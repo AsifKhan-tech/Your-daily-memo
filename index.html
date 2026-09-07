@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/daily-memo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Memo | Your personal daily planner</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="app-shell" id="home">
+      <section class="todo-container" aria-labelledby="memo-title">
+        <p class="eyebrow">Daily memo</p>
+        <h1 id="memo-title">What’s on your mind?</h1>
+        <p class="intro">Capture a task before it slips away.</p>
+
+        <form class="todo-form" action="#">
+          <div class="input-group">
+            <label for="todo">New memo</label>
+            <input
+              id="todo"
+              class="todo"
+              type="text"
+              name="todo"
+              placeholder="Today’s memo"
+              autocomplete="off"
+              required
+            />
+            <label for="todo-date-time">Date and time</label>
+            <input
+              id="todo-date-time"
+              class="todo todo-date-time"
+              type="datetime-local"
+              name="date-time"
+              required
+            />
+          </div>
+          <button class="add-todo" id="todo-btn" type="submit">Add memo</button>
+        </form>
+
+        <section
+          class="todo-list-section"
+          id="todos"
+          aria-labelledby="memo-list-title"
+        >
+          <div class="list-heading">
+            <h2 id="memo-list-title">Today’s memos</h2>
+            <span class="todo-count" id="todo-count">0</span>
+          </div>
+          <p class="empty-state" id="empty-state">
+            Your added memos will appear here.
+          </p>
+          <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
