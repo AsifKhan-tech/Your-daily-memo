@@ -13,10 +13,48 @@ const dateTimeInput = document.querySelector("#todo-date-time");
 const todoList = document.querySelector("#todo-list");
 const todoCount = document.querySelector("#todo-count");
 const emptyState = document.querySelector("#empty-state");
+const allItemsToggle = document.querySelector("#all-items");
+const deleteAllButton = document.querySelector("#delete-all");
+const contactForm = document.querySelector("#contact-form");
+const contactStatus = document.querySelector("#contact-status");
 const allNavigationLinks = document.querySelectorAll(".nav-links a");
-const navigationLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+const navigationLinks = document.querySelectorAll('a[href^="#"]');
 const navbar = document.querySelector(".navbar");
 const menuToggle = document.querySelector(".menu-toggle");
+const todoContainer = document.querySelector(".todo-container");
+const currentYear = document.querySelector("#current-year");
+const scrollTopButton = document.querySelector("#scroll-top");
+
+currentYear.textContent = new Date().getFullYear();
+
+/**
+ * Reveals the return control only after the user has moved away from the
+ * navbar, keeping the initial viewport free of unnecessary controls.
+ */
+function updateScrollTopButton() {
+  scrollTopButton.hidden = window.scrollY < 240;
+}
+
+window.addEventListener("scroll", updateScrollTopButton, { passive: true });
+updateScrollTopButton();
+
+scrollTopButton.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/**
+ * Scrolls an in-page target below the sticky navbar instead of hiding it
+ * underneath the glass navigation. The spacing constant keeps the card
+ * comfortably visible on both desktop and mobile viewports.
+ */
+function scrollToNavigationTarget(target) {
+  const navbarHeight = navbar.getBoundingClientRect().height;
+  const breathingRoom = 24;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+  const scrollTop = Math.max(0, targetTop - navbarHeight - breathingRoom);
+
+  window.scrollTo({ top: scrollTop, behavior: "smooth" });
+}
 
 /**
  * Smoothly moves between in-page sections and closes the mobile menu afterward.
@@ -24,12 +62,14 @@ const menuToggle = document.querySelector(".menu-toggle");
  */
 navigationLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
-    const target = document.querySelector(link.getAttribute("href"));
+    const targetId = link.getAttribute("href");
+    const target =
+      targetId === "#home" ? todoContainer : document.querySelector(targetId);
     if (!target) return;
 
     event.preventDefault();
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.replaceState(null, "", link.getAttribute("href"));
+    scrollToNavigationTarget(target);
+    window.history.replaceState(null, "", targetId);
     closeMobileMenu();
   });
 });
@@ -71,6 +111,16 @@ document.addEventListener("click", (event) => {
   if (!navbar.contains(event.target)) closeMobileMenu();
 });
 
+/**
+ * Provides immediate confirmation for contact submissions while the app has
+ * no server endpoint. The form is reset only after browser validation passes.
+ */
+contactForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  contactStatus.textContent = "Thanks. Your message is ready to be reviewed.";
+  contactForm.reset();
+});
+
 // --- 3. Application State ---
 /**
  * Application state holding the list of todos.
@@ -86,7 +136,51 @@ let todos = loadTodos();
 function updateMemoCount() {
   todoCount.textContent = todos.length;
   emptyState.hidden = todos.length > 0;
+  allItemsToggle.disabled = todos.length === 0;
+  allItemsToggle.checked =
+    todos.length > 0 && todos.every((todo) => todo.completed);
+  deleteAllButton.disabled = todos.length === 0 || !allItemsToggle.checked;
 }
+
+/**
+ * Applies the master completion state to every rendered todo and persists it.
+ */
+function setAllTodosCompleted(completed) {
+  todos.forEach((todo) => {
+    todo.completed = completed;
+  });
+
+  todoList.querySelectorAll(".todo-row").forEach((row, index) => {
+    const todoCard = row.querySelector(".todo-item");
+    const completeToggle = row.querySelector(".todo-checkbox");
+    const editButton = row.querySelector(".edit-todo");
+    const todo = todos[index];
+
+    completeToggle.checked = completed;
+    todoCard.classList.toggle("is-complete", completed);
+    editButton.disabled = completed;
+    completeToggle.setAttribute("aria-label", `Mark ${todo.memo} completed`);
+  });
+
+  saveTodos(todos);
+  updateMemoCount();
+}
+
+allItemsToggle.addEventListener("change", () => {
+  setAllTodosCompleted(allItemsToggle.checked);
+});
+
+/**
+ * Removes every task in one action and resets the list controls and storage.
+ */
+deleteAllButton.addEventListener("click", () => {
+  if (!allItemsToggle.checked) return;
+
+  todos = [];
+  todoList.replaceChildren();
+  saveTodos(todos);
+  updateMemoCount();
+});
 
 /**
  * Creates and configures an SVG icon element for the edit button.
@@ -188,6 +282,7 @@ function renderTodo(todo) {
     todoCard.classList.toggle("is-complete", todo.completed);
     editButton.disabled = todo.completed;
     saveTodos(todos);
+    updateMemoCount();
   });
 
   editButton.addEventListener("click", () => {

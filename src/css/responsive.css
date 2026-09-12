@@ -45,11 +45,29 @@
     border-radius: 1.75rem;
     padding: 2rem;
   }
+  .contact-section {
+    border-radius: 1.75rem;
+    padding: 2rem;
+  }
+  .site-footer {
+    padding-inline: 2rem;
+  }
   .todo-form {
     grid-template-columns: minmax(0, 1fr);
   }
   .add-todo {
     width: 100%;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .footer-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
   }
 }
 
