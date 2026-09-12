@@ -28,10 +28,51 @@ const navigationLinks = document.querySelectorAll('a[href^="#"]');
 const siteHeader = document.querySelector(".site-header");
 const navbar = document.querySelector(".navbar");
 const menuToggle = document.querySelector(".menu-toggle");
+const themeToggle = document.querySelector("#theme-toggle");
 const todoContainer = document.querySelector(".todo-container");
 const siteFooter = document.querySelector(".site-footer");
 const currentYear = document.querySelector("#current-year");
 const scrollTopButton = document.querySelector("#scroll-top");
+
+const THEME_STORAGE_KEY = "daily-memo-theme";
+
+/**
+ * Applies a theme, updates the toggle to describe the next available mode,
+ * and persists the user's explicit choice for future visits.
+ * @param {"dark" | "light"} theme Theme to activate.
+ */
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  const nextTheme = theme === "dark" ? "light" : "dark";
+  themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+  themeToggle.setAttribute(
+    "title",
+    `${nextTheme[0].toUpperCase()}${nextTheme.slice(1)} mode`,
+  );
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // The selected theme remains active for the current page session.
+  }
+}
+
+/** Restore the saved theme, defaulting to dark for first-time visitors. */
+function initializeTheme() {
+  let savedTheme;
+  try {
+    savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    savedTheme = null;
+  }
+  setTheme(savedTheme === "light" ? "light" : "dark");
+}
+
+initializeTheme();
+
+themeToggle.addEventListener("click", () => {
+  const currentTheme = document.documentElement.dataset.theme;
+  setTheme(currentTheme === "dark" ? "light" : "dark");
+});
 
 currentYear.textContent = new Date().getFullYear();
 
