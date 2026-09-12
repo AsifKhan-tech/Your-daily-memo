@@ -1,71 +1,5 @@
-/* :root {
-  color-scheme: light dark;
-  --canvas: #f7f3e9;
-  --canvas-deep: #e9e0cf;
-  --surface: rgba(247, 243, 233, 0.62);
-  --surface-strong: rgba(242, 241, 237, 0.8);
-  --line: rgba(22, 22, 22, 0.12);
-  --ink: #161616;
-  --muted: rgba(22, 22, 22, 0.64);
-  --accent: #161616;
-  --accent-ink: #f7f3e9;
-  --focus: #e7d4bb;
-  --shadow: rgba(22, 22, 22, 0.16);
-  --control-height: 2.75rem;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  font-synthesis: none;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --canvas: #101211;
-  --canvas-deep: #161616;
-  --surface: rgba(22, 22, 22, 0.7);
-  --surface-strong: rgba(16, 18, 17, 0.8);
-  --line: rgba(232, 217, 196, 0.18);
-  --ink: #f7f3e9;
-  --muted: rgba(242, 241, 237, 0.68);
-  --accent: #e8d9c4;
-  --accent-ink: #161616;
-  --focus: #e7d4bb;
-  --shadow: rgba(0, 0, 0, 0.38);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --canvas: #101211;
-    --canvas-deep: #161616;
-    --surface: rgba(22, 22, 22, 0.7);
-    --surface-strong: rgba(16, 18, 17, 0.8);
-    --line: rgba(232, 217, 196, 0.18);
-    --ink: #f7f3e9;
-    --muted: rgba(242, 241, 237, 0.68);
-    --accent: #e8d9c4;
-    --accent-ink: #161616;
-    --focus: #e7d4bb;
-    --shadow: rgba(0, 0, 0, 0.38);
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background: var(--canvas);
-  color: var(--ink);
-  margin: 0;
-  min-width: 20rem;
-}
-
+/* --- 1. Layout Wrappers --- */
+/* The main shell centers the app and provides the decorative background */
 .app-shell {
   align-items: center;
   background:
@@ -88,6 +22,7 @@ body {
   position: relative;
 }
 
+/* Decorative background blobs */
 .app-shell::before,
 .app-shell::after {
   border-radius: 999px;
@@ -110,6 +45,7 @@ body {
   width: 16rem;
 }
 
+/* The main card holding the application */
 .todo-container {
   background: linear-gradient(135deg, var(--surface-strong), var(--surface));
   border: 1px solid var(--line);
@@ -126,6 +62,7 @@ body {
   z-index: 1;
 }
 
+/* --- 2. Typography Components --- */
 .eyebrow {
   color: var(--muted);
   font-size: 0.75rem;
@@ -134,17 +71,14 @@ body {
   margin: 0 0 0.5rem;
   text-transform: uppercase;
 }
-h1 {
-  font-size: clamp(1.65rem, 7vw, 2.35rem);
-  letter-spacing: -0.045em;
-  line-height: 1.1;
-  margin: 0;
-}
+
 .intro {
   color: var(--muted);
   line-height: 1.55;
   margin: 0.6rem 0 1.5rem;
 }
+
+/* --- 3. Form Components --- */
 .todo-form,
 .input-group {
   display: grid;
@@ -155,15 +89,14 @@ h1 {
 .input-group {
   gap: 0.55rem;
 }
+
 .input-group label {
   color: var(--muted);
   font-size: 0.8125rem;
   font-weight: 700;
 }
-.input-group .todo + label {
-  margin-top: 0.7rem;
-}
 
+/* Standardized Input Styling */
 .todo {
   appearance: none;
   background: var(--surface-strong);
@@ -180,17 +113,12 @@ h1 {
     background-color 180ms ease;
   width: 100%;
 }
-.todo::placeholder {
-  color: var(--muted);
-}
-.todo:hover {
-  border-color: rgba(231, 212, 187, 0.8);
-}
 .todo:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 0.23rem color-mix(in srgb, var(--focus) 62%, transparent);
 }
 
+/* Primary Action Button */
 .add-todo {
   appearance: none;
   background: var(--accent);
@@ -214,30 +142,20 @@ h1 {
     inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   filter: brightness(1.09);
 }
-.add-todo:active {
-  box-shadow: none;
-  transform: translateY(0);
-}
-.add-todo:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
-}
 
+/* --- 4. List Components --- */
 .todo-list-section {
   border-top: 1px solid var(--line);
   margin-top: 1.5rem;
   padding-top: 1.25rem;
 }
+
 .list-heading {
   align-items: center;
   display: flex;
   justify-content: space-between;
 }
-.list-heading h2 {
-  font-size: 0.9rem;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
+
 .todo-count {
   background: var(--surface-strong);
   border: 1px solid var(--line);
@@ -245,15 +163,14 @@ h1 {
   color: var(--muted);
   font-size: 0.75rem;
   font-weight: 750;
-  line-height: 1;
-  min-width: 1.75rem;
   padding: 0.35rem 0.5rem;
   text-align: center;
 }
+
 .empty-state {
+  margin: 1rem 0 0;
   color: var(--muted);
   font-size: 0.875rem;
-  margin: 1rem 0 0;
 }
 .todo-list {
   display: grid;
@@ -265,12 +182,15 @@ h1 {
 .todo-list:empty {
   display: none;
 }
+
+/* Individual List Item Layout */
 .todo-row {
   align-items: stretch;
   display: grid;
   gap: 0.5rem;
   grid-template-columns: minmax(0, 1fr) 4.5rem;
 }
+
 .todo-item {
   align-items: center;
   background: var(--surface-strong);
@@ -278,112 +198,70 @@ h1 {
   border-radius: 0.8rem;
   display: flex;
   gap: 0.75rem;
-  min-width: 0;
   min-height: var(--control-height);
   padding: 0.375rem 0.625rem;
 }
-.todo-checkbox {
-  accent-color: var(--accent);
-  cursor: pointer;
-  flex: 0 0 1rem;
-  height: 1rem;
-  margin: 0;
-  width: 1rem;
-}
+
+/* State Modifiers */
 .todo-item.is-complete {
   opacity: 0.58;
 }
 .todo-item.is-complete .todo-item-text {
   text-decoration: line-through;
 }
+
 .todo-item-content {
-  align-items: baseline;
-  display: flex;
   flex: 1;
+  display: flex;
   flex-wrap: wrap;
   gap: 0.1rem 0.4rem;
-  min-width: 0;
 }
 .todo-item-text {
   font-size: 0.925rem;
-  line-height: 1.3;
   overflow-wrap: anywhere;
 }
 .todo-item-details {
   color: var(--muted);
   font-size: 0.7rem;
-  line-height: 1.3;
 }
-.edit-todo {
-  appearance: none;
+
+/* --- Action Buttons within List --- */
+
+/* 1. Shared Base Styles 
+   Only group properties that are 100% identical between both buttons. */
+.edit-todo,
+.delete-todo {
   align-items: center;
-  background: var(--surface-strong);
+  appearance: none;
   border: 1px solid var(--line);
-  border-radius: 0.45rem;
-  color: var(--ink);
   cursor: pointer;
   display: inline-flex;
+  justify-content: center;
+}
+
+/* 2. Edit Button Specifics */
+.edit-todo {
+  background: var(--surface-strong);
+  border-radius: 0.45rem;
+  color: var(--ink);
   flex: 0 0 2rem;
   line-height: 1;
   min-height: 1.9rem;
   padding: 0;
-  justify-content: center;
   transition:
     background-color 180ms ease,
     color 180ms ease;
 }
-.edit-todo svg {
-  height: 1rem;
-  width: 1rem;
-}
-.edit-todo:hover {
-  background: var(--focus);
-  color: #161616;
-}
-.edit-todo:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-.edit-todo:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-.todo-item.is-editing {
-  align-items: flex-start;
-}
-.todo-item.is-editing .todo-item-content {
-  display: grid;
-  gap: 0.2rem;
-}
-.todo-edit-input {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--accent);
-  border-radius: 0;
-  color: var(--ink);
-  font: inherit;
-  line-height: 1.3;
-  min-width: 0;
-  outline: none;
-  padding: 0.15rem 0;
-  width: 100%;
-}
-.todo-edit-input:focus {
-  border-bottom-width: 2px;
-}
+
+/* 3. Delete Button Specifics
+   Restored the missing padding, min-height, and typography inherited from your original code. */
 .delete-todo {
-  align-items: center;
-  appearance: none;
   background: transparent;
-  border: 1px solid var(--line);
   border-radius: 0.65rem;
   color: var(--muted);
-  cursor: pointer;
-  display: inline-flex;
   font: inherit;
   font-size: 0.75rem;
   font-weight: 700;
-  justify-content: center;
   min-height: var(--control-height);
   padding: 0.2rem 0.5rem;
   transition:
@@ -392,49 +270,43 @@ h1 {
     color 180ms ease;
   width: 100%;
 }
-.delete-todo:hover {
+
+/* 4. Hover States */
+.edit-todo:hover {
   background: var(--focus);
-  border-color: var(--focus);
   color: #161616;
 }
+
+.delete-todo:hover {
+  background: var(--focus);
+  border-color: var(--focus); /* Restored the specific border hover effect */
+  color: #161616;
+}
+
+/* 5. Focus States 
+   Restoring accessibility outlines from the original code. */
+.edit-todo:focus-visible,
 .delete-todo:focus-visible {
   outline: 2px solid var(--accent);
+}
+.edit-todo:focus-visible {
+  outline-offset: 1px;
+}
+.delete-todo:focus-visible {
   outline-offset: 2px;
 }
 
-@media (min-width: 40rem) {
-  .app-shell {
-    padding: 2rem;
-  }
-  .todo-container {
-    border-radius: 1.75rem;
-    padding: 2rem;
-  }
-  .todo-form {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .add-todo {
-    width: 100%;
-  }
+/* 1. Constrain the SVG Icon Size
+   Without this, inline SVGs will attempt to fill their container or use intrinsic dimensions. */
+.edit-todo svg {
+  height: 1rem;
+  width: 1rem;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
-} */
-
-/* 1. Design Tokens (Colors & Variables) */
-@import url("./css/theme.css");
-
-/* 2. Global Resets (Box sizing, body styles) */
-@import url("./css/base.css");
-
-/* 3. Component Architecture (Layouts & UI) */
-@import url("./css/components.css");
-
-/* 4. Overrides (Responsive & Accessibility) */
-@import url("./css/responsive.css");
+/* 2. Disabled State
+   When a todo is checked as complete, the edit button is disabled in JavaScript. 
+   This restores the intended visual fading for that state. */
+.edit-todo:disabled {
+  cursor: default;
+  opacity: 0.45;
+}

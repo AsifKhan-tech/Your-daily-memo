@@ -1,0 +1,50 @@
+/* src/css/theme.css */
+/* Base Light Theme */
+:root {
+  color-scheme: light dark;
+  --canvas: #f7f3e9;
+  --canvas-deep: #e9e0cf;
+  --surface: rgba(247, 243, 233, 0.62);
+  --surface-strong: rgba(242, 241, 237, 0.8);
+  --line: rgba(22, 22, 22, 0.12);
+  --ink: #161616;
+  --muted: rgba(22, 22, 22, 0.64);
+  --accent: #161616;
+  --accent-ink: #f7f3e9;
+  --focus: #e7d4bb;
+  --shadow: rgba(22, 22, 22, 0.16);
+  --control-height: 2.75rem;
+}
+
+/* Dark Theme Overrides */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #101211;
+  --canvas-deep: #161616;
+  --surface: rgba(22, 22, 22, 0.7);
+  --surface-strong: rgba(16, 18, 17, 0.8);
+  --line: rgba(232, 217, 196, 0.18);
+  --ink: #f7f3e9;
+  --muted: rgba(242, 241, 237, 0.68);
+  --accent: #e8d9c4;
+  --accent-ink: #161616;
+  --focus: #e7d4bb;
+  --shadow: rgba(0, 0, 0, 0.38);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canvas: #101211;
+    --canvas-deep: #161616;
+    --surface: rgba(22, 22, 22, 0.7);
+    --surface-strong: rgba(16, 18, 17, 0.8);
+    --line: rgba(232, 217, 196, 0.18);
+    --ink: #f7f3e9;
+    --muted: rgba(242, 241, 237, 0.68);
+    --accent: #e8d9c4;
+    --accent-ink: #161616;
+    --focus: #e7d4bb;
+    --shadow: rgba(0, 0, 0, 0.38);
+  }
+}

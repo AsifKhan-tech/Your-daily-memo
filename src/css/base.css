@@ -1,0 +1,36 @@
+/* src/css/base.css */
+
+/* 1. Global Box Sizing 
+   Ensures padding and borders are included in the element's total width and height. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Document Body Foundation
+   Removes default browser margins and applies our theme background globally. */
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  margin: 0;
+  min-width: 20rem;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+}
+
+/* 3. Global Typography Resets
+   Removes default margins from text elements so components dictate their own spacing. */
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}

@@ -1,0 +1,27 @@
+/* src/css/responsive.css */
+/* Desktop Layout Enhancements */
+@media (min-width: 40rem) {
+  .app-shell {
+    padding: 2rem;
+  }
+  .todo-container {
+    border-radius: 1.75rem;
+    padding: 2rem;
+  }
+  .todo-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .add-todo {
+    width: 100%;
+  }
+}
+
+/* Accessibility: Respect User Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

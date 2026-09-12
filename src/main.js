@@ -1,3 +1,13 @@
+//
+//import pure functions and data layers to maintain separation of concerns.
+import {
+  formatDateTime,
+  getCurrentLocalDateTime,
+  generateId,
+} from "./utils.js";
+import { loadTodos, saveTodos } from "./storage.js";
+
+// --- 2. DOM Elements ---
 const form = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo");
 const dateTimeInput = document.querySelector("#todo-date-time");
@@ -5,52 +15,27 @@ const todoList = document.querySelector("#todo-list");
 const todoCount = document.querySelector("#todo-count");
 const emptyState = document.querySelector("#empty-state");
 
-const STORAGE_KEY = "daily-memo-todos";
+// --- 3. Application State ---
+/**
+ * Application state holding the list of todos.
+ * @type {Array<{id: string, memo: string, dateTime: string, completed: boolean}>}
+ */
 let todos = loadTodos();
 
-function loadTodos() {
-  try {
-    const storedTodos = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!Array.isArray(storedTodos)) return [];
+// --- 4. UI specific Utility Functions ---
 
-    return storedTodos.filter(
-      (todo) =>
-        typeof todo.id === "string" &&
-        typeof todo.memo === "string" &&
-        typeof todo.dateTime === "string",
-    );
-  } catch {
-    return [];
-  }
-}
-
-function saveTodos() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-  } catch {
-    // The app remains usable if browser storage is unavailable.
-  }
-}
-
+/**
+ * Updates the UI to reflect the total count of todos and toggles the empty state message.
+ */
 function updateMemoCount() {
   todoCount.textContent = todos.length;
   emptyState.hidden = todos.length > 0;
 }
 
-function formatDateTime(dateTime) {
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(dateTime));
-}
-
-function getCurrentLocalDateTime() {
-  const now = new Date();
-  const pad = (value) => String(value).padStart(2, "0");
-
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-}
-
+/**
+ * Creates and configures an SVG icon element for the edit button.
+ * @returns {SVGSVGElement} The constructed SVG element.
+ */
 function createEditIcon() {
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   icon.setAttribute("viewBox", "0 0 24 24");
@@ -60,7 +45,6 @@ function createEditIcon() {
   icon.setAttribute("stroke-width", "2");
   icon.setAttribute("stroke-linecap", "round");
   icon.setAttribute("stroke-linejoin", "round");
-
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   path.setAttribute(
     "d",
@@ -70,6 +54,12 @@ function createEditIcon() {
   return icon;
 }
 
+// --- 5. Rendering Engine ---
+
+/**
+ * Constructs the DOM elements for a single todo item and attaches event listeners.
+ * @param {Object} todo - The data object representing a single todo.
+ */
 function renderTodo(todo) {
   const item = document.createElement("li");
   item.className = "todo-row";
@@ -112,17 +102,19 @@ function renderTodo(todo) {
   let isEditing = false;
   let editInput;
 
+  /**
+   * Internal helper to save edits, update the DOM, and persist state.
+   */
   function saveEdit() {
     const updatedMemo = editInput.value.trim();
     if (!updatedMemo) {
       editInput.focus();
       return;
     }
-
     todo.memo = updatedMemo;
-    todo.dateTime = getCurrentLocalDateTime();
+    todo.dateTime = getCurrentLocalDateTime(); // Using imported util
     itemText.textContent = todo.memo;
-    itemDetails.textContent = formatDateTime(todo.dateTime);
+    itemDetails.textContent = formatDateTime(todo.dateTime); // Using imported util
     itemContent.replaceChild(itemText, editInput);
     todoCard.classList.remove("is-editing");
     editButton.disabled = todo.completed;
@@ -131,19 +123,19 @@ function renderTodo(todo) {
     deleteButton.textContent = "Delete";
     deleteButton.setAttribute("aria-label", `Delete ${todo.memo}`);
     isEditing = false;
-    saveTodos();
+    saveTodos(todos); // Passing state to the imported storage function
   }
 
+  // Event Listeners for the Todo Item
   completeToggle.addEventListener("change", () => {
     todo.completed = completeToggle.checked;
     todoCard.classList.toggle("is-complete", todo.completed);
     editButton.disabled = todo.completed;
-    saveTodos();
+    saveTodos(todos);
   });
 
   editButton.addEventListener("click", () => {
     if (isEditing || todo.completed) return;
-
     isEditing = true;
     editInput = document.createElement("input");
     editInput.className = "todo-edit-input";
@@ -172,17 +164,19 @@ function renderTodo(todo) {
       saveEdit();
       return;
     }
-
+    // Filter out the deleted item from state
     todos = todos.filter((savedTodo) => savedTodo.id !== todo.id);
     item.remove();
     updateMemoCount();
-    saveTodos();
+    saveTodos(todos);
   });
 
   todoCard.append(completeToggle, itemContent, editButton);
   item.append(todoCard, deleteButton);
   todoList.append(item);
 }
+
+// --- 6. Form Submission ---
 
 todoInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.isComposing) {
@@ -193,7 +187,6 @@ todoInput.addEventListener("keydown", (event) => {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-
   const memo = todoInput.value.trim();
   if (!memo || !dateTimeInput.value) {
     todoInput.focus();
@@ -201,7 +194,7 @@ form.addEventListener("submit", (event) => {
   }
 
   const todo = {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    id: generateId(), // Using imported util
     memo,
     dateTime: dateTimeInput.value,
     completed: false,
@@ -210,10 +203,12 @@ form.addEventListener("submit", (event) => {
   todos.push(todo);
   renderTodo(todo);
   updateMemoCount();
-  saveTodos();
+  saveTodos(todos);
+
   form.reset();
   todoInput.focus();
 });
 
+// --- 7. Initialization ---
 todos.forEach(renderTodo);
 updateMemoCount();
