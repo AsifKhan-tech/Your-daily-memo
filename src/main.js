@@ -11,7 +11,7 @@ import {
 } from "./js/utils.js";
 import { loadTodos, saveTodos } from "./js/storage.js";
 
-// DOM references are resolved once so event handlers can update the interface
+// Resolve DOM references once so event handlers can update the interface
 // without repeatedly querying the document.
 const form = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo");
@@ -297,10 +297,10 @@ function renderTodo(todo) {
     deleteButton.textContent = "Delete";
     deleteButton.setAttribute("aria-label", `Delete ${todo.memo}`);
     isEditing = false;
-    saveTodos(todos); // Passing state to the imported storage function
+    saveTodos(todos);
   }
 
-  /** Keep the row appearance, edit availability, and storage in sync. */
+  /** Synchronize completion state, row styling, edit availability, and storage. */
   completeToggle.addEventListener("change", () => {
     todo.completed = completeToggle.checked;
     todoCard.classList.toggle("is-complete", todo.completed);
@@ -339,7 +339,7 @@ function renderTodo(todo) {
       saveEdit();
       return;
     }
-    // Filter out the deleted item from state before removing its row.
+    // Remove the record from state before removing its corresponding row.
     todos = todos.filter((savedTodo) => savedTodo.id !== todo.id);
     item.remove();
     updateMemoCount();

@@ -637,7 +637,7 @@
 }
 
 /* 3. Delete Button Specifics
-   Restored the missing padding, min-height, and typography inherited from your original code. */
+  Delete actions use compact typography while retaining the shared control height. */
 .delete-todo {
   background: transparent;
   border-radius: 0.65rem;
@@ -662,12 +662,12 @@
 
 .delete-todo:hover {
   background: var(--focus);
-  border-color: var(--focus); /* Restored the specific border hover effect */
+  border-color: var(--focus);
   color: #161616;
 }
 
-/* 5. Focus States 
-   Restoring accessibility outlines from the original code. */
+/* 5. Focus States
+  Visible outlines keep icon and text actions keyboard accessible. */
 .edit-todo:focus-visible,
 .delete-todo:focus-visible {
   outline: 2px solid var(--accent);
@@ -680,15 +680,14 @@
 }
 
 /* 1. Constrain the SVG Icon Size
-   Without this, inline SVGs will attempt to fill their container or use intrinsic dimensions. */
+  Fixed dimensions keep the action row stable across browsers. */
 .edit-todo svg {
   height: 1rem;
   width: 1rem;
 }
 
 /* 2. Disabled State
-   When a todo is checked as complete, the edit button is disabled in JavaScript. 
-   This restores the intended visual fading for that state. */
+  Completed todos cannot be edited, so the control is visibly de-emphasized. */
 .edit-todo:disabled {
   cursor: default;
   opacity: 0.45;
