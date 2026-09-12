@@ -1,6 +1,7 @@
 /* src/css/responsive.css */
 /* Desktop Layout Enhancements */
-@media (max-width: 39.99rem) {
+/* Tablet and mobile navigation use the compact menu to avoid cramped links. */
+@media (max-width: 63.99rem) {
   .navbar {
     position: relative;
   }
@@ -60,7 +61,7 @@
   }
 }
 
-@media (max-width: 39.99rem) {
+@media (max-width: 63.99rem) {
   .footer-content {
     align-items: flex-start;
     flex-direction: column;

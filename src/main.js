@@ -25,9 +25,11 @@ const contactForm = document.querySelector("#contact-form");
 const contactStatus = document.querySelector("#contact-status");
 const allNavigationLinks = document.querySelectorAll(".nav-links a");
 const navigationLinks = document.querySelectorAll('a[href^="#"]');
+const siteHeader = document.querySelector(".site-header");
 const navbar = document.querySelector(".navbar");
 const menuToggle = document.querySelector(".menu-toggle");
 const todoContainer = document.querySelector(".todo-container");
+const siteFooter = document.querySelector(".site-footer");
 const currentYear = document.querySelector("#current-year");
 const scrollTopButton = document.querySelector("#scroll-top");
 
@@ -55,10 +57,12 @@ scrollTopButton.addEventListener("click", () => {
  * comfortably visible on both desktop and mobile viewports.
  */
 function scrollToNavigationTarget(target) {
-  const navbarHeight = navbar.getBoundingClientRect().height;
-  const breathingRoom = 24;
+  // Measure the complete sticky header, including its vertical padding, so
+  // the memo eyebrow and heading remain below the visible navigation surface.
+  const headerHeight = siteHeader.getBoundingClientRect().height;
+  const breathingRoom = 32;
   const targetTop = target.getBoundingClientRect().top + window.scrollY;
-  const scrollTop = Math.max(0, targetTop - navbarHeight - breathingRoom);
+  const scrollTop = Math.max(0, targetTop - headerHeight - breathingRoom);
 
   window.scrollTo({ top: scrollTop, behavior: "smooth" });
 }
@@ -71,7 +75,11 @@ navigationLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     const targetId = link.getAttribute("href");
     const target =
-      targetId === "#home" ? todoContainer : document.querySelector(targetId);
+      targetId === "#home" || targetId === "#todos"
+        ? todoContainer
+        : targetId === "#contact"
+          ? siteFooter
+          : document.querySelector(targetId);
     if (!target) return;
 
     event.preventDefault();
@@ -157,6 +165,31 @@ function updateMemoCount() {
   allItemsToggle.checked =
     todos.length > 0 && todos.every((todo) => todo.completed);
   deleteAllButton.disabled = todos.length === 0 || !allItemsToggle.checked;
+}
+
+/**
+ * Orders tasks from the latest scheduled datetime to the earliest.
+ * Invalid or missing dates are placed after valid task dates.
+ */
+function sortTodosByNewest() {
+  todos.sort((firstTodo, secondTodo) => {
+    const firstTime = Date.parse(firstTodo.dateTime);
+    const secondTime = Date.parse(secondTodo.dateTime);
+    const firstIsValid = Number.isFinite(firstTime);
+    const secondIsValid = Number.isFinite(secondTime);
+
+    if (!firstIsValid || !secondIsValid) {
+      return Number(secondIsValid) - Number(firstIsValid);
+    }
+
+    return secondTime - firstTime;
+  });
+}
+
+/** Rebuilds the visible list from the current, already-sorted state. */
+function renderAllTodos() {
+  todoList.replaceChildren();
+  todos.forEach(renderTodo);
 }
 
 /**
@@ -298,6 +331,8 @@ function renderTodo(todo) {
     deleteButton.setAttribute("aria-label", `Delete ${todo.memo}`);
     isEditing = false;
     saveTodos(todos);
+    sortTodosByNewest();
+    renderAllTodos();
   }
 
   /** Synchronize completion state, row styling, edit availability, and storage. */
@@ -378,7 +413,8 @@ form.addEventListener("submit", (event) => {
   };
 
   todos.push(todo);
-  renderTodo(todo);
+  sortTodosByNewest();
+  renderAllTodos();
   updateMemoCount();
   saveTodos(todos);
 
@@ -386,6 +422,7 @@ form.addEventListener("submit", (event) => {
   todoInput.focus();
 });
 
-/** Render persisted tasks and initialize all derived controls on startup. */
-todos.forEach(renderTodo);
+/** Sort persisted tasks and render the newest task at the top on startup. */
+sortTodosByNewest();
+renderAllTodos();
 updateMemoCount();
