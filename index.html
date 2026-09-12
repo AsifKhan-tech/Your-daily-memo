@@ -9,12 +9,13 @@
   </head>
   <body>
     <main class="app-shell" id="home">
+      <!-- Todo container -->
       <section class="todo-container" aria-labelledby="memo-title">
         <p class="eyebrow">Daily memo</p>
         <h1 id="memo-title">What’s on your mind?</h1>
         <p class="intro">Capture a task before it slips away.</p>
 
-        <form class="todo-form">
+        <form class="todo-form" id="home">
           <div class="input-group">
             <label for="todo">New memo</label>
             <input
@@ -22,7 +23,7 @@
               class="todo"
               type="text"
               name="todo"
-              placeholder="Today’s memo"
+              placeholder="Today’s task"
               autocomplete="off"
               required
             />
@@ -48,9 +49,14 @@
             <span class="todo-count" id="todo-count">0</span>
           </div>
           <p class="empty-state" id="empty-state">
-            Your added memos will appear here.
+            Your added tasks will appear here.
           </p>
-          <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
+          <ul
+            class="todo-list"
+            id="todo-list"
+            aria-live="polite"
+            id="todos"
+          ></ul>
         </section>
       </section>
     </main>

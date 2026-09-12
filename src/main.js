@@ -1,11 +1,10 @@
-//
 //import pure functions and data layers to maintain separation of concerns.
 import {
   formatDateTime,
   getCurrentLocalDateTime,
   generateId,
-} from "./utils.js";
-import { loadTodos, saveTodos } from "./storage.js";
+} from "./js/utils.js";
+import { loadTodos, saveTodos } from "./js/storage.js";
 
 // --- 2. DOM Elements ---
 const form = document.querySelector(".todo-form");
