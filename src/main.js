@@ -1,4 +1,9 @@
-//import pure functions and data layers to maintain separation of concerns.
+/**
+ * UI entry point for Daily Memo.
+ *
+ * DOM rendering and event orchestration live here, while date formatting,
+ * identifier generation, and local-storage access remain in dedicated modules.
+ */
 import {
   formatDateTime,
   getCurrentLocalDateTime,
@@ -6,7 +11,8 @@ import {
 } from "./js/utils.js";
 import { loadTodos, saveTodos } from "./js/storage.js";
 
-// --- 2. DOM Elements ---
+// DOM references are resolved once so event handlers can update the interface
+// without repeatedly querying the document.
 const form = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo");
 const dateTimeInput = document.querySelector("#todo-date-time");
@@ -38,6 +44,7 @@ function updateScrollTopButton() {
 window.addEventListener("scroll", updateScrollTopButton, { passive: true });
 updateScrollTopButton();
 
+/** Return the document to the navbar when the floating control is activated. */
 scrollTopButton.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -84,7 +91,8 @@ function closeMobileMenu() {
   menuToggle.setAttribute("aria-label", "Open navigation menu");
 }
 
-// Close the menu for links that do not use the in-page scrolling handler.
+// External navigation links still close the mobile menu before the browser
+// follows their default action.
 allNavigationLinks.forEach((link) => {
   if (link.matches('[href^="#"]')) return;
   link.addEventListener("click", closeMobileMenu);
@@ -102,7 +110,7 @@ menuToggle.addEventListener("click", () => {
   );
 });
 
-// Escape and outside clicks provide predictable ways to dismiss the open menu.
+// Escape and outside clicks provide predictable dismissal paths for the menu.
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeMobileMenu();
 });
@@ -121,17 +129,26 @@ contactForm.addEventListener("submit", (event) => {
   contactForm.reset();
 });
 
-// --- 3. Application State ---
 /**
- * Application state holding the list of todos.
- * @type {Array<{id: string, memo: string, dateTime: string, completed: boolean}>}
+ * @typedef {Object} Todo
+ * @property {string} id Stable identifier used for updates and deletion.
+ * @property {string} memo User-entered task text.
+ * @property {string} dateTime Local datetime associated with the task.
+ * @property {boolean} completed Whether the task is marked complete.
+ */
+
+/**
+ * In-memory application state. The same array is persisted after every state
+ * mutation so the rendered list and local storage remain synchronized.
+ * @type {Todo[]}
  */
 let todos = loadTodos();
 
-// --- 4. UI specific Utility Functions ---
-
 /**
- * Updates the UI to reflect the total count of todos and toggles the empty state message.
+ * Synchronizes list summary controls with the current todo state.
+ *
+ * This includes the visible count, empty-state message, master completion
+ * checkbox, and guarded Delete all action.
  */
 function updateMemoCount() {
   todoCount.textContent = todos.length;
@@ -143,7 +160,8 @@ function updateMemoCount() {
 }
 
 /**
- * Applies the master completion state to every rendered todo and persists it.
+ * Applies one completion state to every todo and its rendered controls.
+ * @param {boolean} completed Whether every task should be complete.
  */
 function setAllTodosCompleted(completed) {
   todos.forEach((todo) => {
@@ -166,12 +184,15 @@ function setAllTodosCompleted(completed) {
   updateMemoCount();
 }
 
+/** Apply the master checkbox selection to the complete todo collection. */
 allItemsToggle.addEventListener("change", () => {
   setAllTodosCompleted(allItemsToggle.checked);
 });
 
 /**
- * Removes every task in one action and resets the list controls and storage.
+ * Removes every task after the user has explicitly enabled the master control.
+ * The guard is intentional because disabled controls should not be the only
+ * protection against an accidental destructive action.
  */
 deleteAllButton.addEventListener("click", () => {
   if (!allItemsToggle.checked) return;
@@ -204,11 +225,13 @@ function createEditIcon() {
   return icon;
 }
 
-// --- 5. Rendering Engine ---
-
 /**
- * Constructs the DOM elements for a single todo item and attaches event listeners.
- * @param {Object} todo - The data object representing a single todo.
+ * Renders one todo and wires its completion, edit, and delete interactions.
+ *
+ * Each todo owns its row-level controls, while the outer state array remains
+ * the source of truth for persistence and collection-level actions.
+ * @param {Todo} todo Todo data to render.
+ * @returns {void}
  */
 function renderTodo(todo) {
   const item = document.createElement("li");
@@ -253,7 +276,8 @@ function renderTodo(todo) {
   let editInput;
 
   /**
-   * Internal helper to save edits, update the DOM, and persist state.
+   * Commits the temporary edit field back to the todo model and row UI.
+   * Empty edits are rejected so a task cannot be saved without a label.
    */
   function saveEdit() {
     const updatedMemo = editInput.value.trim();
@@ -262,9 +286,9 @@ function renderTodo(todo) {
       return;
     }
     todo.memo = updatedMemo;
-    todo.dateTime = getCurrentLocalDateTime(); // Using imported util
+    todo.dateTime = getCurrentLocalDateTime();
     itemText.textContent = todo.memo;
-    itemDetails.textContent = formatDateTime(todo.dateTime); // Using imported util
+    itemDetails.textContent = formatDateTime(todo.dateTime);
     itemContent.replaceChild(itemText, editInput);
     todoCard.classList.remove("is-editing");
     editButton.disabled = todo.completed;
@@ -276,7 +300,7 @@ function renderTodo(todo) {
     saveTodos(todos); // Passing state to the imported storage function
   }
 
-  // Event Listeners for the Todo Item
+  /** Keep the row appearance, edit availability, and storage in sync. */
   completeToggle.addEventListener("change", () => {
     todo.completed = completeToggle.checked;
     todoCard.classList.toggle("is-complete", todo.completed);
@@ -315,7 +339,7 @@ function renderTodo(todo) {
       saveEdit();
       return;
     }
-    // Filter out the deleted item from state
+    // Filter out the deleted item from state before removing its row.
     todos = todos.filter((savedTodo) => savedTodo.id !== todo.id);
     item.remove();
     updateMemoCount();
@@ -327,8 +351,7 @@ function renderTodo(todo) {
   todoList.append(item);
 }
 
-// --- 6. Form Submission ---
-
+/** Submit a new task when Enter is pressed in the memo field. */
 todoInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.isComposing) {
     event.preventDefault();
@@ -336,6 +359,9 @@ todoInput.addEventListener("keydown", (event) => {
   }
 });
 
+/**
+ * Validates, creates, renders, and persists a new todo from the entry form.
+ */
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const memo = todoInput.value.trim();
@@ -345,7 +371,7 @@ form.addEventListener("submit", (event) => {
   }
 
   const todo = {
-    id: generateId(), // Using imported util
+    id: generateId(),
     memo,
     dateTime: dateTimeInput.value,
     completed: false,
@@ -360,6 +386,6 @@ form.addEventListener("submit", (event) => {
   todoInput.focus();
 });
 
-// --- 7. Initialization ---
+/** Render persisted tasks and initialize all derived controls on startup. */
 todos.forEach(renderTodo);
 updateMemoCount();
