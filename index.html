@@ -41,7 +41,7 @@
         <div class="nav-links" id="primary-nav" role="list">
           <a href="#home" role="listitem">Home</a>
           <a href="#todos" role="listitem">Todos</a>
-          <a href="mailto:asifjamshed4@gmail.com" role="listitem">Contact us</a>
+          <a href="#contact" role="listitem">Contact us</a>
         </div>
       </nav>
     </header>
@@ -91,6 +91,44 @@
           </p>
           <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
         </section>
+      </section>
+
+      <!-- Contact form remains a separate page section instead of nesting inside the todo card. -->
+      <section
+        class="contact-section"
+        id="contact"
+        aria-labelledby="contact-title"
+      >
+        <p class="eyebrow">Contact us</p>
+        <h2 id="contact-title">How can we help?</h2>
+        <form class="contact-form" id="contact-form">
+          <label for="contact-name">Name or email</label>
+          <input
+            class="todo"
+            id="contact-name"
+            name="contact-name"
+            type="text"
+            placeholder="Your name or email"
+            autocomplete="email"
+            required
+          />
+          <label for="contact-description">Description</label>
+          <textarea
+            class="todo contact-description"
+            id="contact-description"
+            name="description"
+            placeholder="Tell us how we can help"
+            rows="4"
+            required
+          ></textarea>
+          <button class="add-todo" type="submit">Send message</button>
+          <p
+            class="contact-status"
+            id="contact-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </form>
       </section>
     </main>
     <script type="module" src="/src/main.js"></script>
