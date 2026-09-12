@@ -8,6 +8,44 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
+    <!-- Primary navigation for returning home and reaching the todo list or contact channel. -->
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary navigation">
+        <a class="brand" href="#home" aria-label="Daily Memo home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 3h8l4 4v14H6z" />
+              <path d="M14 3v5h4M9 13h6M9 17h4" />
+            </svg>
+          </span>
+          <span>Daily Memo</span>
+        </a>
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Open navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="nav-links" id="primary-nav" role="list">
+          <a href="#home" role="listitem">Home</a>
+          <a href="#todos" role="listitem">Todos</a>
+          <a href="mailto:asifjamshed4@gmail.com" role="listitem">Contact us</a>
+        </div>
+      </nav>
+    </header>
+
     <main class="app-shell" id="home">
       <!-- Todo container -->
       <section class="todo-container" aria-labelledby="memo-title">
@@ -15,7 +53,7 @@
         <h1 id="memo-title">What’s on your mind?</h1>
         <p class="intro">Capture a task before it slips away.</p>
 
-        <form class="todo-form" id="home">
+        <form class="todo-form">
           <div class="input-group">
             <label for="todo">New memo</label>
             <input
@@ -51,12 +89,7 @@
           <p class="empty-state" id="empty-state">
             Your added tasks will appear here.
           </p>
-          <ul
-            class="todo-list"
-            id="todo-list"
-            aria-live="polite"
-            id="todos"
-          ></ul>
+          <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
         </section>
       </section>
     </main>

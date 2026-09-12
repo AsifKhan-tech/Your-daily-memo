@@ -1,5 +1,42 @@
 /* src/css/responsive.css */
 /* Desktop Layout Enhancements */
+@media (max-width: 39.99rem) {
+  .navbar {
+    position: relative;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .nav-links {
+    align-items: stretch;
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    box-shadow: 0 0.75rem 2rem var(--shadow);
+    display: none;
+    flex-direction: column;
+    gap: 0.2rem;
+    left: 0.75rem;
+    padding: 0.4rem;
+    position: absolute;
+    right: 0.75rem;
+    top: calc(100% + 0.5rem);
+    -webkit-backdrop-filter: blur(1.25rem) saturate(150%);
+    backdrop-filter: blur(1.25rem) saturate(150%);
+  }
+
+  .navbar.is-menu-open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    min-height: 2.5rem;
+  }
+}
+
 @media (min-width: 40rem) {
   .app-shell {
     padding: 2rem;

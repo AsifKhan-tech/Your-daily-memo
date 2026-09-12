@@ -13,6 +13,63 @@ const dateTimeInput = document.querySelector("#todo-date-time");
 const todoList = document.querySelector("#todo-list");
 const todoCount = document.querySelector("#todo-count");
 const emptyState = document.querySelector("#empty-state");
+const allNavigationLinks = document.querySelectorAll(".nav-links a");
+const navigationLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+const navbar = document.querySelector(".navbar");
+const menuToggle = document.querySelector(".menu-toggle");
+
+/**
+ * Smoothly moves between in-page sections and closes the mobile menu afterward.
+ * External links, such as Contact us, retain their browser-default behavior.
+ */
+navigationLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const target = document.querySelector(link.getAttribute("href"));
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", link.getAttribute("href"));
+    closeMobileMenu();
+  });
+});
+
+/**
+ * Closes the mobile navigation and synchronizes its accessibility state.
+ * Keeping this in one helper prevents visual and ARIA state from drifting apart.
+ */
+function closeMobileMenu() {
+  navbar.classList.remove("is-menu-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open navigation menu");
+}
+
+// Close the menu for links that do not use the in-page scrolling handler.
+allNavigationLinks.forEach((link) => {
+  if (link.matches('[href^="#"]')) return;
+  link.addEventListener("click", closeMobileMenu);
+});
+
+/**
+ * Toggles the mobile menu and exposes the current state to assistive technology.
+ */
+menuToggle.addEventListener("click", () => {
+  const isOpen = navbar.classList.toggle("is-menu-open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+  menuToggle.setAttribute(
+    "aria-label",
+    `${isOpen ? "Close" : "Open"} navigation menu`,
+  );
+});
+
+// Escape and outside clicks provide predictable ways to dismiss the open menu.
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMobileMenu();
+});
+
+document.addEventListener("click", (event) => {
+  if (!navbar.contains(event.target)) closeMobileMenu();
+});
 
 // --- 3. Application State ---
 /**
