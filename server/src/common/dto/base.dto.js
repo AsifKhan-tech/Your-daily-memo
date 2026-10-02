@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-class BaseDTO {
+class Basedto {
   static schema = Joi.object({});
 
   static validateInput(data) {
@@ -18,4 +18,4 @@ class BaseDTO {
   }
 }
 
-export default BaseDTO;
+export default Basedto;
