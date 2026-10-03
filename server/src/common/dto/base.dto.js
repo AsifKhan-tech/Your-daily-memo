@@ -14,7 +14,7 @@ class Basedto {
       const errors = error.details.map((detail) => detail.message);
       return { errors, value: null };
     }
-    return { error: null, value };
+    return { errors: null, value };
   }
 }
 

@@ -1,7 +1,8 @@
 import ApiError from "../utils/api-error.js";
 
-const validateMiddleware = (Dtoclass) => {
+const validateMiddlewareFunction = (Dtoclass) => {
   return (req, res, next) => {
+    // this returned function is actual middleware function
     const { errors, value } = Dtoclass.validateInput(req.body);
 
     if (errors) {
@@ -12,4 +13,4 @@ const validateMiddleware = (Dtoclass) => {
   };
 };
 
-export default validateMiddleware;
+export default validateMiddlewareFunction;
