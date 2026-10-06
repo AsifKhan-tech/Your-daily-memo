@@ -4,6 +4,12 @@ services:
   mongodb:
     image: mongo:latest
     container_name: daily_memo_db
+
+    environment:
+    MONGO_DB: daily_memo
+    MONGO_USER: daily_memo_user
+    MONGO_PASSWORD: daily_memo_password
+
     ports:
       - "27017:27017"
     volumes:
