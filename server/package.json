@@ -5,10 +5,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "up": "docker compose up -d",
+    "start": "docker compose start",
+    "stop": "docker compose stop",
+    "restart": "docker compose restart"
   },
   "keywords": [
-    "javascript",
+    "Node.js",
+    "Express.js",
     "server",
     "authentication",
     "back-end"
