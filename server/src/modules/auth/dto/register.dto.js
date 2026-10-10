@@ -10,7 +10,6 @@ class Registerdto extends Basedto {
       .min(8)
       .max(128)
       .message("Password must contain 8 chars minimum")
-      .min(8)
       .required(),
     role: Joi.string().valid("student", "teacher", "user").default("user"),
   });

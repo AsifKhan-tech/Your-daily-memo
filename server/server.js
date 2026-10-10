@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   //connect to database
-  await databaseConnection(); //code wait until the db operation complete
+  await databaseConnection(); //code wait until the db operation completed
 
   app.listen(PORT, () => {
     console.log(
