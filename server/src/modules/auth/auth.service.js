@@ -14,10 +14,10 @@ const register = async ({ name, email, password, role = "user" }) => {
   const { rawToken, hashedToken } = generateResetToken();
 
   const user = await User.create({
-    name,
-    email,
-    password,
-    role,
+    name: name,
+    email: email,
+    password: password,
+    role: role,
     verificationToken: hashedToken,
   });
 
