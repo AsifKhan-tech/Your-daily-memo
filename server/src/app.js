@@ -1,4 +1,5 @@
 import express from "express";
+import authRoutes from "./modules/auth/auth.route.js";
 
 const app = express();
 
@@ -6,6 +7,9 @@ const app = express();
 app.use(express.json());
 
 // Mount routes into app
-app.use("/api/v1/auth");
+
+// Express ko bata rahe hain: "Jab bhi koi request '/api/auth' se shuru ho,
+// toh usko 'authRoutes' wale Router ke paas bhej do."
+app.use("/api/v1/auth", authRoutes);
 
 export default app;
