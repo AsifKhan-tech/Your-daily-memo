@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    verficationToken: {
+    verificationToken: {
       type: String,
       select: false, //when an object(user) created using it, all data is returned except selcet:false
     },
