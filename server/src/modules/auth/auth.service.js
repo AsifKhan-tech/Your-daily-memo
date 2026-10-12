@@ -8,7 +8,7 @@ import {
   verifyRefreshToken,
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
-// It's the model
+// It's the model(schema)
 
 //utiliy to hash the data
 const hashToken = (token) =>
