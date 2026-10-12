@@ -127,4 +127,8 @@ const logout = async (userId) => {
   await User.findByIdAndUpdate(userId, { refreshToken: null });
 };
 
-export { register, login, refresh, logout };
+const forgotPassword = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) throw ApiError.notFound("No account found with this email");
+};
+export { register, login, refresh, logout, forgotPassword };

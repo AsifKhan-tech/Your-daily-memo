@@ -22,6 +22,10 @@ class ApiError extends Error {
   static forbidden(message = "forbidden") {
     return new ApiError(412, message);
   }
+
+  static notFound(message = "account not found") {
+    return new ApiError(404, message);
+  }
 }
 
 export default ApiError;
