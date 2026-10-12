@@ -1,5 +1,9 @@
 import ApiError from "../../common/utils/api-error.js";
-import { generateResetToken } from "../../common/utils/tokens.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  generateResetToken,
+} from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
 // It's the model
 
@@ -31,6 +35,25 @@ const register = async ({ name, email, password, role = "user" }) => {
   delete userObject.verificationToken;
 
   return userObject;
+};
+
+const login = async ({ email, password }) => {
+  // take email and find user in DB
+  // check if password is correct
+  //check if verified or not
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) throw ApiError.unauthorized("Invalied Email or password");
+
+  //somehow I will check password
+
+  if (!user.isVerified) {
+    throw ApiError.forbidden("Please verify your email before login");
+  }
+
+  //send tokens
+  const accessToken = generateAccessToken({ id: user._id, role: user.role });
+  const refreshToken = generateRefreshToken(user._id);
 };
 
 export { register };
