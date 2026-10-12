@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
 
     verificationToken: {
       type: String,
-      select: false, //when an object(user) created using it, all data is returned except selcet:false
+      select: false, //when an object(user) created using it, all the data is returned except the data which => selcet:false
     },
     refreshToken: {
       type: String,

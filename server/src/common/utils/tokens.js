@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
+import ApiError from "./api-error.js";
 
 const generateAccessToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
@@ -8,7 +9,14 @@ const generateAccessToken = (payload) => {
 };
 
 const verifyAccessToken = (token) => {
-  return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  try {
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      throw ApiError.unauthorized("Access token expired");
+    }
+    throw ApiError.unauthorized("Invalid access token");
+  }
 };
 
 const generateRefreshToken = (payload) => {
@@ -17,8 +25,13 @@ const generateRefreshToken = (payload) => {
   });
 };
 
+//it will return the payload
 const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  try {
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  } catch (error) {
+    throw ApiError.unauthorized("Invalid refresh token");
+  }
 };
 
 const generateResetToken = () => {

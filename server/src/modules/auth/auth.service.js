@@ -5,6 +5,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   generateResetToken,
+  verifyRefreshToken,
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
 // It's the model
@@ -49,7 +50,7 @@ const login = async ({ email, password }) => {
   //check if verified or not
 
   const user = await User.findOne({ email }).select("+password");
-  if (!user) throw ApiError.unauthorized("Invalied Email or password");
+  if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
   //somehow I will check password
 
@@ -77,4 +78,15 @@ const login = async ({ email, password }) => {
   };
 };
 
+const refresh = async (token) => {
+  //check token is availabe
+  if (!token) throw ApiError.unauthorized("Refresh token missing");
+
+  //verify refresh token & it returns payload
+  const decoded = verifyRefreshToken(token);
+
+  //find the specific user
+  const user = await User.findById(decoded._id).select("+refreshToken");
+  if (!user) throw ApiError.unauthorized("User not found");
+};
 export { register };
