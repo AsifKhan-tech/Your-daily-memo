@@ -60,9 +60,9 @@ const login = async ({ email, password }) => {
 
   //send tokens to the client
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
-  const refreshToken = generateRefreshToken(user._id);
+  const refreshToken = generateRefreshToken({ _id: user._id });
 
-  //store encrypted refreshToken of the specific user in DB
+  //store hashed refreshToken of the specific user in DB
   user.refreshToken = hashToken(refreshToken);
   await user.save({ validateBeforeSave: false }); //don't run DB validation
 
@@ -96,16 +96,14 @@ const refresh = async (token) => {
 
   //generate access and refresh tokens
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
-  const newRefreshToken = generateRefreshToken(user._id);
+  const newRefreshToken = generateRefreshToken({ id: user._id });
 
-  //store encrypted refreshToken of the specific user in DB
+  //store hashed refreshToken of the specific user in DB
   user.refreshToken = hashToken(newRefreshToken);
   await user.save({ validateBeforeSave: false }); //don't run DB validation
 
   //removing some fields and return
   const userObj = user.toObject();
-
-  delete userObj.password;
   delete userObj.refreshToken;
 
   return {
