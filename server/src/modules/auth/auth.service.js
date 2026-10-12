@@ -88,5 +88,31 @@ const refresh = async (token) => {
   //find the specific user
   const user = await User.findById(decoded._id).select("+refreshToken");
   if (!user) throw ApiError.unauthorized("User not found");
+
+  //check with stored hashed DB token
+  if (user.refreshToken !== hashToken(token)) {
+    throw ApiError.unauthorized("Invalid refresh token");
+  }
+
+  //generate access and refresh tokens
+  const accessToken = generateAccessToken({ id: user._id, role: user.role });
+  const newRefreshToken = generateRefreshToken(user._id);
+
+  //store encrypted refreshToken of the specific user in DB
+  user.refreshToken = hashToken(newRefreshToken);
+  await user.save({ validateBeforeSave: false }); //don't run DB validation
+
+  //removing some fields and return
+  const userObj = user.toObject();
+
+  delete userObj.password;
+  delete userObj.refreshToken;
+
+  return {
+    user: userObj,
+    accessToken,
+    refreshToken: newRefreshToken,
+  };
 };
-export { register };
+
+export { register, login, refresh };
