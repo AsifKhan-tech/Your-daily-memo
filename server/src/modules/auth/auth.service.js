@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+
 import ApiError from "../../common/utils/api-error.js";
 import {
   generateAccessToken,
@@ -6,6 +8,10 @@ import {
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
 // It's the model
+
+//utiliy to hash the data
+const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
 
 const register = async ({ name, email, password, role = "user" }) => {
   // check in DB if user already exists or not
@@ -51,9 +57,24 @@ const login = async ({ email, password }) => {
     throw ApiError.forbidden("Please verify your email before login");
   }
 
-  //send tokens
+  //send tokens to the client
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
   const refreshToken = generateRefreshToken(user._id);
+
+  //store encrypted refreshToken of the specific user in DB
+  user.refreshToken = hashToken(refreshToken);
+  await user.save({ validateBeforeSave: false }); //don't run DB validation
+
+  const userObj = user.toObject();
+
+  delete userObj.password;
+  delete userObj.refreshToken;
+
+  return {
+    user: userObj,
+    accessToken,
+    refreshToken,
+  };
 };
 
 export { register };
