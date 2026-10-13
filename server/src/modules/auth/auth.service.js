@@ -41,6 +41,7 @@ const register = async ({ name, email, password, role = "user" }) => {
   delete userObject.password;
   delete userObject.verificationToken;
 
+  console.log("User registered");
   return userObject;
 };
 
@@ -128,6 +129,7 @@ const logout = async (userId) => {
 };
 
 const forgotPassword = async (email) => {
+  //find specific user with the email
   const user = await User.findOne({ email });
   if (!user) throw ApiError.notFound("No account found with this email");
 };
