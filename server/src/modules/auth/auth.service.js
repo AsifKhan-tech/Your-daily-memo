@@ -16,14 +16,13 @@ const hashToken = (token) =>
 
 const register = async ({ name, email, password, role = "user" }) => {
   // check in DB if user already exists or not
-
   const existingUser = await User.findOne({ email });
   if (existingUser) throw ApiError.conflict("email already exists");
 
-  //? Give token bcz user is registering, hashedToken will keep in DB
-
+  // create tokens for user and server
   const { rawToken, hashedToken } = generateResetToken();
 
+  // store user in DB with hashedToken to check if(rawToken === hashedToken) for email verification
   const user = await User.create({
     name: name,
     email: email,
@@ -31,12 +30,11 @@ const register = async ({ name, email, password, role = "user" }) => {
     role: role,
     verificationToken: hashedToken,
   });
-
   console.log("Stored user: ", user);
 
-  // TODO: send an email to the user with a token: rawToken
+  // TODO: send an email to the user with a token: rawToken for varify the email
 
-  //? When you need not return some fields
+  // When you need not return some fields
   const userObject = user.toObject();
   delete userObject.password;
   delete userObject.verificationToken;
@@ -55,11 +53,12 @@ const login = async ({ email, password }) => {
 
   //somehow I will check password
 
+  //if isVerified: false, email will not send
   if (!user.isVerified) {
     throw ApiError.forbidden("Please verify your email before login");
   }
 
-  //send tokens to the client
+  //generate tokens for sending to the client
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
   const refreshToken = generateRefreshToken({ _id: user._id });
 
@@ -122,6 +121,38 @@ const logout = async (userId) => {
   */
 
   await User.findByIdAndUpdate(userId, { refreshToken: null });
+};
+
+const verifyEmail = async (token) => {
+  //trim and check the token
+  const trimToken = String(token).trim();
+  if (!trimToken) throw ApiError.badRequest("Invalid token");
+
+  //hash the user token to compare with server token
+  const hashedToken = hashToken(trimToken);
+
+  //find the user in DB with this token
+  const user = await User.findOne({ verificationToken: hashedToken });
+
+  //if user not found in DB
+  if (!user) throw ApiError.badRequest("Invalid token");
+
+  //update isVerified field and remove verification token
+  const updatedUser = await User.findByIdAndUpdate(
+    user._id,
+    {
+      $set: { isVerified: true },
+      $unset: { verificationToken: 1 },
+    },
+    {
+      new: true, //returns the updated object
+    },
+  );
+
+  const userObj = updatedUser.toObject();
+  delete userObj.verificationToken;
+
+  return { message: "Email verified successfully" };
 };
 
 const forgotPassword = async (email) => {
