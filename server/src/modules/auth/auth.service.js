@@ -157,8 +157,28 @@ const verifyEmail = async (token) => {
 };
 
 const forgotPassword = async (email) => {
-  //find specific user with the email
+  /**
+   * find specific user with the email
+   * check in DB for the given email
+   * verify the email existance in DB
+   */
   const user = await User.findOne({ email });
   if (!user) throw ApiError.notFound("No account found with this email");
+
+  /**
+   * create tokens
+   * save resetPasswordToken it will hashedToken in DB
+   * set resetPasswordToken expiry
+   * save the user
+   */
+
+  const { rawToken, hashedToken } = generateResetToken();
+  user.resetPasswordToken = hashedToken;
+  user.resetPasswordExpiry = Date.now() + 15 * 60 * 1000;
+  await user.save({ validateBeforeSave: false });
+
+  /**
+   * send the email with the rawToken
+   */
 };
 export { register, login, refresh, logout, forgotPassword, verifyEmail };
