@@ -72,11 +72,7 @@ const login = async ({ email, password }) => {
   delete userObj.password;
   delete userObj.refreshToken;
 
-  return {
-    user: userObj,
-    accessToken,
-    refreshToken,
-  };
+  return { user: userObj, accessToken, refreshToken };
 };
 
 const refresh = async (token) => {
