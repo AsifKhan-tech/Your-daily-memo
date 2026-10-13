@@ -124,35 +124,36 @@ const logout = async (userId) => {
 };
 
 const verifyEmail = async (token) => {
-  //trim and check the token
-  const trimToken = String(token).trim();
-  if (!trimToken) throw ApiError.badRequest("Invalid token");
+  // token should be a string & not empty after trimming
+  if (typeof token !== "string" || !token.trim()) {
+    throw ApiError.badRequest("Invalid token");
+  }
 
-  //hash the user token to compare with server token
+  // clean the token
+  const trimToken = token.trim();
+
+  //hash the user token to compare with stored hashed token
   const hashedToken = hashToken(trimToken);
 
-  //find the user in DB with this token
+  //find the user in DB with this token and compare too with stored hashed token
   const user = await User.findOne({ verificationToken: hashedToken });
 
   //if user not found in DB
-  if (!user) throw ApiError.badRequest("Invalid token");
+  if (!user) throw ApiError.badRequest("Invalid or expired token");
 
   //update isVerified field and remove verification token
   const updatedUser = await User.findByIdAndUpdate(
     user._id,
     {
       $set: { isVerified: true },
-      $unset: { verificationToken: 1 },
+      $unset: { verificationToken },
     },
     {
       new: true, //returns the updated object
     },
   );
 
-  const userObj = updatedUser.toObject();
-  delete userObj.verificationToken;
-
-  return { message: "Email verified successfully" };
+  return { message: "Email verified successfully", user: updatedUser };
 };
 
 const forgotPassword = async (email) => {
