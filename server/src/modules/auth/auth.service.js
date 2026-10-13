@@ -161,4 +161,4 @@ const forgotPassword = async (email) => {
   const user = await User.findOne({ email });
   if (!user) throw ApiError.notFound("No account found with this email");
 };
-export { register, login, refresh, logout, forgotPassword };
+export { register, login, refresh, logout, forgotPassword, verifyEmail };
