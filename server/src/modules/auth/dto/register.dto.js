@@ -2,7 +2,7 @@ import Joi from "joi";
 
 import Basedto from "../../../common/dto/base.dto.js";
 
-class Registerdto extends Basedto {
+class RegisterDto extends Basedto {
   static schema = Joi.object({
     name: Joi.string().trim().min(2).max(50).required(),
     email: Joi.string().email().min(3).max(254).lowercase().required(),
@@ -14,4 +14,4 @@ class Registerdto extends Basedto {
     role: Joi.string().valid("student", "teacher", "user").default("user"),
   });
 }
-export default Registerdto;
+export default RegisterDto;

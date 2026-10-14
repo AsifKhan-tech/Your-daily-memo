@@ -29,6 +29,13 @@ const login = async (req, res) => {
   Apiresponse.ok(res, "User login successfully", { user, accessToken });
 };
 
-const logout = async (req, res) => {};
+const logout = async (req, res) => {
+  //extract user's id
+  await authService.logout(req.user._id);
+  //clear cookie
+  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken");
+  Apiresponse.ok(res, "logout successfully");
+};
 
 export { register, login, logout };

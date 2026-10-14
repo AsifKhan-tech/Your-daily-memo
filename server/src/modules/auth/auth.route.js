@@ -2,14 +2,16 @@ import { Router } from "express";
 
 import * as authController from "./auth.controller.js";
 import validateMiddlewareFunction from "../../common/middleware/validate.middleware.js";
-import Registerdto from "./dto/register.dto.js";
+import RegisterDto from "./dto/register.dto.js";
+import LoginDto from "./dto/login.dto.js";
+import { authenticate } from "./auth.middleware.js";
 // This class actually validate the reqest
 
 const router = Router();
 
 router.post(
   "/register",
-  validateMiddlewareFunction(Registerdto),
+  validateMiddlewareFunction(RegisterDto),
   authController.register,
 );
 
@@ -18,6 +20,8 @@ router.post(
   validateMiddlewareFunction(LoginDto),
   authController.login,
 );
+
+router.post("/logout", authenticate, authController.logout);
 
 router.get("/get-me", authenticate, authController.getMe);
 
