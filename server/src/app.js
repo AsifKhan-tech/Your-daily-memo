@@ -9,10 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Mount routes into app
-
-// Express ko bata rahe hain: "Jab bhi koi request '/api/v1/auth' se shuru ho,
-// toh usko 'authRoutes' wale Router ke paas bhej do."
+/**
+ * Mount routes into app
+ * Signaling to the express: "when any request start with '/api/v1/auth' ,
+ * send/route it to the 'authRoutes' router."
+ */
 app.use("/api/v1/auth", authRoutes);
 
 export default app;
