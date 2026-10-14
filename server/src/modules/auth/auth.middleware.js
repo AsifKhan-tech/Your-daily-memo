@@ -1,6 +1,8 @@
 import ApiError from "../../common/utils/api-error.js";
 import User from "./auth.model.js";
+import { verifyAccessToken } from "../../common/utils/tokens.js";
 
+// authenticate the user
 const authenticate = async (req, res, next) => {
   // extract token from the request
   let token;
@@ -8,14 +10,14 @@ const authenticate = async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  if (!token) ApiError.unauthorized("Not authenticated");
+  if (!token) throw ApiError.unauthorized("Not authenticated");
 
   //verify the access token and search the specific user
   const decoded = verifyAccessToken(token);
   const user = await User.findById(decoded._id);
-  if (!user) ApiError.unauthorized("User no longer exists");
+  if (!user) throw ApiError.unauthorized("User no longer exists");
 
-  // Add user in the request object
+  // Add user in the request object so that controller use this user without DB query
   req.user = {
     id: user._id,
     role: user.role,
@@ -26,6 +28,7 @@ const authenticate = async (req, res, next) => {
   next();
 };
 
+// authorize the user
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

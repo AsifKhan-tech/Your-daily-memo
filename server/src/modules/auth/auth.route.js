@@ -13,4 +13,12 @@ router.post(
   authController.register,
 );
 
+router.post(
+  "/login",
+  validateMiddlewareFunction(LoginDto),
+  authController.login,
+);
+
+router.get("/get-me", authenticate, authController.getMe);
+
 export default router;
