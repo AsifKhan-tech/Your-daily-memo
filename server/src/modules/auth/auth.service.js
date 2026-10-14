@@ -52,7 +52,8 @@ const login = async ({ email, password }) => {
   if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
   //somehow I will check password
-  user.comparePassword(req.body.password);
+  const isMatch = user.comparePassword(password);
+  if (!isMatch) ApiError.unauthorized("Invalid Email or password");
 
   //if isVerified: false, email will not send
   if (!user.isVerified) {
