@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// securly hash the user's password before storing it.
 userSchema.pre("save", async function (next) {
   /**
    * If the password field is unchanged, skip hashing and proceed to the next middleware.
@@ -59,4 +60,14 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+/**
+ * Create an instance method to securely compare a given plain-text password
+ * with the user's stored hashed password in the database.
+ *
+ * Returns true if passwords match, false otherwise.
+ */
+userSchema.methods.comparePassword = async function (userPassword) {
+  // compare user password and stored hash password
+  return await bcrypt.compare(userPassword, this.password);
+};
 export default mongoose.model("User", userSchema);
