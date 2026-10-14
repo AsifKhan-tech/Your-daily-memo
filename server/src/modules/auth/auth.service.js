@@ -184,6 +184,24 @@ const forgotPassword = async (email) => {
    */
 };
 
+const resetPassword = async (token, newPassword) => {
+  //hash the user's token
+  const hashedToken = hashToken(token);
+
+  //find the specific user with the help of token
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpiry: { $gt: Date.now() },
+  }).select("+resetPasswordToken +resetPasswordExpiry");
+  if (!user) throw ApiError.badRequest("Invalid reset token");
+
+  //save these new values in the user
+  user.password = newPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiry = undefined;
+  await user.save({ validateBeforeSave: false });
+};
+
 const profile = async (userId) => {
   //find the specific user with the user's id and return
   const user = await User.findById(userId);
@@ -192,10 +210,11 @@ const profile = async (userId) => {
 };
 export {
   register,
+  verifyEmail,
   login,
   refresh,
   logout,
   forgotPassword,
-  verifyEmail,
+  resetPassword,
   profile,
 };
