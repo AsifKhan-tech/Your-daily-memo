@@ -4,12 +4,11 @@ import { verifyAccessToken } from "../../common/utils/tokens.js";
 
 // authenticate the user
 const authenticate = async (req, res, next) => {
-  // extract token from the request
-  let token;
-  if (req.headers.authorization?.startsWith("Bearer")) {
+  // extract token from cookies OR request headers
+  let token = req.cookies?.accessToken;
+  if (!token && req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
   }
-
   if (!token) throw ApiError.unauthorized("Not authenticated");
 
   //verify the access token and search the specific user

@@ -1,10 +1,13 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+
 import authRoutes from "./modules/auth/auth.route.js";
 
 const app = express();
 
 // Adding middleware to parse JSON (req.body) data
 app.use(express.json());
+app.use(cookieParser());
 
 // Mount routes into app
 

@@ -12,8 +12,25 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const user = await authService.login(req.body);
-    Apiresponse.ok(res, "Login successfully", user);
+    const { user, accessToken, refreshToken } = await authService.login(
+      req.body,
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 15 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    Apiresponse.ok(res, "User login successfully", { user, accessToken });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
