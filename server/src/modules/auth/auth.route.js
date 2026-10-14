@@ -23,6 +23,6 @@ router.post(
 
 router.post("/logout", authenticate, authController.logout);
 
-router.get("/get-me", authenticate, authController.getMe);
+router.get("/profile", authenticate, authController.profile);
 
 export default router;

@@ -183,4 +183,19 @@ const forgotPassword = async (email) => {
    * send the email with the rawToken
    */
 };
-export { register, login, refresh, logout, forgotPassword, verifyEmail };
+
+const profile = async (userId) => {
+  //find the specific user with the user's id and return
+  const user = await User.findById(userId);
+  if (!user) throw ApiError.notFound("User not found");
+  return user;
+};
+export {
+  register,
+  login,
+  refresh,
+  logout,
+  forgotPassword,
+  verifyEmail,
+  profile,
+};
