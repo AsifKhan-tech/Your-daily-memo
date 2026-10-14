@@ -47,10 +47,14 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  // if password isn't modifyin
+  /**
+   * If the password field is unchanged, skip hashing and proceed to the next middleware.
+   */
   if (!this.isModified("password")) return next();
 
-  // if password is modifying, hash it
+  /**
+   * Hash the newly updated password with 12 salt rounds before saving to the DB.
+   */
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
