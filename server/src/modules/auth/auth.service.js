@@ -51,7 +51,7 @@ const login = async ({ email, password }) => {
   const user = await User.findOne({ email }).select("+password");
   if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
-  //somehow I will check password
+  //check password
   const isMatch = user.comparePassword(password);
   if (!isMatch) ApiError.unauthorized("Invalid Email or password");
 
