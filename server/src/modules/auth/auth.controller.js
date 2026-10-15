@@ -47,7 +47,11 @@ const login = async (req, res) => {
     sameSite: "strict",
   });
 
-  Apiresponse.ok(res, "User login successfully", { user, accessToken });
+  Apiresponse.ok(res, "User login successfully", {
+    user,
+    accessToken,
+    refreshToken,
+  });
 };
 
 const logout = async (req, res) => {
