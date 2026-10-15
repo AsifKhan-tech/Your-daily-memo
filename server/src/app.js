@@ -6,7 +6,12 @@ import authRoutes from "./modules/auth/auth.route.js";
 const app = express();
 
 // Adding middleware to parse JSON (req.body) data
-app.use(express.json());
+app.use(express.json({ limit: "16kb" }));
+
+/**
+ * It will parse client's cookies and wrap them in 'req.cookies'
+ * when a client do request, the browser automatically send cookies with the request
+ */
 app.use(cookieParser());
 
 /**

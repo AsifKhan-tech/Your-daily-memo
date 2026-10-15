@@ -9,7 +9,17 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
-  //sending refresh token
+  /**
+   * sending refresh token in cookie
+   * frontend cann't read the cookie because 'httpOnly: true'
+   * It prevents the XSS(Cross-Site scripting) attack
+   *
+   * secure: process.env.NODE_ENV === "production"
+   * This cookie will only transfer on HTTPS connections in 'production environment'
+   *
+   * sameSite: "strict" => Ensures that the cookie is sent on only with requests to your own domain.
+   * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
+   */
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
