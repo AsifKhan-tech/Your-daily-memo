@@ -60,7 +60,7 @@ const logout = async (req, res) => {
   //clear cookie
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
-  Apiresponse.ok(res, "logout successfully");
+  Apiresponse.ok(res, "Logout successfully");
 };
 
 const profile = async (req, res) => {
