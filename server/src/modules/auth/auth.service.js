@@ -141,7 +141,7 @@ const verifyEmail = async (token) => {
   const user = await User.findOneAndUpdate(
     { verificationToken: hashedToken },
     { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
-    { new: true }, //returns the updated object
+    { new: true }, //with this 'flag true' DB returns the updated object
   );
 
   //if user not found in DB
