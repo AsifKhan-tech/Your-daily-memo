@@ -145,7 +145,7 @@ const verifyEmail = async (token) => {
     user._id,
     {
       $set: { isVerified: true },
-      $unset: { verificationToken },
+      $unset: { verificationToken: "" },
     },
     {
       new: true, //returns the updated object
