@@ -134,25 +134,21 @@ const verifyEmail = async (token) => {
   //hash the user token to compare with stored hashed token
   const hashedToken = hashToken(token.trim());
 
-  //find the user in DB with this token and compare too with stored hashed token
-  const user = await User.findOne({ verificationToken: hashedToken });
+  /**
+   * find the user in DB with this hashed token and compare it too with stored hashed token
+   * update field 'isVerified: true' and remove verification token
+   */
+  const user = await User.findOneAndUpdate(
+    { verificationToken: hashedToken },
+    { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
+    { new: true }, //returns the updated object
+  );
 
   //if user not found in DB
   if (!user) throw ApiError.badRequest("Invalid or expired token");
 
-  //update isVerified field and remove verification token
-  const updatedUser = await User.findByIdAndUpdate(
-    user._id,
-    {
-      $set: { isVerified: true },
-      $unset: { verificationToken: 1 },
-    },
-    {
-      new: true, //returns the updated object
-    },
-  );
-
-  return { message: "Email verified successfully", user: updatedUser };
+  //return the response
+  return { message: "Email verified successfully", user };
 };
 
 const forgotPassword = async (email) => {
