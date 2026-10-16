@@ -53,7 +53,7 @@ const login = async ({ email, password }) => {
 
   //check password
   const isMatch = user.comparePassword(password);
-  if (!isMatch) ApiError.unauthorized("Invalid Email or password");
+  if (!isMatch) throw ApiError.unauthorized("Invalid Email or password");
 
   //if isVerified: false, email will not send
   if (!user.isVerified) {
@@ -131,11 +131,8 @@ const verifyEmail = async (token) => {
     throw ApiError.badRequest("Invalid token");
   }
 
-  // clean the token
-  const trimToken = token.trim();
-
   //hash the user token to compare with stored hashed token
-  const hashedToken = hashToken(trimToken);
+  const hashedToken = hashToken(trimToken.trim());
 
   //find the user in DB with this token and compare too with stored hashed token
   const user = await User.findOne({ verificationToken: hashedToken });
@@ -185,21 +182,29 @@ const forgotPassword = async (email) => {
 };
 
 const resetPassword = async (token, newPassword) => {
+  //checking if the user has provided token
+  if (typeof token !== "string" || !token.trim()) {
+    throw ApiError.badRequest("Invalid token");
+  }
+
   //hash the user's token
-  const hashedToken = hashToken(token);
+  const hashedToken = hashToken(token.trim());
 
   //find the specific user with the help of token
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
-    resetPasswordExpiry: { $gt: Date.now() },
-  }).select("+resetPasswordToken +resetPasswordExpiry");
+    resetPasswordExpiry: { $gt: Date.now() }, //checks token's expiration time > now
+  });
   if (!user) throw ApiError.badRequest("Invalid reset token");
 
-  //save these new values in the user
+  //save password to the user "pre" hook will hash it
   user.password = newPassword;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpiry = undefined;
-  await user.save({ validateBeforeSave: false });
+
+  // terminate the seesion on password reset
+  user.resetPasswordToken = null;
+  user.resetPasswordExpiry = null;
+  user.refreshToken = null;
+  await user.save();
 };
 
 const profile = async (userId) => {
