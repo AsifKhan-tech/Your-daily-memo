@@ -56,7 +56,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   //extract user's id
-  await authService.logout(req.user._id);
+  await authService.logout(req.user.id);
   //clear cookie
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
@@ -64,7 +64,7 @@ const logout = async (req, res) => {
 };
 
 const profile = async (req, res) => {
-  const user = await authService.profile(req.user._id);
+  const user = await authService.profile(req.user.id);
   Apiresponse.ok(res, "User profile", user);
 };
 

@@ -13,7 +13,7 @@ const authenticate = async (req, res, next) => {
 
   //verify the access token and search the specific user
   const decoded = verifyAccessToken(token);
-  const user = await User.findById(decoded._id);
+  const user = await User.findById(decoded.id);
   if (!user) throw ApiError.unauthorized("User no longer exists");
 
   // Add user in the request object so that controller use this user without DB query

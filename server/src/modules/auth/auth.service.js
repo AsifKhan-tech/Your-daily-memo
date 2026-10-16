@@ -62,7 +62,7 @@ const login = async ({ email, password }) => {
 
   //generate tokens for sending to the client
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
-  const refreshToken = generateRefreshToken({ _id: user._id });
+  const refreshToken = generateRefreshToken({ id: user._id });
 
   //store hashed refreshToken of the specific user in DB
   user.refreshToken = hashToken(refreshToken);
@@ -84,7 +84,7 @@ const refresh = async (token) => {
   const decoded = verifyRefreshToken(token);
 
   //find the specific user
-  const user = await User.findById(decoded._id).select("+refreshToken");
+  const user = await User.findById(decoded.id).select("+refreshToken");
   if (!user) throw ApiError.unauthorized("User not found");
 
   //check with stored hashed DB token
@@ -132,7 +132,7 @@ const verifyEmail = async (token) => {
   }
 
   //hash the user token to compare with stored hashed token
-  const hashedToken = hashToken(trimToken.trim());
+  const hashedToken = hashToken(token.trim());
 
   //find the user in DB with this token and compare too with stored hashed token
   const user = await User.findOne({ verificationToken: hashedToken });
@@ -145,7 +145,7 @@ const verifyEmail = async (token) => {
     user._id,
     {
       $set: { isVerified: true },
-      $unset: { verificationToken: "" },
+      $unset: { verificationToken: 1 },
     },
     {
       new: true, //returns the updated object
