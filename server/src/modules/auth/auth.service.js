@@ -52,7 +52,7 @@ const login = async ({ email, password }) => {
   if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
   //check password
-  const isMatch = user.comparePassword(password);
+  const isMatch = await user.comparePassword(password);
   if (!isMatch) throw ApiError.unauthorized("Invalid Email or password");
 
   //if isVerified: false, email will not send
