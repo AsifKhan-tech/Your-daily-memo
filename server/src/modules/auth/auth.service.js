@@ -8,6 +8,7 @@ import {
   verifyRefreshToken,
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
+import { sendVerificationEmail } from "../../common/config/email.js";
 // It's the model(schema)
 
 //utiliy to hash the data
@@ -32,7 +33,13 @@ const register = async ({ name, email, password, role = "user" }) => {
   });
   console.log("Stored user: ", user);
 
-  // TODO: send an email to the user with a token: rawToken for varify the email
+  // send an email to the user with a token: rawToken for varify the email
+
+  try {
+    await sendVerificationEmail(email, rawToken);
+  } catch (error) {
+    console.error(error);
+  }
 
   // When you need not return some fields
   const userObject = user.toObject();
@@ -142,7 +149,7 @@ const verifyEmail = async (token) => {
     { verificationToken: hashedToken },
     { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
     { new: true }, //with this 'flag true' DB returns the updated object
-  );
+  ).select("+verificationToken");
 
   //if user not found in DB
   if (!user) throw ApiError.badRequest("Invalid or expired token");

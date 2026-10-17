@@ -7,6 +7,7 @@ const app = express();
 
 // Adding middleware to parse JSON (req.body) data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * It will parse client's cookies and wrap them in 'req.cookies'
