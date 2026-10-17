@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
 
-// Create a transporter using SMTP
+// SMTP transporter — works with Mailtrap, Gmail, SendGrid, or any SMTP provider
 const transporter = nodemailer.createTransport({
   // createTransport: return a transporter instance
 
   host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
+  port: Number(process.env.SMTP_PORT) || 587,
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
 
   auth: {
@@ -47,10 +47,10 @@ try {
  
  */
 
-const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async (to, subject, html) => {
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM_EMAIL, // sender address
+      from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}`, // sender address
       to, // list of recipients
       subject, // subject line
       html, // HTML body
@@ -63,14 +63,20 @@ const sendEmail = async ({ to, subject, html }) => {
   }
 };
 
-const sendVerificationEmail = async ({ email, token }) => {
+const sendVerificationEmail = async (email, token) => {
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM_EMAIL, // sender address
-      email, // list of recipients
-      subject, // subject line
-      html, // HTML body
-    });
+    const url = `${process.env.CLIENT_URL}/verify-email/${token}`;
+
+    await transporter.sendMail(
+      email,
+      "Verify your email",
+      `<h2>Welcome!</h2>
+      <p>Click 
+      <a href="${url}">here</a>
+       to verify your email.
+       </p>
+      `,
+    );
     console.log("Message sent: %s", info.messageId);
     // Preview URL is only available when using an Ethereal test account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));

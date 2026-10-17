@@ -8,8 +8,8 @@ import {
   verifyRefreshToken,
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
-import { sendVerificationEmail } from "../../common/config/email.js";
 // It's the model(schema)
+import { sendVerificationEmail } from "../../common/config/email.js";
 
 //utiliy to hash the data
 const hashToken = (token) =>
