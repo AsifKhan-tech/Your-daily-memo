@@ -47,6 +47,7 @@ try {
  
  */
 
+//send email
 const sendEmail = async (to, subject, html) => {
   try {
     await transporter.sendMail({
@@ -63,11 +64,12 @@ const sendEmail = async (to, subject, html) => {
   }
 };
 
+//send verification email
 const sendVerificationEmail = async (email, token) => {
   try {
     const url = `${process.env.CLIENT_URL}/verify-email/${token}`;
 
-    await transporter.sendMail(
+    await sendEmail(
       email,
       "Verify your email",
       `<h2>Welcome!</h2>
@@ -84,4 +86,29 @@ const sendVerificationEmail = async (email, token) => {
     console.error("Error while sending mail:", error);
   }
 };
-export { sendEmail, sendVerificationEmail };
+
+//send reset password email
+const sendResetPasswordEmail = async (email, token) => {
+  try {
+    const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
+    await sendEmail(
+      email,
+      "Reset your password",
+      `<h2>Password reset!</h2>
+      <p>Click 
+      <a href="${url}">here</a>
+       to reset your password.
+       This link will expire in 15 minutes
+       </p>
+      `,
+    );
+    console.log("Message sent: %s", info.messageId);
+    // Preview URL is only available when using an Ethereal test account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error("Error while sending mail:", error);
+  }
+};
+
+export { sendVerificationEmail, sendResetPasswordEmail };
