@@ -21,8 +21,8 @@ router.post(
   authController.login,
 );
 
+router.get("/verify-email/:token", authController.verifyEmail);
 router.post("/logout", authenticate, authController.logout);
-
 router.get("/profile", authenticate, authController.profile);
 
 export default router;

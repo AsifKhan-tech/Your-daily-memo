@@ -149,7 +149,7 @@ const verifyEmail = async (token) => {
     { verificationToken: hashedToken },
     { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
     { new: true }, //with this 'flag true' DB returns the updated object
-  ).select("+verificationToken");
+  );
 
   //if user not found in DB
   if (!user) throw ApiError.badRequest("Invalid or expired token");

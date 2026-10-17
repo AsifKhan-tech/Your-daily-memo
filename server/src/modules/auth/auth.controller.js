@@ -6,6 +6,10 @@ const register = async (req, res) => {
   Apiresponse.created(res, "Registration successfull", user);
 };
 
+const verifyEmail = async (req, res) => {
+  await authService.verifyEmail(req.user.params);
+};
+
 const login = async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
@@ -68,4 +72,4 @@ const profile = async (req, res) => {
   Apiresponse.ok(res, "User profile", user);
 };
 
-export { register, login, logout, profile };
+export { register, verifyEmail, login, logout, profile };
