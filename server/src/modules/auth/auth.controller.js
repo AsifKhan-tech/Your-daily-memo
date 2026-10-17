@@ -6,10 +6,6 @@ const register = async (req, res) => {
   Apiresponse.created(res, "Registration successfull", user);
 };
 
-const verifyEmail = async (req, res) => {
-  await authService.verifyEmail(req.user.params);
-};
-
 const login = async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
@@ -58,6 +54,13 @@ const login = async (req, res) => {
   });
 };
 
+const refreshToken = async (req, res) => {
+  const token = req.cookies?.refreshToken;
+
+  const { accessToken } = authService.refresh(token);
+  Apiresponse.ok(res, "Refreshed the token", { accessToken });
+};
+
 const logout = async (req, res) => {
   //extract user's id
   await authService.logout(req.user.id);
@@ -67,9 +70,33 @@ const logout = async (req, res) => {
   Apiresponse.ok(res, "Logout successfully");
 };
 
+const verifyEmail = async (req, res) => {
+  await authService.verifyEmail(req.params.token);
+  Apiresponse.ok(res, "email verified successfully");
+};
+
+const forgotPassword = async (req, res) => {
+  await authService.forgotPassword(req.body.email);
+  Apiresponse.ok(res, "password reset email sent");
+};
+
+const resetPassword = async (req, res) => {
+  await authService.resetPassword(req.params.token, req.body.password);
+  Apiresponse.ok(res, "password reset successfully");
+};
+
 const profile = async (req, res) => {
   const user = await authService.profile(req.user.id);
   Apiresponse.ok(res, "User profile", user);
 };
 
-export { register, verifyEmail, login, logout, profile };
+export {
+  register,
+  login,
+  refreshToken,
+  logout,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
+  profile,
+};

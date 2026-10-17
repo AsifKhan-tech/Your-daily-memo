@@ -9,7 +9,10 @@ import {
 } from "../../common/utils/tokens.js";
 import User from "./auth.model.js";
 // It's the model(schema)
-import { sendVerificationEmail } from "../../common/config/email.js";
+import {
+  sendResetPasswordEmail,
+  sendVerificationEmail,
+} from "../../common/config/email.js";
 
 //utiliy to hash the data
 const hashToken = (token) =>
@@ -38,7 +41,7 @@ const register = async ({ name, email, password, role = "user" }) => {
   try {
     await sendVerificationEmail(email, rawToken);
   } catch (error) {
-    console.error(error);
+    console.error("Register user:", error);
   }
 
   // When you need not return some fields
@@ -182,6 +185,12 @@ const forgotPassword = async (email) => {
   /**
    * send the email with the rawToken
    */
+
+  try {
+    await sendResetPasswordEmail(email, rawToken);
+  } catch (error) {
+    console.error("forgot password: ", error);
+  }
 };
 
 const resetPassword = async (token, newPassword) => {
