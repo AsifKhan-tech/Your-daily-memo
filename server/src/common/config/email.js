@@ -79,9 +79,6 @@ const sendVerificationEmail = async (email, token) => {
        </p>
       `,
     );
-    console.log("Message sent: %s", info.messageId);
-    // Preview URL is only available when using an Ethereal test account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {
     console.error("Error while sending mail:", error);
   }
