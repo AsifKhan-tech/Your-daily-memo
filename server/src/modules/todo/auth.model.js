@@ -6,6 +6,8 @@ const todoSchema = new mongoose.Schema(
       type: String,
       trim: true,
       require: [true, "Todo is required"],
+      minlength: 1,
+      maxlength: 200,
     },
   },
   { timestamps: true },
