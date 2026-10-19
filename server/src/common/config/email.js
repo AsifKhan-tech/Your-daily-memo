@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
 
-// SMTP transporter — works with Mailtrap, Gmail, SendGrid, or any SMTP provider
+/**
+ * nodemailer is the SMTP client
+ * SMTP transporter — works with Mailtrap, Gmail, SendGrid, or any SMTP provider
+ *
+ */
+
 const transporter = nodemailer.createTransport({
   // createTransport: return a transporter instance
 
