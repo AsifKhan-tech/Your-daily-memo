@@ -5,6 +5,7 @@ const todoSchema = new mongoose.Schema(
     todoValue: {
       type: String,
       trim: true,
+      require: [true, "Todo is required"],
     },
   },
   { timestamps: true },
