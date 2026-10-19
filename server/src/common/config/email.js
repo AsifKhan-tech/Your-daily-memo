@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 
 /**
  * nodemailer is the SMTP client
+ * It helps to forward the emails to the SMTP server
  * SMTP transporter — works with Mailtrap, Gmail, SendGrid, or any SMTP provider
  *
  */
