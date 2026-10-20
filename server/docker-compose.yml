@@ -12,11 +12,11 @@ services:
       - mongo_data:/data/db
 
   mongo-express:
-    image: mongo-express:1.0
+    image: mongo-express:latest
     container_name: daily_memo_mongo_express
     restart: unless-stopped
     environment:
-      - ME_CONFIG_MONGODB_URI=process.env.MONGODB_URI || "mongodb://admin:password@mongodb:27017/"
+      - ME_CONFIG_MONGODB_URL="mongodb://admin:password@mongodb:27017/"
     ports:
       - "8081:8081"
     depends_on:
