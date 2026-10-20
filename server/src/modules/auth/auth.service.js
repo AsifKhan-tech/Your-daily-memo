@@ -41,6 +41,7 @@ const register = async ({ name, email, password, role = "user" }) => {
   try {
     await sendVerificationEmail(email, rawToken);
   } catch (error) {
+    //catch error that was thrown when email couldn't send
     console.error("Register user:", error);
     /**
      * If the email failed to reach to the user,
