@@ -1,8 +1,10 @@
 import nodemailer from "nodemailer";
 
 /**
- * nodemailer is the SMTP client
- * It helps to forward the emails to the SMTP server
+ * nodemailer is a third party library for Node.js app -
+ * that communicate with SMTP servers(Gmail,yahoo, mailtrap) and send emails
+ *
+ *
  * SMTP transporter — works with Mailtrap, Gmail, SendGrid, or any SMTP provider
  *
  */
