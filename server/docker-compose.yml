@@ -16,11 +16,11 @@ services:
     container_name: daily_memo_mongo_express
     restart: unless-stopped
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
-      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_URI=process.env.MONGODB_URI || "mongodb://admin:password@mongodb:27017/"
     ports:
       - "8081:8081"
+    depends_on:
+      - mongodb
 
 volumes:
   mongo_data:
