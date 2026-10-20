@@ -56,17 +56,19 @@ try {
 //send email
 const sendEmail = async (to, subject, html) => {
   try {
-    await transporter.sendMail({
-      from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}`, // sender address
+    const info = await transporter.sendMail({
+      from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}>`, // sender address
       to, // list of recipients
       subject, // subject line
       html, // HTML body
     });
-    console.log("Message sent: %s", info.messageId);
+    console.log("Info result: ", info);
+    // console.log("Message sent: %s", info.messageId);
     // Preview URL is only available when using an Ethereal test account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {
     console.error("Error while sending mail:", error);
+    throw error;
   }
 };
 
@@ -87,6 +89,7 @@ const sendVerificationEmail = async (email, token) => {
     );
   } catch (error) {
     console.error("Error while sending mail:", error);
+    throw error;
   }
 };
 
@@ -108,6 +111,7 @@ const sendResetPasswordEmail = async (email, token) => {
     );
   } catch (error) {
     console.error("Error while sending mail:", error);
+    throw error;
   }
 };
 

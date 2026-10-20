@@ -46,7 +46,7 @@ const register = async ({ name, email, password, role = "user" }) => {
      * If the email failed to reach to the user,
      * delete the user from DB and give message
      */
-    await User.findByIdAndDelete({ id: user._id });
+    await User.findByIdAndDelete(user._id);
     throw ApiError.internal(
       "Failed to send the verification email. Please try again!",
     );
