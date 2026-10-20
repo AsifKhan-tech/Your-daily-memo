@@ -11,12 +11,13 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  # open mongo-express=> http://localhost:8081
   mongo-express:
     image: mongo-express:latest
     container_name: daily_memo_mongo_express
     restart: unless-stopped
     environment:
-      - ME_CONFIG_MONGODB_URL="mongodb://admin:password@mongodb:27017/"
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/
     ports:
       - "8081:8081"
     depends_on:
@@ -24,3 +25,6 @@ services:
 
 volumes:
   mongo_data:
+
+# docker compose logs -f mongo-express
+# when want to see the logs of the container => mongo-express
