@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node --watch server.js",
     "up": "docker compose up -d",
-    "down": "docker compose down",
+    "down": "docker compose down -v",
     "start": "docker compose start",
     "stop": "docker compose stop",
     "restart": "docker compose restart"
