@@ -26,6 +26,12 @@ class ApiError extends Error {
   static notFound(message = "account not found") {
     return new ApiError(404, message);
   }
+
+  static internal(
+    message = "Failed to send verification email. Please try again!",
+  ) {
+    return new ApiError(500, message);
+  }
 }
 
 export default ApiError;

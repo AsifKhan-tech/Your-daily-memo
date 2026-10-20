@@ -42,6 +42,14 @@ const register = async ({ name, email, password, role = "user" }) => {
     await sendVerificationEmail(email, rawToken);
   } catch (error) {
     console.error("Register user:", error);
+    /**
+     * If the email failed to reach to the user,
+     * delete the user from DB and give message
+     */
+    await User.findByIdAndDelete({ id: user._id });
+    throw ApiError.internal(
+      "Failed to send to verification email. Please try again!",
+    );
   }
 
   // When you need not return some fields
