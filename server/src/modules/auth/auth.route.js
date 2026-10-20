@@ -22,6 +22,12 @@ router.post(
 );
 
 router.post(
+  "/resend-verification",
+  validateMiddlewareFunction(ForgotPasswordDto), // using this because it validates email
+  authController.resendVerificationEmail,
+);
+
+router.post(
   "/login",
   validateMiddlewareFunction(LoginDto),
   authController.login,

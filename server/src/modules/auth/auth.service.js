@@ -48,7 +48,7 @@ const register = async ({ name, email, password, role = "user" }) => {
      */
     await User.findByIdAndDelete({ id: user._id });
     throw ApiError.internal(
-      "Failed to send to verification email. Please try again!",
+      "Failed to send the verification email. Please try again!",
     );
   }
 
@@ -233,6 +233,41 @@ const profile = async (userId) => {
   if (!user) throw ApiError.notFound("User not found");
   return user;
 };
+
+/**
+ *
+ * When email couldn't reach to the user to verify it's email,
+ * It can resend the verification email
+ */
+const resendVerificationEmail = async (email) => {
+  //find the user with specific email
+  const user = await User.findOne({ email });
+  if (!user) throw ApiError.notFound("Account not found");
+
+  //if already verified, give the error
+  if (user.isVerified) throw ApiError.badRequest("User already exists");
+
+  //generate reset tokens one give to the user
+  //and another one store in DB to compare the user's token
+  const { rawToken, hashedToken } = generateResetToken();
+
+  //store hashedToken in DB
+  user.verificationToken = hashedToken;
+  await user.save({ validateBeforeSave: false });
+
+  //resend the verification email
+
+  try {
+    await sendVerificationEmail(email, rawToken);
+  } catch (error) {
+    console.error("Resend verification: ", error);
+
+    throw ApiError.internal(
+      "Failed to send the verification email. Please try again!",
+    );
+  }
+};
+
 export {
   register,
   verifyEmail,
@@ -242,4 +277,5 @@ export {
   forgotPassword,
   resetPassword,
   profile,
+  resendVerificationEmail,
 };

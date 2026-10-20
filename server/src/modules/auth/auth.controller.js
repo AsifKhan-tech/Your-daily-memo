@@ -90,6 +90,11 @@ const profile = async (req, res) => {
   Apiresponse.ok(res, "User profile", user);
 };
 
+const resendVerificationEmail = async (req, res) => {
+  await authService.resendVerificationEmail(req.body.email);
+  Apiresponse.ok(res, "verification email resent successfully");
+};
+
 export {
   register,
   login,
@@ -99,4 +104,5 @@ export {
   forgotPassword,
   resetPassword,
   profile,
+  resendVerificationEmail,
 };
