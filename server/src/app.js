@@ -22,6 +22,12 @@ app.use(cookieParser());
  */
 app.use("/api/v1/auth", authRoutes);
 
+/**
+ * Global Catch-All (404 Fallback) Route.
+ *
+ * Intercepts all unmatched HTTP requests (GET, POST, PUT, etc.) for any undefined endpoint.
+ * Throws a 404 Not Found error, which is then automatically forwarded to the global error-handling middleware for a consistent JSON response.
+ */
 app.all("{*path}", (req, res) => {
   throw ApiError.notFound(`Route ${req.originalUrl} not found`);
 });
