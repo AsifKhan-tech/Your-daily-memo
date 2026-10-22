@@ -12,7 +12,7 @@ import User from "./auth.model.js";
 import {
   sendResetPasswordEmail,
   sendVerificationEmail,
-} from "../../common/config/email.js";
+} from "../../common/utils/email.js";
 
 //utiliy to hash the data
 const hashToken = (token) =>
