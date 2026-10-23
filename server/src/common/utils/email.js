@@ -1,5 +1,14 @@
 import nodemailer from "nodemailer";
 
+// IMPORT FILE SYSTEM TO READ HTML FILES
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Utility to get current directory path in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /**
  * nodemailer is a third party library for Node.js app -
  * that communicate with SMTP servers(Gmail,yahoo, mailtrap) and send emails
@@ -83,6 +92,19 @@ const sendVerificationEmail = async (email, token) => {
   try {
     const url = `${process.env.CLIENT_URL}/verify-email/${token}`;
 
+    // 1. Determine the path to the HTML template
+    const templatePath = path.join(__dirname, "templates", "verify-email.html");
+
+    // 2. Read the raw HTML file from disk
+    let htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
+    // 3. Inject dynamic data: Replace ALL instances of {{URL}} with the actual token URL
+    htmlTemplate = htmlTemplate.replaceAll("{{URL}}", url);
+
+    // 4. Send the email with the injected HTML
+    await sendEmail(email, "Verify your email", htmlTemplate);
+
+    /*
     await sendEmail(
       email,
       "Verify your email",
@@ -93,6 +115,7 @@ const sendVerificationEmail = async (email, token) => {
        </p>
       `,
     );
+    */
   } catch (error) {
     console.error("Error while sending mail:", error);
     throw error;
@@ -104,6 +127,20 @@ const sendResetPasswordEmail = async (email, token) => {
   try {
     const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
+    // Read the reset password template
+    const templatePath = path.join(
+      __dirname,
+      "templates",
+      "reset-password.html",
+    );
+    let htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
+    // Inject dynamic data
+    htmlTemplate = htmlTemplate.replaceAll("{{URL}}", url);
+
+    await sendEmail(email, "Reset your password", htmlTemplate);
+
+    /*
     await sendEmail(
       email,
       "Reset your password",
@@ -115,6 +152,7 @@ const sendResetPasswordEmail = async (email, token) => {
        </p>
       `,
     );
+    */
   } catch (error) {
     console.error("Error while sending mail:", error);
     throw error;
