@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./modules/auth/auth.route.js";
+import ApiError from "./common/utils/api-error.js";
 
 const app = express();
 

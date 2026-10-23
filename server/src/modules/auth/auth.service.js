@@ -25,7 +25,7 @@ const register = async ({ name, email, password, role = "user" }) => {
 
   // create tokens for user and server
   const { rawToken, hashedToken } = generateResetToken();
-  console.log(`Raw token: ${rawToken}`);
+
   // store user in DB with hashedToken to check if(rawToken === hashedToken) for email verification
   const user = await User.create({
     name: name,

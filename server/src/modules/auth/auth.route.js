@@ -54,35 +54,40 @@ router.post(
 //email verification route
 router.get("/verify-email/:token", authController.verifyEmail);
 
-//re-send email verification route
+//email re-send verification route (if email doesn't send in email verification)
 router.post(
   "/resend-verification",
   validateMiddlewareFunction(ForgotPasswordDto), // using this because it validates email
   authController.resendVerificationEmail,
 );
 
+//login route
 router.post(
   "/login",
   validateMiddlewareFunction(LoginDto),
   authController.login,
 );
+//token refresh route
+router.post("/refresh-token", authenticate, authController.refreshToken);
 
-// router.post("/refresh-token", authenticate, authController.refreshToken);
+//logout route
 router.post("/logout", authenticate, authController.logout);
 
+// forgot password route
 router.post(
   "/forgot-password",
   validateMiddlewareFunction(ForgotPasswordDto),
   authController.forgotPassword,
 );
 
-/*
+//reset password route
 router.put(
   "/reset-password/:token",
   validateMiddlewareFunction(ResetPasswordDto),
   authController.resetPassword,
 );
 
+//profile route
 router.get("/profile", authenticate, authController.profile);
-*/
+
 export default router;
