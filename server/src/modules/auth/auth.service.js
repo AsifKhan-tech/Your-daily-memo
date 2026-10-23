@@ -237,6 +237,7 @@ const forgotPassword = async (email) => {
     await sendResetPasswordEmail(email, rawToken);
   } catch (error) {
     console.error("forgot password: ", error);
+    throw ApiError.internal("Failed to send reset password email");
   }
 };
 

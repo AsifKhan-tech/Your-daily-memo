@@ -67,15 +67,16 @@ router.post(
   authController.login,
 );
 
-/*
-router.post("/refresh-token", authenticate, authController.refreshToken);
+// router.post("/refresh-token", authenticate, authController.refreshToken);
 router.post("/logout", authenticate, authController.logout);
+
 router.post(
   "/forgot-password",
   validateMiddlewareFunction(ForgotPasswordDto),
   authController.forgotPassword,
 );
 
+/*
 router.put(
   "/reset-password/:token",
   validateMiddlewareFunction(ResetPasswordDto),
