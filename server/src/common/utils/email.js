@@ -64,8 +64,12 @@ const sendEmail = async (to, subject, html) => {
       subject, // subject line
       html, // HTML body
     });
+
+    // console.log("Message sent: %s", info);
+    //This will notify that email has been sent successfully
     console.log("Info result: ", info);
-    // console.log("Message sent: %s", info.messageId);
+    //specific id corresponding to the email
+    console.log("Info result: ", info.messageId);
     // Preview URL is only available when using an Ethereal test account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {

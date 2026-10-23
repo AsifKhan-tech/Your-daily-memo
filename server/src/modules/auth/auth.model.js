@@ -47,17 +47,32 @@ const userSchema = new mongoose.Schema(
 );
 
 // securly hash the user's password before storing it.
-userSchema.pre("save", async function (next) {
-  /**
-   * If the password field is unchanged, skip hashing and proceed to the next middleware.
-   */
-  if (!this.isModified("password")) return next();
+// userSchema.pre("save", async function (next) {
+/**
+ * If the password field is unchanged, skip hashing and proceed to the next middleware.
+ */
+// if (!this.isModified("password")) return next();
 
-  /**
-   * Hash the newly updated password with 12 salt rounds before saving to the DB.
-   */
+/**
+ * Hash the newly updated password with 12 salt rounds before saving to the DB.
+ */
+// this.password = await bcrypt.hash(this.password, 12);
+// next();
+// });
+
+/**
+ * Mongoose pre-save middleware to securely hash the user's password before storing it.
+ *
+ * ARCHITECTURE NOTE: Modern Mongoose natively supports `async/await` promises.
+ * Because this is an `async` function, we intentionally DO NOT pass or call the
+ * traditional `next()` callback. Calling `next()` inside an async hook will cause
+ * a "TypeError: next is not a function" crash.
+ *
+ * Performance Guard: Skips the hashing process if the password is unchanged.
+ */
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 12);
-  next();
 });
 
 /**

@@ -25,7 +25,7 @@ const register = async ({ name, email, password, role = "user" }) => {
 
   // create tokens for user and server
   const { rawToken, hashedToken } = generateResetToken();
-
+  console.log(`Raw token: ${rawToken}`);
   // store user in DB with hashedToken to check if(rawToken === hashedToken) for email verification
   const user = await User.create({
     name: name,
@@ -60,6 +60,70 @@ const register = async ({ name, email, password, role = "user" }) => {
 
   console.log("User registered");
   return userObject;
+};
+
+const verifyEmail = async (token) => {
+  // token should be a string & not empty after trimming
+  if (typeof token !== "string" || !token.trim()) {
+    throw ApiError.badRequest("Invalid token");
+  }
+
+  //hash the user token to compare with stored hashed token
+  const hashedToken = hashToken(token.trim());
+
+  /**
+   * find the user in DB with this hashed token and compare it too with stored hashed token
+   * update field 'isVerified: true' and remove verification token
+   */
+
+  /**
+   * Find the user by their hashed verification token and mark them as verified.
+   *
+   * ARCHITECTURE NOTE (Mongoose 8/9+ standard):
+   * We use `{ returnDocument: "after" }` instead of the legacy `{ new: true }` option.
+   * This explicitly tells the MongoDB driver to return the newly updated user document
+   * rather than the original unverified one.
+   */
+  const user = await User.findOneAndUpdate(
+    { verificationToken: hashedToken },
+    { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
+    { returnDocument: "after" }, //with this 'flag after' DB returns the updated object
+  );
+
+  //if user not found in DB
+  if (!user) throw ApiError.badRequest("Invalid or expired token");
+
+  //return the response
+  return { message: "Email verified successfully", user };
+};
+
+const resendVerificationEmail = async (email) => {
+  //find the user with specific email
+  const user = await User.findOne({ email });
+  if (!user) throw ApiError.notFound("Account not found");
+
+  //if already verified, give the error
+  if (user.isVerified) throw ApiError.badRequest("User already exists");
+
+  //generate reset tokens one give to the user
+  //and another one store in DB to compare the user's token
+  const { rawToken, hashedToken } = generateResetToken();
+
+  //store hashedToken in DB
+  user.verificationToken = hashedToken;
+  await user.save({ validateBeforeSave: false });
+
+  //resend the verification email
+
+  try {
+    await sendVerificationEmail(email, rawToken);
+  } catch (error) {
+    console.error("Resend verification: ", error);
+
+    throw ApiError.internal(
+      "Failed to send the verification email. Please try again!",
+    );
+  }
 };
 
 const login = async ({ email, password }) => {
@@ -144,32 +208,6 @@ const logout = async (userId) => {
   await User.findByIdAndUpdate(userId, { refreshToken: null });
 };
 
-const verifyEmail = async (token) => {
-  // token should be a string & not empty after trimming
-  if (typeof token !== "string" || !token.trim()) {
-    throw ApiError.badRequest("Invalid token");
-  }
-
-  //hash the user token to compare with stored hashed token
-  const hashedToken = hashToken(token.trim());
-
-  /**
-   * find the user in DB with this hashed token and compare it too with stored hashed token
-   * update field 'isVerified: true' and remove verification token
-   */
-  const user = await User.findOneAndUpdate(
-    { verificationToken: hashedToken },
-    { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
-    { new: true }, //with this 'flag true' DB returns the updated object
-  );
-
-  //if user not found in DB
-  if (!user) throw ApiError.badRequest("Invalid or expired token");
-
-  //return the response
-  return { message: "Email verified successfully", user };
-};
-
 const forgotPassword = async (email) => {
   /**
    * find specific user with the email
@@ -240,34 +278,6 @@ const profile = async (userId) => {
  * When email couldn't reach to the user to verify it's email,
  * It can resend the verification email
  */
-const resendVerificationEmail = async (email) => {
-  //find the user with specific email
-  const user = await User.findOne({ email });
-  if (!user) throw ApiError.notFound("Account not found");
-
-  //if already verified, give the error
-  if (user.isVerified) throw ApiError.badRequest("User already exists");
-
-  //generate reset tokens one give to the user
-  //and another one store in DB to compare the user's token
-  const { rawToken, hashedToken } = generateResetToken();
-
-  //store hashedToken in DB
-  user.verificationToken = hashedToken;
-  await user.save({ validateBeforeSave: false });
-
-  //resend the verification email
-
-  try {
-    await sendVerificationEmail(email, rawToken);
-  } catch (error) {
-    console.error("Resend verification: ", error);
-
-    throw ApiError.internal(
-      "Failed to send the verification email. Please try again!",
-    );
-  }
-};
 
 export {
   register,

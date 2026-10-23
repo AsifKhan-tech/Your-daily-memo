@@ -6,6 +6,16 @@ const register = async (req, res) => {
   Apiresponse.created(res, "Registration successfull", user);
 };
 
+const verifyEmail = async (req, res) => {
+  await authService.verifyEmail(req.params.token);
+  Apiresponse.ok(res, "email verified successfully");
+};
+
+const resendVerificationEmail = async (req, res) => {
+  await authService.resendVerificationEmail(req.body.email);
+  Apiresponse.ok(res, "verification email resent successfully");
+};
+
 const login = async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
@@ -70,11 +80,6 @@ const logout = async (req, res) => {
   Apiresponse.ok(res, "Logout successfully");
 };
 
-const verifyEmail = async (req, res) => {
-  await authService.verifyEmail(req.params.token);
-  Apiresponse.ok(res, "email verified successfully");
-};
-
 const forgotPassword = async (req, res) => {
   await authService.forgotPassword(req.body.email);
   Apiresponse.ok(res, "password reset email sent");
@@ -88,11 +93,6 @@ const resetPassword = async (req, res) => {
 const profile = async (req, res) => {
   const user = await authService.profile(req.user.id);
   Apiresponse.ok(res, "User profile", user);
-};
-
-const resendVerificationEmail = async (req, res) => {
-  await authService.resendVerificationEmail(req.body.email);
-  Apiresponse.ok(res, "verification email resent successfully");
 };
 
 export {
