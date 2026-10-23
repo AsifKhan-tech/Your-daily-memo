@@ -1,4 +1,4 @@
-import Joi, { string } from "joi";
+import Joi, { date, number, string } from "joi";
 
 import Basedto from "../../../common/dto/base.dto.js";
 
