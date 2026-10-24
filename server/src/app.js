@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import authRoutes from "./modules/auth/auth.route.js";
 import ApiError from "./common/utils/api-error.js";
@@ -15,6 +16,20 @@ app.use(express.urlencoded({ extended: true }));
  * when a client do request, the browser automatically send cookies with the request
  */
 app.use(cookieParser());
+
+/**
+ * CORS = Cross-Origin Resource Sharing
+ *
+ * Browsers block a website from calling an API on another origin
+ * (different protocol, domain, or port) unless the API allows it.
+ *
+ * Production rule: never use origin: "*".
+ * Allow only your real frontend URLs. That is required when
+ * credentials: true (cookies / auth headers).
+ *
+ * CLIENT_URL can be one URL or several, separated by commas:
+ *   CLIENT_URL=https://dailymemo.com,https://www.dailymemo.com
+ */
 
 /**
  * Mount routes into app
