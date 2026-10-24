@@ -30,6 +30,30 @@ app.use(cookieParser());
  * CLIENT_URL can be one URL or several, separated by commas:
  *   CLIENT_URL=https://dailymemo.com,https://www.dailymemo.com
  */
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Tools like Postman / curl send no Origin header — allow those.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    credentials: true, // allow cookies (accessToken / refreshToken)
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 /**
  * Mount routes into app
