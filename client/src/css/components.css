@@ -1,5 +1,9 @@
-/* --- 1. Layout Wrappers --- */
-/* The main shell centers the app and provides the decorative background */
+/* src/css/components.css
+   Visual building blocks for Daily Memo. Tokens come from theme.css. */
+
+/* --- 1. Page layout --- */
+
+/* Full-viewport column: gradient canvas, then memo card and contact card. */
 .app-shell {
   align-items: center;
   background:
@@ -24,7 +28,7 @@
   position: relative;
 }
 
-/* Decorative background blobs */
+/* Soft circles behind the cards; pointer-events none so clicks pass through. */
 .app-shell::before,
 .app-shell::after {
   border-radius: 999px;
@@ -47,7 +51,7 @@
   width: 16rem;
 }
 
-/* The main card holding the application */
+/* Frosted memo card: create form + task list. */
 .todo-container {
   background: linear-gradient(135deg, var(--surface-strong), var(--surface));
   border: 1px solid var(--line);
@@ -69,6 +73,7 @@
   scroll-margin-top: 8rem;
 }
 
+/* Contact card sits under the memo card as its own destination. */
 .contact-section {
   background: linear-gradient(135deg, var(--surface-strong), var(--surface));
   border: 1px solid var(--line);
@@ -90,6 +95,7 @@
   margin: 0;
 }
 
+/* Stacked labels, fields, send button, and status line. */
 .contact-form {
   display: grid;
   gap: 0.55rem;
@@ -102,6 +108,7 @@
   font-weight: 700;
 }
 
+/* Taller message box; user can stretch it vertically. */
 .contact-description {
   min-height: 7rem;
   resize: vertical;
@@ -111,6 +118,7 @@
   margin-top: 0.45rem;
 }
 
+/* Confirmation text after submit; min-height avoids layout jump when empty. */
 .contact-status {
   color: var(--muted);
   font-size: 0.8125rem;
@@ -131,6 +139,7 @@
   backdrop-filter: blur(1.25rem) saturate(120%);
 }
 
+/* Brand | section links | copyright on one row (stacks on small screens). */
 .footer-content {
   align-items: center;
   display: flex;
@@ -162,6 +171,7 @@
   width: 0.95rem;
 }
 
+/* Same in-page anchors as the header, muted until hover. */
 .footer-links {
   align-items: center;
   display: flex;
@@ -237,7 +247,9 @@
   outline-offset: 3px;
 }
 
-/* --- 2. Typography Components --- */
+/* --- 2. Type on the cards --- */
+
+/* Small uppercase kicker above the main heading. */
 .eyebrow {
   color: var(--muted);
   font-size: 0.75rem;
@@ -247,13 +259,16 @@
   text-transform: uppercase;
 }
 
+/* Supporting line under the h1. */
 .intro {
   color: var(--muted);
   line-height: 1.55;
   margin: 0.6rem 0 1.5rem;
 }
 
-/* --- 3. Form Components --- */
+/* --- 3. Memo form --- */
+
+/* Vertical stack of fields, then the Add memo button. */
 .todo-form,
 .input-group {
   display: grid;
@@ -271,7 +286,7 @@
   font-weight: 700;
 }
 
-/* Standardized Input Styling */
+/* Shared look for text, datetime, and contact fields. */
 .todo {
   appearance: none;
   background: var(--surface-strong);
@@ -301,6 +316,7 @@
   z-index: 10;
 }
 
+/* Frosted bar: brand left, links and theme toggle right. */
 .navbar {
   align-items: center;
   backdrop-filter: blur(1.25rem) saturate(150%);
@@ -318,6 +334,7 @@
   padding: 0.5rem 0.75rem;
 }
 
+/* Logo tile + product name; stays left while links occupy the rest. */
 .brand {
   align-items: center;
   color: var(--ink);
@@ -330,6 +347,7 @@
   text-decoration: none;
 }
 
+/* Square accent chip holding the note icon. */
 .brand-mark {
   align-items: center;
   background: var(--accent);
@@ -346,6 +364,7 @@
   width: 1.1rem;
 }
 
+/* Hidden on desktop; displayed in responsive.css as a three-line button. */
 .menu-toggle {
   align-items: center;
   appearance: none;
@@ -370,6 +389,7 @@
   width: 1.1rem;
 }
 
+/* Horizontal Home / Todos / Contact + theme control. */
 .nav-links {
   align-items: center;
   display: flex;
@@ -391,6 +411,7 @@
   text-decoration: none;
 }
 
+/* Underline that grows in on hover/focus. */
 .nav-links a::after {
   background: currentColor;
   bottom: 0.35rem;
@@ -414,6 +435,7 @@
   transform: scaleX(1);
 }
 
+/* Icon-only control; JavaScript flips html[data-theme]. */
 .theme-toggle {
   align-items: center;
   appearance: none;
@@ -444,6 +466,7 @@
   width: 1.25rem;
 }
 
+/* Dark theme shows the sun (switch to light). Light theme shows the moon. */
 .theme-icon-moon,
 :root[data-theme="light"] .theme-icon-sun {
   display: none;
@@ -461,7 +484,7 @@
   outline-offset: 2px;
 }
 
-/* Primary Action Button */
+/* Add memo / Send message: filled accent button. */
 .add-todo {
   appearance: none;
   background: var(--accent);
@@ -486,19 +509,23 @@
   filter: brightness(1.09);
 }
 
-/* --- 4. List Components --- */
+/* --- 4. Task list --- */
+
+/* Divider between the create form and the saved tasks. */
 .todo-list-section {
   border-top: 1px solid var(--line);
   margin-top: 1.5rem;
   padding-top: 1.25rem;
 }
 
+/* “All tasks” on the left, live count pill on the right. */
 .list-heading {
   align-items: center;
   display: flex;
   justify-content: space-between;
 }
 
+/* Numeric badge; text content is set in JavaScript. */
 .todo-count {
   background: var(--surface-strong);
   border: 1px solid var(--line);
@@ -510,12 +537,14 @@
   text-align: center;
 }
 
+/* Placeholder copy while the list has no rows. */
 .empty-state {
   margin: 1rem 0 0;
   color: var(--muted);
   font-size: 0.875rem;
 }
 
+/* Master checkbox: complete every task at once. */
 .all-items-control {
   align-items: center;
   color: var(--muted);
@@ -532,6 +561,7 @@
   opacity: 0.5;
 }
 
+/* All items on the left, Delete all on the right. */
 .list-actions {
   align-items: center;
   display: flex;
@@ -543,6 +573,7 @@
   margin-top: 0;
 }
 
+/* Destructive action; enabled only after every item is selected. */
 .delete-all {
   appearance: none;
   background: transparent;
@@ -577,6 +608,7 @@
   opacity: 0.5;
 }
 
+/* JS-populated rows. Hide the empty <ul> so it does not add gap. */
 .todo-list {
   display: grid;
   gap: 0.625rem;
@@ -588,7 +620,7 @@
   display: none;
 }
 
-/* Individual List Item Layout */
+/* Card column + fixed-width Delete/Save column. */
 .todo-row {
   align-items: stretch;
   display: grid;
@@ -596,6 +628,7 @@
   grid-template-columns: minmax(0, 1fr) 4.5rem;
 }
 
+/* Checkbox, memo text, datetime, edit icon. */
 .todo-item {
   align-items: center;
   background: var(--surface-strong);
@@ -607,7 +640,7 @@
   padding: 0.375rem 0.625rem;
 }
 
-/* State Modifiers */
+/* Completed tasks fade and strike through the memo text. */
 .todo-item.is-complete {
   opacity: 0.58;
 }
@@ -615,6 +648,7 @@
   text-decoration: line-through;
 }
 
+/* Memo title wraps; datetime sits beside or under it. */
 .todo-item-content {
   flex: 1;
   display: flex;
@@ -625,6 +659,7 @@
   font-size: 0.925rem;
   overflow-wrap: anywhere;
 }
+/* Formatted schedule from formatDateTime(). */
 .todo-item-details {
   color: var(--muted);
   font-size: 0.7rem;

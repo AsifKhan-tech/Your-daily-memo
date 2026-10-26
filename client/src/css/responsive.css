@@ -1,16 +1,20 @@
-/* src/css/responsive.css */
-/* Desktop Layout Enhancements */
-/* Tablet and mobile navigation use the compact menu to avoid cramped links. */
+/* src/css/responsive.css
+   Viewport and accessibility overrides. Loaded last so these rules win. */
+
+/* Below ~1024px: hide the inline nav and show the hamburger instead. */
 @media (max-width: 63.99rem) {
+  /* Position context for the dropdown panel. */
   .navbar {
     position: relative;
   }
 
+  /* Hamburger sits on the right of the brand. */
   .menu-toggle {
     display: inline-flex;
     margin-left: auto;
   }
 
+  /* Collapsed menu: overlay under the bar until .is-menu-open is set in JS. */
   .nav-links {
     align-items: stretch;
     background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
@@ -29,15 +33,18 @@
     backdrop-filter: blur(1.25rem) saturate(150%);
   }
 
+  /* Open state toggled on .navbar by the menu button. */
   .navbar.is-menu-open .nav-links {
     display: flex;
   }
 
+  /* Taller tap targets in the stacked menu. */
   .nav-links a {
     min-height: 2.5rem;
   }
 }
 
+/* From ~640px up: more padding and matching card radii. */
 @media (min-width: 40rem) {
   .app-shell {
     padding: 2rem;
@@ -61,6 +68,7 @@
   }
 }
 
+/* Narrow footer: stack brand, links, and copyright instead of one row. */
 @media (max-width: 63.99rem) {
   .footer-content {
     align-items: flex-start;
@@ -72,7 +80,7 @@
   }
 }
 
-/* Accessibility: Respect User Motion Preferences */
+/* Honor OS “reduce motion”: drop smooth scrolling and CSS transitions. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

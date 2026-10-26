@@ -34,6 +34,7 @@ const siteFooter = document.querySelector(".site-footer");
 const currentYear = document.querySelector("#current-year");
 const scrollTopButton = document.querySelector("#scroll-top");
 
+// Separate from the todos key so theme choice survives even if the list is cleared.
 const THEME_STORAGE_KEY = "daily-memo-theme";
 
 /**
@@ -69,11 +70,13 @@ function initializeTheme() {
 
 initializeTheme();
 
+// Flip between dark and light on each click.
 themeToggle.addEventListener("click", () => {
   const currentTheme = document.documentElement.dataset.theme;
   setTheme(currentTheme === "dark" ? "light" : "dark");
 });
 
+// Keep the footer copyright current without editing HTML every January.
 currentYear.textContent = new Date().getFullYear();
 
 /**
@@ -346,6 +349,7 @@ function renderTodo(todo) {
   deleteButton.textContent = "Delete";
   deleteButton.setAttribute("aria-label", `Delete ${todo.memo}`);
 
+  // Per-row edit session: the Delete button becomes Save until the field is committed.
   let isEditing = false;
   let editInput;
 
@@ -385,6 +389,7 @@ function renderTodo(todo) {
     updateMemoCount();
   });
 
+  // Swap the memo text for an input; Enter or Save commits via saveEdit().
   editButton.addEventListener("click", () => {
     if (isEditing || todo.completed) return;
     isEditing = true;
@@ -463,7 +468,7 @@ form.addEventListener("submit", (event) => {
   todoInput.focus();
 });
 
-/** Sort persisted tasks and render the newest task at the top on startup. */
+// First paint: load from storage already happened above; sort, draw, then sync counts.
 sortTodosByNewest();
 renderAllTodos();
 updateMemoCount();

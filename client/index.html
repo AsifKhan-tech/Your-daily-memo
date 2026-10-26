@@ -1,16 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Character set, favicon, and viewport so the planner scales on phones. -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/daily-memo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Daily Memo | Your personal daily planner</title>
+    <!-- Bundled styles: theme tokens, resets, components, then responsive overrides. -->
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <!-- Primary navigation for returning home and reaching the todo list or contact channel. -->
+    <!-- Sticky header: brand home link, in-page section links, theme switch, mobile menu. -->
     <header class="site-header">
       <nav class="navbar" aria-label="Primary navigation">
+        <!-- Brand mark + title jump to the memo card (#home). -->
         <a class="brand" href="#home" aria-label="Daily Memo home">
           <span class="brand-mark" aria-hidden="true">
             <svg
@@ -27,6 +30,7 @@
           </span>
           <span>Daily Memo</span>
         </a>
+        <!-- Hamburger shown on smaller screens; aria-expanded is toggled in main.js. -->
         <button
           class="menu-toggle"
           type="button"
@@ -42,6 +46,7 @@
           <a href="#home" role="listitem">Home</a>
           <a href="#todos" role="listitem">Todos</a>
           <a href="#contact" role="listitem">Contact us</a>
+          <!-- Sun/moon icons swap with data-theme on <html>; click handler lives in main.js. -->
           <button
             class="theme-toggle"
             id="theme-toggle"
@@ -71,13 +76,15 @@
       </nav>
     </header>
 
-    <!-- Todo container -->
+    <!-- Page body: memo card first, contact card second. Both share #home as the shell id. -->
     <main class="app-shell" id="home">
+      <!-- Create a memo, then review the saved list below the form. -->
       <section class="todo-container" aria-labelledby="memo-title">
         <p class="eyebrow">Daily memo</p>
         <h1 id="memo-title">What’s on your mind?</h1>
         <p class="intro">Capture a task before it slips away.</p>
 
+        <!-- New task: text + datetime; submit creates a row via the form handler in main.js. -->
         <form class="todo-form">
           <div class="input-group">
             <label for="todo">New memo</label>
@@ -102,6 +109,7 @@
           <button class="add-todo" id="todo-btn" type="submit">Add memo</button>
         </form>
 
+        <!-- Saved tasks: count, select-all / delete-all, empty message, live list. -->
         <section
           class="todo-list-section"
           id="todos"
@@ -109,9 +117,11 @@
         >
           <div class="list-heading">
             <h2 id="memo-list-title">All tasks</h2>
+            <!-- Count is filled from the in-memory todos array. -->
             <span class="todo-count" id="todo-count">0</span>
           </div>
           <div class="list-actions">
+            <!-- Checking this marks every row complete and unlocks Delete all. -->
             <label class="all-items-control" for="all-items">
               <input id="all-items" class="todo-checkbox" type="checkbox" />
               <span>All items</span>
@@ -120,14 +130,16 @@
               Delete all
             </button>
           </div>
+          <!-- Hidden once at least one task exists. -->
           <p class="empty-state" id="empty-state">
             Your added tasks will appear here.
           </p>
+          <!-- Rows are created in JavaScript; aria-live announces list changes. -->
           <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
         </section>
       </section>
 
-      <!-- Contact form remains a separate page section instead of nesting inside the todo card. -->
+      <!-- Standalone contact card (not nested in the memo card) so it can be a separate destination. -->
       <section
         class="contact-section"
         id="contact"
@@ -135,6 +147,7 @@
       >
         <p class="eyebrow">Contact us</p>
         <h2 id="contact-title">How can we help?</h2>
+        <!-- Client-only submit: shows a status message; there is no backend yet. -->
         <form class="contact-form" id="contact-form">
           <label for="contact-name">Name or email</label>
           <input
@@ -166,7 +179,7 @@
       </section>
     </main>
 
-    <!-- Footer provides persistent identity, quick section links, and ownership information. -->
+    <!-- Persistent chrome: brand, same section links as the header, copyright year filled by JS. -->
     <footer class="site-footer">
       <div class="footer-content">
         <a
@@ -199,7 +212,7 @@
         </p>
       </div>
     </footer>
-    <!-- Fixed return control becomes available after the user leaves the navbar area. -->
+    <!-- Appears after scrolling away from the navbar; click returns to the top. -->
     <button
       class="scroll-top"
       id="scroll-top"
@@ -219,6 +232,7 @@
         <path d="m5 12 7-7 7 7M12 19V5" />
       </svg>
     </button>
+    <!-- App logic: theme, navigation, todos, persistence. -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

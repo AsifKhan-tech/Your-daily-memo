@@ -1,3 +1,31 @@
+/*
+  Daily Memo stylesheet entry.
+
+  Vite loads this file from index.html. Active rules live in the four imports
+  below, in cascade order: tokens → reset → components → viewport overrides.
+
+  The large block further down is leftover from an earlier single-file design.
+  It is commented out so it does not affect the live UI, but it remains as a
+  reference for the original color and layout choices.
+*/
+
+/* Color tokens, typography stack height, dark default vs light override. */
+@import url("./css/theme.css");
+
+/* Box-sizing, body canvas, heading/paragraph margin reset. */
+@import url("./css/base.css");
+
+/* Header, memo card, list rows, contact card, footer, floating scroll button. */
+@import url("./css/components.css");
+
+/* Mobile menu, wider padding, stacked footer, reduced-motion. */
+@import url("./css/responsive.css");
+
+/* =============================================================================
+   Legacy single-file stylesheet (inactive)
+   Kept for history. Do not uncomment without reconciling with the split files.
+   ============================================================================= */
+
 /* :root {
   color-scheme: light dark;
   --canvas: #f7f3e9;
@@ -426,15 +454,3 @@ h1 {
     transition-duration: 0.01ms !important;
   }
 } */
-
-/* 1. Design Tokens (Colors & Variables) */
-@import url("./css/theme.css");
-
-/* 2. Global Resets (Box sizing, body styles) */
-@import url("./css/base.css");
-
-/* 3. Component Architecture (Layouts & UI) */
-@import url("./css/components.css");
-
-/* 4. Overrides (Responsive & Accessibility) */
-@import url("./css/responsive.css");

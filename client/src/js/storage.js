@@ -1,12 +1,15 @@
-/** Local-storage key used to persist the user's todo collection. */
+/**
+ * Persist the todo list in the browser.
+ * The UI still works if localStorage is blocked; saves then fail silently.
+ */
+
+/** Key under which the JSON array of todos is stored. */
 const STORAGE_KEY = "daily-memo-todos";
 
 /**
- * Retrieves the persisted todo collection.
- *
- * Invalid JSON, unavailable storage, and non-array values are treated as an
- * empty collection so storage failures do not prevent the app from loading.
- * @returns {Array<Object>} The stored todo records, or an empty array.
+ * Read todos from localStorage.
+ * Missing data, invalid JSON, or a non-array value all become [].
+ * @returns {Array<Object>} Stored records, or an empty array.
  */
 export function loadTodos() {
   try {
@@ -19,11 +22,9 @@ export function loadTodos() {
 }
 
 /**
- * Persists the current todo collection to local storage.
- *
- * Storage is intentionally best-effort: the UI remains usable when browser
- * privacy settings or storage quotas prevent persistence.
- * @param {Array<Object>} todos The todo records to serialize.
+ * Write the current in-memory list back to localStorage.
+ * Quota or privacy errors are logged; the on-screen list is left intact.
+ * @param {Array<Object>} todos Records to serialize.
  */
 export function saveTodos(todos) {
   try {

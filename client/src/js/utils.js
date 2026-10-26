@@ -1,7 +1,13 @@
 /**
- * Formats an ISO datetime string into a localized format.
- * @param {string} dateTime - The ISO string representation.
- * @returns {string} The formatted date and time string.
+ * Shared date and identifier helpers used by the todo UI.
+ * Kept out of main.js so rendering code does not mix with formatting details.
+ */
+
+/**
+ * Turns a stored datetime into a locale-aware string for the list row
+ * (for example "Oct 26, 2026, 9:05 PM" in the user's locale).
+ * @param {string} dateTime ISO or datetime-local string from the todo record.
+ * @returns {string} Human-readable date and time.
  */
 export function formatDateTime(dateTime) {
   return new Intl.DateTimeFormat(undefined, {
@@ -11,8 +17,9 @@ export function formatDateTime(dateTime) {
 }
 
 /**
- * Generates a local datetime string for HTML inputs.
- * @returns {string} Date formatted as YYYY-MM-DDTHH:mm.
+ * Builds a value suitable for <input type="datetime-local"> using the user's
+ * local clock. Used when an edited memo should bump its timestamp to "now".
+ * @returns {string} YYYY-MM-DDTHH:mm
  */
 export function getCurrentLocalDateTime() {
   const now = new Date();
@@ -21,8 +28,9 @@ export function getCurrentLocalDateTime() {
 }
 
 /**
- * Generates a unique identifier for new todos.
- * @returns {string} A unique ID string.
+ * Cheap unique id for a todo. Combines a timestamp with random hex so two
+ * tasks created in the same millisecond still get different keys.
+ * @returns {string}
  */
 export function generateId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;

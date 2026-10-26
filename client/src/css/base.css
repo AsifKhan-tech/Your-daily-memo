@@ -1,15 +1,14 @@
-/* src/css/base.css */
+/* src/css/base.css
+   Document-wide defaults. Component files assume these resets already ran. */
 
-/* 1. Global Box Sizing 
-   Ensures padding and borders are included in the element's total width and height. */
+/* Include padding and border inside width/height so layouts do not overflow. */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* 2. Document Body Foundation
-   Removes default browser margins and applies our theme background globally. */
+/* Page canvas, readable type, and a minimum width so the card does not collapse. */
 body {
   background: var(--canvas);
   color: var(--ink);
@@ -26,8 +25,7 @@ body {
   font-synthesis: none;
 }
 
-/* 3. Global Typography Resets
-   Removes default margins from text elements so components dictate their own spacing. */
+/* Drop user-agent margins; each component sets its own spacing. */
 h1,
 h2,
 h3,
