@@ -85,6 +85,81 @@
       </nav>
     </header>
 
+    <!-- Add new code: Registration dialog opened by the Register button; required-field markers match native required validation. -->
+    <dialog class="register-dialog" id="register-dialog" aria-labelledby="register-title">
+      <div class="register-dialog-heading">
+        <div>
+          <p class="eyebrow">Create your account</p>
+          <h2 id="register-title">Register</h2>
+        </div>
+        <form method="dialog">
+          <button
+            class="register-close"
+            type="submit"
+            aria-label="Close registration form"
+          >
+            &times;
+          </button>
+        </form>
+      </div>
+      <form class="register-form">
+        <label for="register-name">
+          Name <span class="required-indicator" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="todo"
+          id="register-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          required
+        />
+
+        <label for="register-email">
+          Email <span class="required-indicator" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="todo"
+          id="register-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+        />
+
+        <label for="register-password">
+          Password <span class="required-indicator" aria-hidden="true">*</span>
+        </label>
+        <input
+          class="todo"
+          id="register-password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          required
+        />
+
+        <!-- Add new code: Offer the supported account roles and start with the standard user role selected. -->
+        <label for="register-role">
+          Role <span class="optional-indicator">(Optional)</span>
+        </label>
+        <div class="register-role-select">
+          <select class="todo" id="register-role" name="role">
+            <option value="user" selected>User</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+        </div>
+
+        <button class="add-todo" type="submit">Create account</button>
+      </form>
+      <!-- Add new code: Show the existing-account prompt below the registration action. -->
+      <p class="register-login-prompt">
+        Already registered?
+        <button class="register-login" type="button">Login</button>
+      </p>
+    </dialog>
+
     <!-- Page body: memo card first, contact card second. Both share #home as the shell id. -->
     <main class="app-shell" id="home">
       <!-- Create a memo, then review the saved list below the form. -->

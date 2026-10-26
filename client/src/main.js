@@ -11,27 +11,43 @@ import {
 } from "./js/utils.js";
 import { loadTodos, saveTodos } from "./js/storage.js";
 
-// Resolve DOM references once so event handlers can update the interface
-// without repeatedly querying the document.
+// Elements from the header component.
+const siteHeader = document.querySelector(".site-header");
+const navbar = document.querySelector(".navbar");
+const menuToggle = document.querySelector(".menu-toggle");
+const themeToggle = document.querySelector("#theme-toggle");
+const allNavigationLinks = document.querySelectorAll(".nav-links a");
+
+// In-page links are shared by the header and footer navigation.
+const navigationLinks = document.querySelectorAll('a[href^="#"]');
+
+// Elements from the registration component.
+const registerButton = document.querySelector(".auth-btn-register");
+const registerDialog = document.querySelector("#register-dialog");
+const registerForm = document.querySelector(".register-form");
+
+// Elements from the todo entry component.
+const todoContainer = document.querySelector(".todo-container");
 const form = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo");
 const dateTimeInput = document.querySelector("#todo-date-time");
+
+// Elements from the todo list component.
 const todoList = document.querySelector("#todo-list");
 const todoCount = document.querySelector("#todo-count");
 const emptyState = document.querySelector("#empty-state");
 const allItemsToggle = document.querySelector("#all-items");
 const deleteAllButton = document.querySelector("#delete-all");
+
+// Elements from the contact component.
 const contactForm = document.querySelector("#contact-form");
 const contactStatus = document.querySelector("#contact-status");
-const allNavigationLinks = document.querySelectorAll(".nav-links a");
-const navigationLinks = document.querySelectorAll('a[href^="#"]');
-const siteHeader = document.querySelector(".site-header");
-const navbar = document.querySelector(".navbar");
-const menuToggle = document.querySelector(".menu-toggle");
-const themeToggle = document.querySelector("#theme-toggle");
-const todoContainer = document.querySelector(".todo-container");
+
+// Elements from the footer component.
 const siteFooter = document.querySelector(".site-footer");
 const currentYear = document.querySelector("#current-year");
+
+// Element from the floating scroll control.
 const scrollTopButton = document.querySelector("#scroll-top");
 
 // Separate from the todos key so theme choice survives even if the list is cleared.
@@ -179,6 +195,16 @@ contactForm.addEventListener("submit", (event) => {
   event.preventDefault();
   contactStatus.textContent = "Thanks. Your message is ready to be reviewed.";
   contactForm.reset();
+});
+
+// Add new code: Show the registration form on demand and keep this UI-only
+// prototype from navigating away when the form is submitted.
+registerButton.addEventListener("click", () => {
+  registerDialog.showModal();
+});
+
+registerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
 });
 
 /**
