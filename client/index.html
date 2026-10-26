@@ -46,6 +46,15 @@
           <a href="#home" role="listitem">Home</a>
           <a href="#todos" role="listitem">Todos</a>
           <a href="#contact" role="listitem">Contact us</a>
+
+          <!-- Add new code: Login and Register sit in the primary nav so they appear on desktop and inside the mobile menu. They are visual-only for now (type="button", no JS). Login is the quieter action; Register is the primary action. -->
+          <div class="auth-actions" role="group" aria-label="Account">
+            <button class="auth-btn auth-btn-login" type="button">Login</button>
+            <button class="auth-btn auth-btn-register" type="button">
+              Register
+            </button>
+          </div>
+
           <!-- Sun/moon icons swap with data-theme on <html>; click handler lives in main.js. -->
           <button
             class="theme-toggle"

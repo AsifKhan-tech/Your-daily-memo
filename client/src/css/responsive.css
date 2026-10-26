@@ -42,6 +42,32 @@
   .nav-links a {
     min-height: 2.5rem;
   }
+
+  /* Add new code: In the hamburger panel, keep Login/Register as compact
+     side-by-side buttons (not stretched across the wide dropdown). */
+  .nav-links .auth-actions {
+    align-self: flex-start;
+    display: flex;
+    margin: 0.35rem 0.3rem;
+    max-width: 100%;
+    min-width: 0;
+    width: auto;
+  }
+}
+
+/* Add new code: On phones, stack Login/Register and make them full-width
+   so they are easy to tap in the narrow dropdown. */
+@media (max-width: 40rem) {
+  .nav-links .auth-actions {
+    align-self: stretch;
+    flex-direction: column;
+    margin-inline: 0;
+  }
+
+  .nav-links .auth-btn {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 /* From ~640px up: more padding and matching card radii. */
