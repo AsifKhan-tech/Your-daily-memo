@@ -23,7 +23,7 @@
   gap: 1.5rem;
   justify-content: center;
   min-height: 100svh;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 1.25rem;
   position: relative;
 }
