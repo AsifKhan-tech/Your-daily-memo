@@ -22,9 +22,17 @@ const allNavigationLinks = document.querySelectorAll(".nav-links a");
 const navigationLinks = document.querySelectorAll('a[href^="#"]');
 
 // Elements from the registration component.
+const loginButton = document.querySelector(".auth-btn-login");
 const registerButton = document.querySelector(".auth-btn-register");
 const registerDialog = document.querySelector("#register-dialog");
+const authDialogTitle = document.querySelector("#register-title");
+const authDialogEyebrow = document.querySelector("#auth-dialog-eyebrow");
+const registerPanel = document.querySelector("#register-panel");
+const loginPanel = document.querySelector("#login-panel");
 const registerForm = document.querySelector(".register-form");
+const loginForm = document.querySelector(".login-form");
+const authModeButtons = document.querySelectorAll("[data-auth-mode]");
+const passwordToggleButtons = document.querySelectorAll("[data-password-target]");
 
 // Elements from the todo entry component.
 const todoContainer = document.querySelector(".todo-container");
@@ -197,14 +205,57 @@ contactForm.addEventListener("submit", (event) => {
   contactForm.reset();
 });
 
-// Add new code: Show the registration form on demand and keep this UI-only
-// prototype from navigating away when the form is submitted.
-registerButton.addEventListener("click", () => {
-  registerDialog.showModal();
+// Add new code: Switch the shared dialog between auth panels and move focus
+// into the selected form so keyboard users can continue immediately.
+function showAuthMode(mode) {
+  const isLogin = mode === "login";
+  registerPanel.classList.toggle("is-active", !isLogin);
+  loginPanel.classList.toggle("is-active", isLogin);
+  registerPanel.inert = isLogin;
+  loginPanel.inert = !isLogin;
+  authDialogTitle.textContent = isLogin ? "Login" : "Register";
+  authDialogEyebrow.textContent = isLogin
+    ? "Welcome back"
+    : "Create your account";
+
+  if (!registerDialog.open) registerDialog.showModal();
+  (isLogin
+    ? document.querySelector("#login-email")
+    : document.querySelector("#register-name")
+  ).focus();
+}
+
+loginButton.addEventListener("click", () => showAuthMode("login"));
+registerButton.addEventListener("click", () => showAuthMode("register"));
+
+authModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    showAuthMode(button.dataset.authMode);
+  });
 });
 
-registerForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+// Add new code: Toggle each password field independently and expose its state
+// to assistive technology through the button's label and pressed state.
+passwordToggleButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const passwordInput = document.getElementById(
+      button.dataset.passwordTarget,
+    );
+    const isVisible = passwordInput.type === "text";
+    passwordInput.type = isVisible ? "password" : "text";
+    button.setAttribute("aria-pressed", String(!isVisible));
+    button.setAttribute(
+      "aria-label",
+      `${isVisible ? "Show" : "Hide"} password`,
+    );
+  });
+});
+
+// These forms are presentation-only until an authentication endpoint is wired in.
+[registerForm, loginForm].forEach((authForm) => {
+  authForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
 });
 
 /**
