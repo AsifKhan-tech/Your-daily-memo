@@ -246,7 +246,7 @@ registerButton.addEventListener("click", () => showAuthMode("register"));
 /**
  * Extract the value of the tag that is given a custom attribute
  * HTML tag: <button data-auth-mode = "register">
- * Use dataset property of this tag and write it camelCase
+ * Use dataset property of this tag and write it camelCase and remove data word of the HTML
  * button.dataset.authMode
  */
 authModeButtons.forEach((button) => {
@@ -273,6 +273,7 @@ passwordToggleButtons.forEach((button) => {
 });
 
 // These forms are presentation-only until an authentication endpoint is wired in.
+
 [registerForm, loginForm].forEach((authForm) => {
   authForm.addEventListener("submit", (event) => {
     event.preventDefault();
