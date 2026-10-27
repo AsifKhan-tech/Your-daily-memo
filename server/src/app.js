@@ -60,7 +60,7 @@ app.use(
  * Signaling to the express: "when any request start with '/api/v1/auth' ,
  * send/route it to the 'authRoutes' router."
  */
-app.use("/api/v1/auth/daily-memo", authRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 /**
  * Global Catch-All (404 Fallback) Route.
