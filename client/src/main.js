@@ -31,8 +31,14 @@ const registerPanel = document.querySelector("#register-panel");
 const loginPanel = document.querySelector("#login-panel");
 const registerForm = document.querySelector(".register-form");
 const loginForm = document.querySelector(".login-form");
+
+// Select all buttons that have a data-auth-mode attribute
 const authModeButtons = document.querySelectorAll("[data-auth-mode]");
-const passwordToggleButtons = document.querySelectorAll("[data-password-target]");
+
+// Select all buttons that have a data-password-target attribute
+const passwordToggleButtons = document.querySelectorAll(
+  "[data-password-target]",
+);
 
 // Elements from the todo entry component.
 const todoContainer = document.querySelector(".todo-container");
