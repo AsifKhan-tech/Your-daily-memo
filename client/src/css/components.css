@@ -629,11 +629,15 @@
   gap: 0.55rem;
 }
 
-/* Keep registration validation feedback readable without competing with field labels. */
+/* Use theme-specific error colors for registration validation feedback. */
 .auth-form-error {
-  color: var(--muted);
+  color: #cf6679;
   font-size: 0.8125rem;
   margin: 0;
+}
+
+:root[data-theme="light"] .auth-form-error {
+  color: #b00020;
 }
 
 .register-form label,
