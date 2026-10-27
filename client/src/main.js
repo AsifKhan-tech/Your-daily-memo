@@ -259,6 +259,12 @@ authModeButtons.forEach((button) => {
 // to assistive technology through the button's label and pressed state.
 passwordToggleButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    /**
+     * Attribute on button is: data-password-target = "login password/register password"
+     * passwordTarget = "login password/register password"
+     * document.getElementById("login password/register password")
+     * It will select password input field
+     */
     const passwordInput = document.getElementById(
       button.dataset.passwordTarget,
     );
@@ -274,6 +280,7 @@ passwordToggleButtons.forEach((button) => {
 
 // These forms are presentation-only until an authentication endpoint is wired in.
 
+//create an array and loop through it
 [registerForm, loginForm].forEach((authForm) => {
   authForm.addEventListener("submit", (event) => {
     event.preventDefault();
