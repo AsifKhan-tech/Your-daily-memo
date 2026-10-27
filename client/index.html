@@ -86,7 +86,11 @@
     </header>
 
     <!-- Add new code: Shared auth dialog switches smoothly between registration and login forms. -->
-    <dialog class="register-dialog" id="register-dialog" aria-labelledby="register-title">
+    <dialog
+      class="register-dialog"
+      id="register-dialog"
+      aria-labelledby="register-title"
+    >
       <div class="register-dialog-heading">
         <div>
           <p class="eyebrow" id="auth-dialog-eyebrow">Create your account</p>
@@ -104,7 +108,11 @@
       </div>
       <!-- Add new code: Both panels share a grid cell to allow a smooth crossfade between forms. -->
       <div class="auth-panels">
-        <section class="auth-panel is-active" id="register-panel" aria-labelledby="register-title">
+        <section
+          class="auth-panel is-active"
+          id="register-panel"
+          aria-labelledby="register-title"
+        >
           <form class="register-form">
             <label for="register-name">
               Name <span class="required-indicator" aria-hidden="true">*</span>
@@ -131,7 +139,8 @@
             />
 
             <label for="register-password">
-              Password <span class="required-indicator" aria-hidden="true">*</span>
+              Password
+              <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <div class="password-field">
               <input
@@ -150,13 +159,23 @@
                 aria-label="Show password"
                 aria-pressed="false"
               >
-                <svg class="password-icon-show" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  class="password-icon-show"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg class="password-icon-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  class="password-icon-hide"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                  <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4-.8" />
+                  <path
+                    d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4-.8"
+                  />
                 </svg>
               </button>
             </div>
@@ -177,7 +196,7 @@
           </form>
           <!-- Add new code: Existing users can switch to the login form. -->
           <p class="register-login-prompt">
-            Already registered?
+            Already have an account?
             <button class="register-login" type="button" data-auth-mode="login">
               Login
             </button>
@@ -204,7 +223,8 @@
             />
 
             <label for="login-password">
-              Password <span class="required-indicator" aria-hidden="true">*</span>
+              Password
+              <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <div class="password-field">
               <input
@@ -223,13 +243,23 @@
                 aria-label="Show password"
                 aria-pressed="false"
               >
-                <svg class="password-icon-show" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  class="password-icon-show"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                <svg class="password-icon-hide" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  class="password-icon-hide"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                  <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4-.8" />
+                  <path
+                    d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4-.8"
+                  />
                 </svg>
               </button>
             </div>
@@ -237,8 +267,12 @@
           </form>
           <!-- Add new code: New users can switch back to registration. -->
           <p class="register-login-prompt">
-            New user?
-            <button class="register-login" type="button" data-auth-mode="register">
+            Don't have an account?
+            <button
+              class="register-login"
+              type="button"
+              data-auth-mode="register"
+            >
               Register
             </button>
           </p>
