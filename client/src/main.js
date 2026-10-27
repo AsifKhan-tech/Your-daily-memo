@@ -213,12 +213,21 @@ contactForm.addEventListener("submit", (event) => {
 
 // Add new code: Switch the shared dialog between auth panels and move focus
 // into the selected form so keyboard users can continue immediately.
+
 function showAuthMode(mode) {
   const isLogin = mode === "login";
-  registerPanel.classList.toggle("is-active", !isLogin);
+  /**
+   * 2nd argument ensures if it's false, class is removed otherwise it's added
+   */
   loginPanel.classList.toggle("is-active", isLogin);
+  registerPanel.classList.toggle("is-active", !isLogin);
+
+  /**
+   * if isLogin is true, inert will true it will disable that element
+   */
   registerPanel.inert = isLogin;
   loginPanel.inert = !isLogin;
+
   authDialogTitle.textContent = isLogin ? "Login" : "Register";
   authDialogEyebrow.textContent = isLogin
     ? "Welcome back"
@@ -234,6 +243,12 @@ function showAuthMode(mode) {
 loginButton.addEventListener("click", () => showAuthMode("login"));
 registerButton.addEventListener("click", () => showAuthMode("register"));
 
+/**
+ * Extract the value of the tag that is given a custom attribute
+ * HTML tag: <button data-auth-mode = "register">
+ * Use dataset property of this tag and write it camelCase
+ * button.dataset.authMode
+ */
 authModeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     showAuthMode(button.dataset.authMode);

@@ -91,7 +91,9 @@
       id="register-dialog"
       aria-labelledby="register-title"
     >
+      <!--Register form heading and close button container-->
       <div class="register-dialog-heading">
+        <!--Register form heading-->
         <div>
           <p class="eyebrow" id="auth-dialog-eyebrow">Create your account</p>
           <h2 id="register-title">Register</h2>
@@ -111,50 +113,58 @@
 
       <!-- Add new code: Both panels share a grid cell to allow a smooth crossfade between forms. -->
       <div class="auth-panels">
-        <!-- Register form -->
+        <!-- Register form section-->
         <section
           class="auth-panel is-active"
           id="register-panel"
           aria-labelledby="register-title"
         >
+          <!-- Register form -->
           <form class="register-form">
+            <!-- Name field -->
             <label for="register-name">
               Name <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <input
+              type="text"
+              placeholder="Jane Doe"
               class="todo"
               id="register-name"
               name="name"
-              type="text"
               autocomplete="name"
               required
             />
 
+            <!-- Email field -->
             <label for="register-email">
               Email <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <input
+              type="email"
+              placeholder="jane.doe@example.com"
               class="todo"
               id="register-email"
               name="email"
-              type="email"
               autocomplete="email"
               required
             />
 
+            <!-- Password field -->
             <label for="register-password">
               Password
               <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <div class="password-field">
               <input
+                type="password"
+                placeholder="********"
                 class="todo"
                 id="register-password"
                 name="password"
-                type="password"
                 autocomplete="new-password"
                 required
               />
+
               <!-- Add new code: Toggle registration password visibility without submitting the form. -->
               <button
                 class="password-toggle"
@@ -207,36 +217,43 @@
           </p>
         </section>
 
-        <!-- Login form -->
+        <!-- Login form section-->
+
+        <!--inert: this atrribute completely disabled element for screen readers and clicks-->
         <section
           class="auth-panel"
           id="login-panel"
           aria-labelledby="register-title"
           inert
         >
+          <!-- Login form -->
           <form class="login-form">
+            <!-- Email field -->
             <label for="login-email">
               Email <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <input
+              type="email"
+              placeholder="jane.doe@example.com"
               class="todo"
               id="login-email"
               name="email"
-              type="email"
               autocomplete="email"
               required
             />
 
+            <!-- Password field -->
             <label for="login-password">
               Password
               <span class="required-indicator" aria-hidden="true">*</span>
             </label>
             <div class="password-field">
               <input
+                type="password"
+                placeholder="********"
                 class="todo"
                 id="login-password"
                 name="password"
-                type="password"
                 autocomplete="current-password"
                 required
               />
@@ -273,6 +290,13 @@
           <!-- Add new code: New users can switch back to registration. -->
           <p class="register-login-prompt">
             Don't have an account?
+
+            <!--Dev can create custom attribute of any tag in HTML5-->
+            <!--It's mandatory to prefix data word as data-auth-mode="register"-->
+            <!--To read the value of this property in JS, -->
+            <!--we can use the dataset property of this tag and write its name in camelCase
+            button.dataset.authMode
+            -->
             <button
               class="register-login"
               type="button"
