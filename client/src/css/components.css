@@ -629,6 +629,13 @@
   gap: 0.55rem;
 }
 
+/* Keep registration validation feedback readable without competing with field labels. */
+.auth-form-error {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
 .register-form label,
 .login-form label {
   color: var(--muted);

@@ -120,7 +120,8 @@
           aria-labelledby="register-title"
         >
           <!-- Register form -->
-          <form class="register-form">
+          <!-- JavaScript applies the same registration checks as the backend. -->
+          <form class="register-form" novalidate>
             <!-- Name field -->
             <label for="register-name">
               Name <span class="required-indicator" aria-hidden="true">*</span>
@@ -205,6 +206,9 @@
                 <option value="teacher">Teacher</option>
               </select>
             </div>
+
+            <!-- JavaScript writes registration validation errors here for screen readers. -->
+            <p class="auth-form-error" id="register-status" role="alert" hidden></p>
 
             <button class="add-todo" type="submit">Create account</button>
           </form>

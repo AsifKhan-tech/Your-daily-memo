@@ -29,8 +29,25 @@ const authDialogTitle = document.querySelector("#register-title");
 const authDialogEyebrow = document.querySelector("#auth-dialog-eyebrow");
 const registerPanel = document.querySelector("#register-panel");
 const loginPanel = document.querySelector("#login-panel");
+
+//select register and login form
 const registerForm = document.querySelector(".register-form");
 const loginForm = document.querySelector(".login-form");
+
+// Keep the registration controls grouped so submission reads every value consistently.
+const registerFields = {
+  /**
+   * scoped selection, browser search in the specific element
+   * selecting elements using attribute selector
+   */
+  name: registerForm.querySelector('[name="name"]'),
+  email: registerForm.querySelector('[name="email"]'),
+  password: registerForm.querySelector('[name="password"]'),
+  role: registerForm.querySelector('[name="role"]'),
+};
+
+//This element is for showing the error message
+const registerStatus = registerForm.querySelector("#register-status");
 
 // Select all buttons that have a data-auth-mode attribute
 const authModeButtons = document.querySelectorAll("[data-auth-mode]");
@@ -278,13 +295,101 @@ passwordToggleButtons.forEach((button) => {
   });
 });
 
-// These forms are presentation-only until an authentication endpoint is wired in.
+// Apply the backend registration rules to the grouped field values before proceeding.
+registerForm.addEventListener("submit", (event) => {
+  event.preventDefault();
 
-//create an array and loop through it
-[registerForm, loginForm].forEach((authForm) => {
-  authForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+  // Match Joi transformations: trim the name and lowercase the email, but preserve password whitespace.
+  const registerValues = {
+    name: registerFields.name.value.trim(),
+    email: registerFields.email.value.toLowerCase(),
+    password: registerFields.password.value,
+    role: registerFields.role.value || "user",
+  };
+
+  //Assign clean data to the input fields so that
+  //if an error occurrs, user will this clean data
+  registerFields.name.value = registerValues.name;
+  registerFields.email.value = registerValues.email;
+
+  // Match the backend's required fields, length limits, email format, and allowed optional roles.
+  const errors = [];
+  if (!registerValues.name) {
+    errors.push({ field: "name", message: "Name is required." });
+  } else if (
+    registerValues.name.length < 2 ||
+    registerValues.name.length > 50
+  ) {
+    errors.push({
+      field: "name",
+      message: "Name must be between 2 and 50 characters.",
+    });
+  }
+
+  if (!registerValues.email) {
+    errors.push({ field: "email", message: "Email is required." });
+  } else if (
+    registerValues.email.length < 3 ||
+    registerValues.email.length > 254 ||
+    /**
+     * This validity.typeMismatch is the part of HTML5 validation API
+     * Bcz input type = "email" in HTML structure,
+     *  browser checks itself that the given text is in email(@) format or not
+     * registerFields.email: selects the node(input) reference not its value
+     * Bcz browser's built-in feature (HTML5 validation API) doesn't work on string
+     * while it works on physcial DOM node and .validity property exist with it
+     */
+    registerFields.email.validity.typeMismatch
+  ) {
+    errors.push({
+      field: "email",
+      message: "Enter a valid email address (maximum 254 characters).",
+    });
+  }
+
+  if (!registerValues.password) {
+    errors.push({ field: "password", message: "Password is required." });
+  } else if (
+    registerValues.password.length < 8 ||
+    registerValues.password.length > 128
+  ) {
+    errors.push({
+      field: "password",
+      message: "Password must be between 8 and 128 characters.",
+    });
+  }
+
+  if (!["student", "teacher", "user"].includes(registerValues.role)) {
+    errors.push({ field: "role", message: "Select a valid role." });
+  }
+
+  // Mark invalid fields and announce all validation errors accessibly.
+
+  Object.entries(registerFields).forEach(([fieldName, field]) => {
+    //                                    name        input field
+    field.setAttribute(
+      "aria-invalid",
+
+      //some method checks there is any error in errors that matches fieldname
+      String(errors.some((error) => error.field === fieldName)),
+    );
   });
+  registerStatus.textContent = errors.map((error) => error.message).join(" ");
+  registerStatus.hidden = errors.length === 0;
+
+  /**
+   * using bracket notation
+   * registerFields[error[0].field].focus() = [{field:"name", message:"Name is required"}]
+   * registerFields["name"] = select the name element(input)
+   * .focus() method will do cursor focus on the selected field
+   *
+   */
+  if (errors.length > 0) registerFields[errors[0].field].focus();
+});
+
+// Keep login presentation-only until its authentication endpoint is wired in.
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
 });
 
 /**
