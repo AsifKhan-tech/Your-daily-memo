@@ -487,7 +487,7 @@ registerForm.addEventListener("submit", async (event) => {
       toastTimeout = setTimeout(() => {
         toast.classList.add("hidden");
         // window.location.hash = "#home";
-      }, 3000);
+      }, 2000);
 
       const responseData = await response.json();
       console.log("Registration successfull: ", responseData);
