@@ -344,10 +344,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const token = urlParts[urlParts.length - 1];
 
     if (token) {
+      const url = `http://localhost:4000/api/v1/auth/verify-email/${token}`;
       try {
-        const response = await fetch(
-          `http://localhost:4000/api/v1/auth/verify-email/${token}`,
-        );
+        const response = await fetch(url, { method: "GET" });
         const data = await response.json(); // read the message from Backend
 
         if (response.ok) {
