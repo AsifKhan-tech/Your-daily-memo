@@ -83,6 +83,35 @@
           </button>
         </div>
       </nav>
+
+      <!-- insert toast message code  -->
+      <div id="toast-message" class="toast hidden">
+        <div class="toast-content">
+          <span class="toast-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </span>
+          <span class="toast-text" id="toast-text">Confirm your email</span>
+        </div>
+        <button
+          type="button"
+          class="toast-close"
+          id="toast-close"
+          aria-label="Close message"
+        >
+          &times;
+          <!-- Cross icon -->
+        </button>
+      </div>
     </header>
 
     <!-- Add new code: Shared auth dialog switches smoothly between registration and login forms. -->
@@ -208,7 +237,12 @@
             </div>
 
             <!-- JavaScript writes registration validation errors here for screen readers. -->
-            <p class="auth-form-error" id="register-status" role="alert" hidden></p>
+            <p
+              class="auth-form-error"
+              id="register-status"
+              role="alert"
+              hidden
+            ></p>
 
             <button class="add-todo" type="submit">Create account</button>
           </form>

@@ -46,6 +46,11 @@ const registerFields = {
   role: registerForm.querySelector('[name="role"]'),
 };
 
+// toast message's references
+const toast = document.getElementById("toast-message");
+const toastCloseBtn = document.getElementById("toast-close");
+let toastTimeout; // reference to clear the timer
+
 //This element is for showing the error message
 const registerStatus = registerForm.querySelector("#register-status");
 
@@ -295,8 +300,14 @@ passwordToggleButtons.forEach((button) => {
   });
 });
 
+// Optional: Manual close button function
+toastCloseBtn.addEventListener("click", () => {
+  toast.classList.add("hidden");
+  clearTimeout(toastTimeout);
+});
+
 // Apply the backend registration rules to the grouped field values before proceeding.
-registerForm.addEventListener("submit", (event) => {
+registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   // Match Joi transformations: trim the name and lowercase the email, but preserve password whitespace.
@@ -379,12 +390,53 @@ registerForm.addEventListener("submit", (event) => {
 
   /**
    * using bracket notation
-   * registerFields[error[0].field].focus() = [{field:"name", message:"Name is required"}]
+   * registerFields[error[0].field].focus() = registerFields[{field:"name", message:"Name is required"}]
    * registerFields["name"] = select the name element(input)
    * .focus() method will do cursor focus on the selected field
    *
    */
   if (errors.length > 0) registerFields[errors[0].field].focus();
+
+  //clear the form when user submit the form
+  registerForm.reset();
+
+  try {
+    const url = "http://localhost:4000/api/v1/auth/register";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(registerValues),
+    });
+
+    console.log("Server response: ", response);
+
+    if (response.ok) {
+      if (registerDialog.open) {
+        registerDialog.close();
+      }
+
+      //show toast message
+      toast.classList.remove("hidden");
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.add("hidden");
+        window.location.hash = "#home";
+      }, 3000);
+
+      const responseData = await response.json();
+      console.log("Registration successfull: ", responseData);
+    } else {
+      registerStatus.textContent = "Registration failed. Please check details";
+      registerStatus.hidden = false;
+      console.error("Backend error. Registration failed");
+    }
+  } catch (error) {
+    registerStatus.textContent = "Network error. Unable to connect";
+    registerStatus.hidden = false;
+    console.error("Network problem", error);
+  }
 });
 
 // Keep login presentation-only until its authentication endpoint is wired in.

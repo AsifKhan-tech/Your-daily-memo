@@ -485,6 +485,67 @@
   outline-offset: 2px;
 }
 
+/*Tost message styles*/
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0f8b4d;
+  color: white;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  z-index: 1000;
+}
+
+.toast.hidden {
+  opacity: 0;
+  transform: translate(-50%, 20px); /* toast will slide at bttom when close */
+  pointer-events: none;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toast-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+}
+
+.toast-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: inherit; /* Inherit global font */
+}
+
+.toast-close {
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
 /* Add new code: Auth button pair in the navbar.
    Groups Login + Register so they stay side by side with a small gap,
    and shrink together instead of wrapping one at a time. */
