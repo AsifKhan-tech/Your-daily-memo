@@ -49,6 +49,7 @@ const registerFields = {
 // toast message's references
 const toast = document.getElementById("toast-message");
 const toastCloseBtn = document.getElementById("toast-close");
+const toastIcon = document.querySelector(".toast-icon");
 let toastTimeout; // reference to clear the timer
 
 //This element is for showing the error message
@@ -304,6 +305,69 @@ passwordToggleButtons.forEach((button) => {
 toastCloseBtn.addEventListener("click", () => {
   toast.classList.add("hidden");
   clearTimeout(toastTimeout);
+});
+
+// 2. Reusable Toast Function (for Success and Error handling)
+function showToast(message, isSuccess) {
+  // Clear previous timer
+  clearTimeout(toastTimeout);
+
+  // Set the text message
+  toastText.textContent = message;
+
+  // Check state and apply colors & icons
+  if (isSuccess) {
+    toast.classList.remove("error");
+    // Success Icon (Green tick)
+    toastIcon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+  } else {
+    toast.classList.add("error");
+    // Error Icon (Cross)
+    toastIcon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+  }
+
+  // Show the toast
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  toastTimeout = setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
+// 3. Verification API Call on Page Load
+window.addEventListener("DOMContentLoaded", async () => {
+  const currentPath = window.location.pathname;
+
+  if (currentPath.startsWith("/verify-email/")) {
+    const urlParts = currentPath.split("/");
+    const token = urlParts[urlParts.length - 1];
+
+    if (token) {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/v1/auth/verify-email/${token}`,
+        );
+        const data = await response.json(); // read the message from Backend
+
+        if (response.ok) {
+          // Success: Show Green Toast
+          showToast("Email verified successfully", true);
+
+          // Clean the URL and open login modal
+          window.history.replaceState(null, "", "/");
+          setTimeout(() => showAuthMode("login"), 1000);
+        } else {
+          // Error: Show Red Toast
+          showToast(data.message || "Email verification failed", false);
+          window.history.replaceState(null, "", "/");
+        }
+      } catch (error) {
+        // Network Crash: Show Red Toast
+        showToast("Network error. Unable to connect.", false);
+      }
+    }
+  }
 });
 
 // Apply the backend registration rules to the grouped field values before proceeding.

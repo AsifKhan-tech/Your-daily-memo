@@ -546,6 +546,10 @@
   opacity: 1;
 }
 
+.toast.error {
+  background-color: #dc2626;
+}
+
 /* Add new code: Auth button pair in the navbar.
    Groups Login + Register so they stay side by side with a small gap,
    and shrink together instead of wrapping one at a time. */
