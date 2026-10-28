@@ -50,6 +50,7 @@ const registerFields = {
 const toast = document.getElementById("toast-message");
 const toastCloseBtn = document.getElementById("toast-close");
 const toastIcon = document.querySelector(".toast-icon");
+const toastText = document.querySelector("#toast-text");
 let toastTimeout; // reference to clear the timer
 
 //This element is for showing the error message
@@ -355,7 +356,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
           // Clean the URL and open login modal
           window.history.replaceState(null, "", "/");
-          setTimeout(() => showAuthMode("login"), 1000);
+          // setTimeout(() => showAuthMode("login"), 1000);
         } else {
           // Error: Show Red Toast
           showToast(data.message || "Email verification failed", false);
@@ -485,7 +486,7 @@ registerForm.addEventListener("submit", async (event) => {
 
       toastTimeout = setTimeout(() => {
         toast.classList.add("hidden");
-        window.location.hash = "#home";
+        // window.location.hash = "#home";
       }, 3000);
 
       const responseData = await response.json();
