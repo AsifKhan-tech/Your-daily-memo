@@ -1,0 +1,117 @@
+/* src/css/responsive.css
+   Viewport and accessibility overrides. Loaded last so these rules win. */
+
+/* Below ~1024px: hide the inline nav and show the hamburger instead. */
+@media (max-width: 63.99rem) {
+  /* Position context for the dropdown panel. */
+  .navbar {
+    position: relative;
+  }
+
+  /* Hamburger sits on the right of the brand. */
+  .menu-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  /* Collapsed menu: overlay under the bar until .is-menu-open is set in JS. */
+  .nav-links {
+    align-items: stretch;
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    box-shadow: 0 0.75rem 2rem var(--shadow);
+    display: none;
+    flex-direction: column;
+    gap: 0.2rem;
+    left: 0.75rem;
+    padding: 0.4rem;
+    position: absolute;
+    right: 0.75rem;
+    top: calc(100% + 0.5rem);
+    -webkit-backdrop-filter: blur(1.25rem) saturate(150%);
+    backdrop-filter: blur(1.25rem) saturate(150%);
+  }
+
+  /* Open state toggled on .navbar by the menu button. */
+  .navbar.is-menu-open .nav-links {
+    display: flex;
+  }
+
+  /* Taller tap targets in the stacked menu. */
+  .nav-links a {
+    min-height: 2.5rem;
+  }
+
+  /* Add new code: In the hamburger panel, keep Login/Register as compact
+     side-by-side buttons (not stretched across the wide dropdown). */
+  .nav-links .auth-actions {
+    align-self: flex-start;
+    display: flex;
+    margin: 0.35rem 0.3rem;
+    max-width: 100%;
+    min-width: 0;
+    width: auto;
+  }
+}
+
+/* Add new code: On phones, stack Login/Register and make them full-width
+   so they are easy to tap in the narrow dropdown. */
+@media (max-width: 40rem) {
+  .nav-links .auth-actions {
+    align-self: stretch;
+    flex-direction: column;
+    margin-inline: 0;
+  }
+
+  .nav-links .auth-btn {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* From ~640px up: more padding and matching card radii. */
+@media (min-width: 40rem) {
+  .app-shell {
+    padding: 2rem;
+  }
+  .todo-container {
+    border-radius: 1.75rem;
+    padding: 2rem;
+  }
+  .contact-section {
+    border-radius: 1.75rem;
+    padding: 2rem;
+  }
+  .site-footer {
+    padding-inline: 2rem;
+  }
+  .todo-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .add-todo {
+    width: 100%;
+  }
+}
+
+/* Narrow footer: stack brand, links, and copyright instead of one row. */
+@media (max-width: 63.99rem) {
+  .footer-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+  }
+}
+
+/* Honor OS “reduce motion”: drop smooth scrolling and CSS transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

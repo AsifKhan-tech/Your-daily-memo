@@ -1,0 +1,59 @@
+/* src/css/theme.css
+   Design tokens only. Components consume these variables; they do not set colors
+   by hex except where a contrast-safe hover ink is required.
+
+   JavaScript writes data-theme="dark"|"light" on <html>. First visit is dark.
+*/
+
+/*
+@media (prefers-color-scheme: dark) {
+ :root:not([data-theme ="light"]) {
+  color-scheme: dark;
+  --canvas: #101211; 
+  --canvas-deep: #161616; /
+  --surface: rgba(22, 22, 22, 0.7); 
+  --surface-strong: rgba(16, 18, 17, 0.8); 
+  --line: rgba(232, 217, 196, 0.18); 
+  --ink: #f7f3e9; 
+  --muted: rgba(242, 241, 237, 0.68); 
+  --accent: #e8d9c4; 
+  --accent-ink: #161616; 
+  --focus: #e7d4bb; 
+  --shadow: rgba(0, 0, 0, 0.38); 
+  --control-height: 2.75rem; 
+}
+}
+*/
+
+:root {
+  /* Tell the browser to style native controls for a dark page. */
+  color-scheme: dark;
+  --canvas: #101211; /* Page background */
+  --canvas-deep: #161616; /* Gradient partner for the shell */
+  --surface: rgba(22, 22, 22, 0.7); /* Translucent card wash */
+  --surface-strong: rgba(16, 18, 17, 0.8); /* Inputs, list rows, nav glass */
+  --line: rgba(232, 217, 196, 0.18); /* Borders on dark */
+  --ink: #f7f3e9; /* Primary text */
+  --muted: rgba(242, 241, 237, 0.68); /* Secondary text and labels */
+  --accent: #e8d9c4; /* Buttons and brand mark fill */
+  --accent-ink: #161616; /* Text sitting on accent */
+  --focus: #e7d4bb; /* Focus rings and hover fills */
+  --shadow: rgba(0, 0, 0, 0.38); /* Elevation */
+  --control-height: 2.75rem; /* Shared height for inputs and primary buttons */
+}
+
+/* Light palette when the user opts in with the theme toggle. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f7f3e9;
+  --canvas-deep: #e9e0cf;
+  --surface: rgba(247, 243, 233, 0.62);
+  --surface-strong: rgba(242, 241, 237, 0.8);
+  --line: rgba(22, 22, 22, 0.12);
+  --ink: #161616;
+  --muted: rgba(22, 22, 22, 0.64);
+  --accent: #161616;
+  --accent-ink: #f7f3e9;
+  --focus: #e7d4bb;
+  --shadow: rgba(22, 22, 22, 0.16);
+}
