@@ -25,52 +25,38 @@
 
 // export default App;
 
-import { useState } from "react";
-
+//  Components
 import Header from "./components/layout/Header.jsx";
+import AppShell from "./components/layout/AppShell.jsx";
 import TodoForm from "./features/todos/components/TodoForm.jsx";
+import TodoList from "./features/todos/components/TodoList.jsx";
 
-export default function App() {
-  const [todos, setTodos] = useState([]);
+//Hooks
+import { useTodos } from "./features/todos/hooks/useTodos.js";
 
-  function handleAddTodo(newTodo) {
-    const todo = {
-      id: crypto.randomUUID(),
-      memo: newTodo.memo,
-      dateTime: newTodo.dateTime,
-      completed: false,
-    };
-
-    setTodos((currentTodos) => [...currentTodos, todo]);
-  }
+function App() {
+  const { todos, addTodo, toggleTodo, deleteTodo } = useTodos();
 
   return (
     <>
       <Header />
 
-      <main className="app-shell" id="home">
+      <AppShell>
         <section className="todo-container" aria-labelledby="memo-title">
           <p className="eyebrow">Daily memo</p>
-
           <h1 id="memo-title">What's on your mind?</h1>
-
           <p className="intro">Capture a task before it slips away.</p>
 
-          <TodoForm onAddTodo={handleAddTodo} />
-
-          <section className="todo-list-section" aria-labelledby="list-title">
-            <div className="list-heading">
-              <h2 id="list-title">All tasks</h2>
-
-              <span className="todo-count">{todos.length}</span>
-            </div>
-
-            {todos.length === 0 && (
-              <p className="empty-state">Your added tasks will appear here.</p>
-            )}
-          </section>
+          <TodoForm onAddTodo={addTodo} />
+          <TodoList
+            todos={todos}
+            onToggleTodo={toggleTodo}
+            onDeleteTodo={deleteTodo}
+          />
         </section>
-      </main>
+      </AppShell>
     </>
   );
 }
+
+export default App;
