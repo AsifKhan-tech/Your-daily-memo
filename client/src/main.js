@@ -56,10 +56,10 @@ let toastTimeout; // reference to clear the timer
 //This element is for showing the error message
 const registerStatus = registerForm.querySelector("#register-status");
 
-// Select all buttons that have a data-auth-mode attribute
+// Select all buttons that have a attribute named data-auth-mode
 const authModeButtons = document.querySelectorAll("[data-auth-mode]");
 
-// Select all buttons that have a data-password-target attribute
+// Select all buttons that have a attribute named data-password-target
 const passwordToggleButtons = document.querySelectorAll(
   "[data-password-target]",
 );
@@ -363,7 +363,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("Email verified successfully", true);
 
           // Clean the URL and open login modal
-          window.history.replaceState(null, "", "/");
+          // window.history.replaceState(null, "", "/");
           // setTimeout(() => showAuthMode("login"), 1000);
         } else {
           // Error: Show Red Toast
@@ -420,7 +420,7 @@ registerForm.addEventListener("submit", async (event) => {
      *  browser checks itself that the given text is in email(@) format or not
      * registerFields.email: selects the node(input) reference not its value
      * Bcz browser's built-in feature (HTML5 validation API) doesn't work on string
-     * while it works on physcial DOM node and .validity property exist with it
+     * while it works on physcial DOM node and .validity property exist with it & returns true/false
      */
     registerFields.email.validity.typeMismatch
   ) {
@@ -494,7 +494,7 @@ registerForm.addEventListener("submit", async (event) => {
 
       toastTimeout = setTimeout(() => {
         toast.classList.add("hidden");
-        // window.location.hash = "#home";
+        // window.location.hash = "#/";
       }, 2000);
 
       const responseData = await response.json();
