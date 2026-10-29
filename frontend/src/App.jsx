@@ -1,29 +1,7 @@
-// import { Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router";
 
-// import RegisterPage from "./features/auth/pages/RegisterPage";
-// import VerifyEmailPage from "./features/auth/pages/VerifyEmailPage";
-// import LoginPage from "./features/auth/pages/LoginPage";
-
-// import MainLayout from "./layouts/MainLayout";
-// import HomePage from "./features/home/pages/HomePage";
-
-// import "./App.css";
-
-// function App() {
-//   return (
-//     <Routes>
-//       <Route element={<MainLayout />}>
-//         <Route path="/" element={<HomePage />} />
-//       </Route>
-
-//       <Route path="/login" element={<LoginPage />} />
-//       <Route path="/register" element={<RegisterPage />} />
-//       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-//     </Routes>
-//   );
-// }
-
-// export default App;
+import LoginForm from "./features/auth/components/LoginForm.jsx";
+import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 
 //  Components
 import Header from "./components/layout/Header.jsx";
@@ -37,7 +15,9 @@ import ScrollToTop from "./components/layout/ScrollToTop.jsx";
 //Hooks
 import { useTodos } from "./features/todos/hooks/useTodos.js";
 
-function App() {
+function HomePage() {
+  const navigate = useNavigate();
+
   const {
     todos,
     isLoading,
@@ -56,7 +36,10 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header
+        onLoginClick={() => navigate("/login")}
+        onRegisterClick={() => navigate("/register")}
+      />
 
       <AppShell>
         <section className="todo-container" aria-labelledby="memo-title">
@@ -101,4 +84,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomePage;
