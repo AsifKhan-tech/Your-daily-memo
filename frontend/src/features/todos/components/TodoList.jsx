@@ -9,6 +9,8 @@ function TodoList({
   editingTodoId,
   onSaveTodo,
   onCancelEdit,
+  onToggleAll,
+  onDeleteAll,
 }) {
   const [editingMemo, setEditingMemo] = useState("");
   const [editingDateTime, setEditingDateTime] = useState("");
@@ -39,6 +41,32 @@ function TodoList({
         <span className="todo-count">{todos.length}</span>
       </div>
 
+      <div className="list-actions">
+        <label className="all-items-control" htmlFor="all-items">
+          <input
+            id="all-items"
+            className="todo-checkbox"
+            type="checkbox"
+            checked={todos.length > 0 && todos.every((todo) => todo.completed)}
+            onChange={(event) => onToggleAll(event.target.checked)}
+            disabled={todos.length === 0}
+          />
+
+          <span>All items</span>
+        </label>
+
+        <button
+          className="delete-all"
+          type="button"
+          onClick={onDeleteAll}
+          disabled={
+            todos.length === 0 || !todos.every((todo) => todo.completed)
+          }
+        >
+          Delete all
+        </button>
+      </div>
+
       {todos.length === 0 ? (
         <p className="empty-state">Your added tasks will appear here.</p>
       ) : (
@@ -65,27 +93,6 @@ function TodoList({
                   <div className="todo-item-content">
                     {isEditing ? (
                       <>
-                        {/* <input
-                          className="todo-edit-input"
-                          type="text"
-                          value={editingMemo}
-                          onChange={(event) =>
-                            setEditingMemo(event.target.value)
-                          }
-                          aria-label="Edit memo"
-                          autoFocus
-                        />
-
-                        <input
-                          className="todo-edit-input"
-                          type="datetime-local"
-                          value={editingDateTime}
-                          onChange={(event) =>
-                            setEditingDateTime(event.target.value)
-                          }
-                          aria-label="Edit date and time"
-                        /> */}
-
                         <input
                           className="todo-edit-input"
                           type="text"

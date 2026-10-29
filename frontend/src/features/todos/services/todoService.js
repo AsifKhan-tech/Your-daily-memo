@@ -34,4 +34,9 @@ export const todoService = {
 
     return true;
   },
+
+  async deleteAllTodos() {
+    saveTodos([]);
+    return true;
+  },
 };

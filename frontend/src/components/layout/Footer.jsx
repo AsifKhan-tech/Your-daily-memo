@@ -8,6 +8,13 @@ function Footer() {
           className="footer-brand"
           href="#top"
           aria-label="Return to Daily Memo home"
+          onClick={(event) => {
+            event.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
         >
           <span className="brand-mark" aria-hidden="true">
             <svg
@@ -27,7 +34,18 @@ function Footer() {
         </a>
 
         <nav className="footer-links" aria-label="Footer navigation">
-          <a href="#top">Home</a>
+          <a
+            href="#top"
+            onClick={(event) => {
+              event.preventDefault();
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
+            Home
+          </a>
           <a href="#todos">Todos</a>
           <a href="#contact">Contact us</a>
         </nav>

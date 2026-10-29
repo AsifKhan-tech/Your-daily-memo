@@ -32,6 +32,7 @@ import TodoForm from "./features/todos/components/TodoForm.jsx";
 import TodoList from "./features/todos/components/TodoList.jsx";
 import ContactForm from "./features/contact/components/ContactForm.jsx";
 import Footer from "./components/layout/Footer.jsx";
+import ScrollToTop from "./components/layout/ScrollToTop.jsx";
 
 //Hooks
 import { useTodos } from "./features/todos/hooks/useTodos.js";
@@ -45,6 +46,8 @@ function App() {
     addTodo,
     toggleTodo,
     deleteTodo,
+    toggleAllTodos,
+    deleteAllTodos,
     editingTodoId,
     startEditingTodo,
     saveTodo,
@@ -85,12 +88,15 @@ function App() {
               onEditTodo={startEditingTodo}
               onSaveTodo={saveTodo}
               onCancelEdit={cancelEditingTodo}
+              onToggleAll={toggleAllTodos}
+              onDeleteAll={deleteAllTodos}
             />
           )}
         </section>
         <ContactForm />
       </AppShell>
       <Footer />
+      <ScrollToTop />
     </>
   );
 }

@@ -163,6 +163,58 @@ export function useTodos() {
     setEditingTodoId(null);
   }
 
+  //delete all todos
+  async function toggleAllTodos(shouldComplete) {
+    setError("");
+
+    const updates = todos.map((todo) => ({
+      ...todo,
+      completed: shouldComplete,
+    }));
+
+    try {
+      // Save the entire updated list through the service.
+      for (const todo of updates) {
+        await todoService.updateTodo(todo.id, {
+          completed: shouldComplete,
+        });
+      }
+
+      setTodos(updates);
+    } catch (error) {
+      setError("Could not update all memos. Please try again.");
+      console.error("Failed to update all todos:", error);
+    }
+  }
+
+  async function deleteAllTodos() {
+    setError("");
+
+    try {
+      await todoService.deleteAllTodos();
+
+      setTodos([]);
+      setEditingTodoId(null);
+    } catch (error) {
+      setError("Could not delete all memos. Please try again.");
+      console.error("Failed to delete all todos:", error);
+    }
+  }
+
+  // return {
+  //   todos,
+  //   isLoading,
+  //   error,
+  //   retryLoading,
+  //   editingTodoId,
+  //   addTodo,
+  //   toggleTodo,
+  //   deleteTodo,
+  //   startEditingTodo,
+  //   saveTodo,
+  //   cancelEditingTodo,
+  // };
+
   return {
     todos,
     isLoading,
@@ -172,6 +224,8 @@ export function useTodos() {
     addTodo,
     toggleTodo,
     deleteTodo,
+    toggleAllTodos,
+    deleteAllTodos,
     startEditingTodo,
     saveTodo,
     cancelEditingTodo,
