@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Page canvas, readable type, and a minimum width so the card does not collapse. */
 body {
   background: var(--canvas);

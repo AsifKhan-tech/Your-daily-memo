@@ -6,7 +6,7 @@ function Footer() {
       <div className="footer-content">
         <a
           className="footer-brand"
-          href="#home"
+          href="#top"
           aria-label="Return to Daily Memo home"
         >
           <span className="brand-mark" aria-hidden="true">
@@ -27,7 +27,7 @@ function Footer() {
         </a>
 
         <nav className="footer-links" aria-label="Footer navigation">
-          <a href="#home">Home</a>
+          <a href="#top">Home</a>
           <a href="#todos">Todos</a>
           <a href="#contact">Contact us</a>
         </nav>

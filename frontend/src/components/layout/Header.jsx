@@ -37,7 +37,7 @@ export default function Header({ onOpenAuth }) {
   }
 
   return (
-    <header className="site-header">
+    <header className="site-header" id="top">
       <nav
         className={`navbar ${isMenuOpen ? "is-menu-open" : ""}`}
         aria-label="Primary navigation"
