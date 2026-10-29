@@ -30,12 +30,26 @@ import Header from "./components/layout/Header.jsx";
 import AppShell from "./components/layout/AppShell.jsx";
 import TodoForm from "./features/todos/components/TodoForm.jsx";
 import TodoList from "./features/todos/components/TodoList.jsx";
+import ContactForm from "./features/contact/components/ContactForm.jsx";
+import Footer from "./components/layout/Footer.jsx";
 
 //Hooks
 import { useTodos } from "./features/todos/hooks/useTodos.js";
 
 function App() {
-  const { todos, addTodo, toggleTodo, deleteTodo } = useTodos();
+  const {
+    todos,
+    isLoading,
+    error,
+    retryLoading,
+    addTodo,
+    toggleTodo,
+    deleteTodo,
+    editingTodoId,
+    startEditingTodo,
+    saveTodo,
+    cancelEditingTodo,
+  } = useTodos();
 
   return (
     <>
@@ -48,13 +62,35 @@ function App() {
           <p className="intro">Capture a task before it slips away.</p>
 
           <TodoForm onAddTodo={addTodo} />
-          <TodoList
-            todos={todos}
-            onToggleTodo={toggleTodo}
-            onDeleteTodo={deleteTodo}
-          />
+
+          {/* Adding loading and error template  */}
+
+          {error && (
+            <div className="error-message" role="alert">
+              <p>{error}</p>
+              <button type="button" onClick={retryLoading}>
+                Retry loading
+              </button>
+            </div>
+          )}
+
+          {isLoading ? (
+            <p role="status">Loading your memos...</p>
+          ) : (
+            <TodoList
+              todos={todos}
+              onToggleTodo={toggleTodo}
+              onDeleteTodo={deleteTodo}
+              editingTodoId={editingTodoId}
+              onEditTodo={startEditingTodo}
+              onSaveTodo={saveTodo}
+              onCancelEdit={cancelEditingTodo}
+            />
+          )}
         </section>
+        <ContactForm />
       </AppShell>
+      <Footer />
     </>
   );
 }

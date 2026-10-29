@@ -1046,10 +1046,39 @@
   border-bottom-width: 2px;
 }
 
+/*---Cancel and save---*/
+.todo-edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-edit-actions .edit-todo,
+.todo-edit-actions .delete-todo {
+  min-height: var(--control-height);
+}
+
+/*Error and loading */
+.error-message {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #d9534f;
+  border-radius: 8px;
+}
+
+.error-message p {
+  margin-top: 0;
+}
+
+.error-message button {
+  cursor: pointer;
+}
+
 /* --- Action Buttons within List --- */
 
 /* 1. Shared Base Styles 
    Only group properties that are 100% identical between both buttons. */
+
 .edit-todo,
 .delete-todo {
   align-items: center;
