@@ -341,7 +341,7 @@ function showToast(message, isSuccess) {
   // Hide after 3 seconds
   toastTimeout = setTimeout(() => {
     toast.classList.add("hidden");
-  }, 3000);
+  }, 2000);
 }
 
 // 3. Verification API Call on Page Load
@@ -363,7 +363,7 @@ window.addEventListener("DOMContentLoaded", async () => {
           showToast("Email verified successfully", true);
 
           // Clean the URL and open login modal
-          // window.history.replaceState(null, "", "/");
+          window.history.replaceState(null, "", "/");
           // setTimeout(() => showAuthMode("login"), 1000);
         } else {
           // Error: Show Red Toast
