@@ -262,10 +262,18 @@ function showAuthMode(mode) {
     ? document.querySelector("#login-email")
     : document.querySelector("#register-name")
   ).focus();
+
+  //update the url
+  // window.history.pushState(null, "", "/" + mode);
 }
 
 loginButton.addEventListener("click", () => showAuthMode("login"));
 registerButton.addEventListener("click", () => showAuthMode("register"));
+
+//update url when close the form
+// registerDialog.addEventListener("close", () => {
+//   window.history.pushState(null, "", "/");
+// });
 
 /**
  * Extract the value of the tag that is given a custom attribute
