@@ -1,4 +1,5 @@
 function Toast({ type = "success", message, onClose }) {
+  // Match the reference mockup with a rounded success pill and a bordered check icon.
   return (
     <div
       className={`app-toast app-toast--${type}`}
