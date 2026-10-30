@@ -1482,3 +1482,10 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
+/*Error show at bottom of input field*/
+.field-error {
+  color: #e05252;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-top: -0.25rem;
+}

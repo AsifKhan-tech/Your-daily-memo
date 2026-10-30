@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+
+import { validateRegisterDto } from "../dto/register.dto";
+import { registerUser } from "../services/authService";
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -7,16 +10,87 @@ function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("User");
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
 
-  function handleSubmit(event) {
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  // Automatically hide toast after 5 seconds.
+  useEffect(() => {
+    if (!toast) return;
+
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  // Remove a field's error when the user edits that field.
+  function handleFieldChange(field, value, setter) {
+    setter(value);
+
+    setErrors((previous) => ({
+      ...previous,
+      [field]: "",
+    }));
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    setMessage(
-      "Registration form ready. Backend registration is not connected yet.",
-    );
+    setToast(null);
+
+    const formData = {
+      name,
+      email,
+      password,
+      role,
+    };
+
+    // Step 1: Validate form data using Joi DTO.
+    const validation = validateRegisterDto(formData);
+
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+
+    // Clear previous validation errors.
+    setErrors({});
+
+    try {
+      setIsSubmitting(true);
+
+      // Step 2: Send validated data to backend.
+      const response = await registerUser(validation.data);
+
+      // Step 3: Show success message.
+      setToast({
+        type: "success",
+        message:
+          response.message ||
+          "Registration successful. Please check your email to confirm your account.",
+      });
+
+      // Clear form after successful registration.
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRole("user");
+      setShowPassword(false);
+    } catch (error) {
+      // Step 4: Show backend or network error.
+      setToast({
+        type: "error",
+        message: error.message || "Registration failed. Please try again.",
+      });
+    } finally {
+      // Always stop loading, whether request succeeds or fails.
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -37,7 +111,7 @@ function RegisterForm() {
         </button>
       </div>
 
-      <form className="register-form" onSubmit={handleSubmit}>
+      <form className="register-form" onSubmit={handleSubmit} noValidate>
         <div className="input-group">
           <label htmlFor="register-name">
             Name <span className="required-indicator">*</span>
@@ -50,9 +124,19 @@ function RegisterForm() {
             placeholder="Jane Doe"
             autoComplete="name"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) =>
+              handleFieldChange("name", event.target.value, setName)
+            }
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? "register-name-error" : undefined}
             required
           />
+
+          {errors.name && (
+            <small className="field-error" id="register-name-error">
+              {errors.name}
+            </small>
+          )}
 
           <label htmlFor="register-email">
             Email <span className="required-indicator">*</span>
@@ -65,9 +149,19 @@ function RegisterForm() {
             placeholder="jane.doe@example.com"
             autoComplete="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) =>
+              handleFieldChange("email", event.target.value, setEmail)
+            }
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "register-email-error" : undefined}
             required
           />
+
+          {errors.email && (
+            <small className="field-error" id="register-email-error">
+              {errors.email}
+            </small>
+          )}
 
           <label htmlFor="register-password">
             Password <span className="required-indicator">*</span>
@@ -80,9 +174,14 @@ function RegisterForm() {
               className="todo"
               placeholder="********"
               autoComplete="new-password"
-              minLength={8}
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                handleFieldChange("password", event.target.value, setPassword)
+              }
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={
+                errors.password ? "register-password-error" : undefined
+              }
               required
             />
 
@@ -94,7 +193,6 @@ function RegisterForm() {
               onClick={() => setShowPassword((previous) => !previous)}
             >
               {showPassword ? (
-                // Eye with a slash: password is currently visible.
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M3 3l18 18" />
                   <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
@@ -102,7 +200,6 @@ function RegisterForm() {
                   <path d="M6.2 6.2C3.9 7.8 3 12 3 12s3.5 7 9 7a10 10 0 0 0 4-.8" />
                 </svg>
               ) : (
-                // Normal eye: password is hidden.
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z" />
                   <circle cx="12" cy="12" r="3" />
@@ -110,6 +207,12 @@ function RegisterForm() {
               )}
             </button>
           </div>
+
+          {errors.password && (
+            <small className="field-error" id="register-password-error">
+              {errors.password}
+            </small>
+          )}
 
           <label htmlFor="register-role">
             Role <span className="optional-indicator">(Optional)</span>
@@ -120,25 +223,31 @@ function RegisterForm() {
               id="register-role"
               className="todo"
               value={role}
-              onChange={(event) => setRole(event.target.value)}
+              onChange={(event) =>
+                handleFieldChange("role", event.target.value, setRole)
+              }
             >
-              <option value="User">User</option>
-              <option value="Student">Student</option>
-              <option value="Teacher">Teacher</option>
+              <option value="user">User</option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
             </select>
           </div>
         </div>
 
-        <button className="add-todo" type="submit">
-          Create account
+        <button className="add-todo" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Creating account..." : "Create account"}
         </button>
-
-        {message && (
-          <p className="contact-status" role="status" aria-live="polite">
-            {message}
-          </p>
-        )}
       </form>
+
+      {toast && (
+        <div
+          className={`toast ${toast.type === "error" ? "error" : ""}`}
+          role={toast.type === "error" ? "alert" : "status"}
+          aria-live={toast.type === "error" ? "assertive" : "polite"}
+        >
+          {toast.message}
+        </div>
+      )}
 
       <p className="register-login-prompt">
         Already have an account? <Link to="/login">Login</Link>
