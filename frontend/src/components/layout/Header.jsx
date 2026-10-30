@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Header({ onOpenAuth }) {
+export default function Header({ onLoginClick, onRegisterClick }) {
   // 1. Manage the mobile navigation menu.
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -101,7 +101,7 @@ export default function Header({ onOpenAuth }) {
             <button
               className="auth-btn auth-btn-login"
               type="button"
-              onClick={() => onOpenAuth?.("login")}
+              onClick={onLoginClick}
             >
               Login
             </button>
@@ -109,7 +109,7 @@ export default function Header({ onOpenAuth }) {
             <button
               className="auth-btn auth-btn-register"
               type="button"
-              onClick={() => onOpenAuth?.("register")}
+              onClick={onRegisterClick}
             >
               Register
             </button>

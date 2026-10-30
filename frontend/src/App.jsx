@@ -84,4 +84,62 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+function AuthPage({ children }) {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Header
+        onLoginClick={() => navigate("/login")}
+        onRegisterClick={() => navigate("/register")}
+      />
+
+      <main className="app-shell">{children}</main>
+
+      <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+
+        <Route
+          path="/login"
+          element={
+            <AuthPage>
+              <LoginForm />
+            </AuthPage>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <AuthPage>
+              <RegisterForm />
+            </AuthPage>
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            <main className="app-shell">
+              <h1>Page not found</h1>
+              <p>The page you are looking for does not exist.</p>
+              <a href="/">Back to Daily Memo</a>
+            </main>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+// export default HomePage;
