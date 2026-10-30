@@ -18,6 +18,7 @@ function RegisterForm() {
   // Prevent multiple registration requests.
   const submissionStarted = useRef(false);
 
+  // Handle input changes and clear individual field errors.
   function handleFieldChange(field, value, setter) {
     setter(value);
 
@@ -27,8 +28,12 @@ function RegisterForm() {
     }));
   }
 
+  // Handle registration form submission.
   async function handleSubmit(event) {
     event.preventDefault();
+
+    // Prevent duplicate submissions.
+    if (submissionStarted.current) return;
 
     // Prepare form data.
     const formData = {
@@ -38,7 +43,7 @@ function RegisterForm() {
       role,
     };
 
-    // Step 1: Validate data before clearing the form.
+    // Step 1: Validate form data.
     const validation = validateRegisterDto(formData);
 
     if (!validation.isValid) {
@@ -46,15 +51,12 @@ function RegisterForm() {
       return;
     }
 
-    // Prevent duplicate submissions.
-    if (submissionStarted.current) return;
-
     submissionStarted.current = true;
 
-    // Step 2: Save validated data.
+    // Step 2: Save validated data before clearing inputs.
     const registrationData = validation.data;
 
-    // Step 3: Immediately clear the form.
+    // Step 3: Immediately clear all input fields.
     setName("");
     setEmail("");
     setPassword("");
@@ -62,28 +64,21 @@ function RegisterForm() {
     setShowPassword(false);
     setErrors({});
 
-    // Step 4: Immediately navigate to homepage.
-    navigate("/", {
-      replace: true,
-      state: {
-        registrationPending: true,
-      },
-    });
-
-    // Step 5: Send registration request in the background.
     try {
+      // Step 4: Send registration request to backend.
+      // Browser URL remains /register while waiting.
       const response = await registerUser(registrationData);
 
-      // Backend registration successful.
+      // Step 5: Redirect to homepage after successful response.
       navigate("/", {
         replace: true,
         state: {
           registrationSuccess: true,
-          message: "Confirm your email.",
+          message: "Confirm your email",
         },
       });
     } catch (error) {
-      // Backend or network error.
+      // Step 6: Redirect to homepage if registration fails.
       navigate("/", {
         replace: true,
         state: {
@@ -91,6 +86,9 @@ function RegisterForm() {
           message: error.message || "Registration failed. Please try again.",
         },
       });
+    } finally {
+      // Allow another registration attempt if needed.
+      submissionStarted.current = false;
     }
   }
 
@@ -114,6 +112,7 @@ function RegisterForm() {
 
       <form className="register-form" onSubmit={handleSubmit} noValidate>
         <div className="input-group">
+          {/* Name */}
           <label htmlFor="register-name">
             Name <span className="required-indicator">*</span>
           </label>
@@ -139,6 +138,7 @@ function RegisterForm() {
             </small>
           )}
 
+          {/* Email */}
           <label htmlFor="register-email">
             Email <span className="required-indicator">*</span>
           </label>
@@ -164,6 +164,7 @@ function RegisterForm() {
             </small>
           )}
 
+          {/* Password */}
           <label htmlFor="register-password">
             Password <span className="required-indicator">*</span>
           </label>
@@ -198,7 +199,7 @@ function RegisterForm() {
                   <path d="M3 3l18 18" />
                   <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
                   <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5.5 0 9 7 9 7a14 14 0 0 1-3.1 3.8" />
-                  <path d="M6.2 6.2C3.9 7.8 3 12 3 12s3.5 7 9 7a10 10 0 0 0 4-.8" />
+                  <path d="M6.2 6.2C3.9 8 3 12 3 12s3.5 7 9 7a10 10 0 0 0 4-.8" />
                 </svg>
               ) : (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -215,6 +216,7 @@ function RegisterForm() {
             </small>
           )}
 
+          {/* Role */}
           <label htmlFor="register-role">
             Role <span className="optional-indicator">(Optional)</span>
           </label>

@@ -22,3 +22,25 @@ export async function registerUser(payload) {
 
   return result;
 }
+
+export async function verifyEmail(token) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/verify-email/${encodeURIComponent(token)}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    },
+  );
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(
+      result?.message || "Email verification failed. Please try again.",
+    );
+  }
+
+  return result;
+}

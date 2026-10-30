@@ -110,6 +110,32 @@
   }
 }
 
+/* Preserve the same compact proportions on narrow screens. */
+@media (max-width: 480px) {
+  .app-toast {
+    width: min(360px, calc(100% - 2rem));
+    min-height: 58px;
+    padding: 0.7rem 0.85rem;
+    gap: 0.65rem;
+  }
+
+  .app-toast__message {
+    font-size: 0.9rem;
+  }
+
+  .app-toast__icon,
+  .app-toast__icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .app-toast__close {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 1.4rem;
+  }
+}
+
 /* Honor OS “reduce motion”: drop smooth scrolling and CSS transitions. */
 @media (prefers-reduced-motion: reduce) {
   *,

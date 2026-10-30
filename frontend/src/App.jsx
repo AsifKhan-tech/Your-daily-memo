@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 
 import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
+import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
 import Toast from "./components/ui/Toast.jsx";
 
 // Components
@@ -186,6 +187,15 @@ function App() {
           element={
             <AuthPage>
               <RegisterForm />
+            </AuthPage>
+          }
+        />
+
+        <Route
+          path="/verify-email/:token"
+          element={
+            <AuthPage>
+              <VerifyEmail />
             </AuthPage>
           }
         />
