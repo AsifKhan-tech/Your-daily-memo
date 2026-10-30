@@ -79,6 +79,10 @@
     border-radius: 1.75rem;
     padding: 2rem;
   }
+
+  .todo-container.register-container {
+    padding: 1.5rem;
+  }
   .contact-section {
     border-radius: 1.75rem;
     padding: 2rem;

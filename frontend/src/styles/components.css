@@ -1195,3 +1195,290 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Register page: match the compact Vanilla registration dialog */
+
+.register-container {
+  max-width: 30rem;
+  padding: 1.5rem;
+  margin: 3rem auto;
+}
+
+.register-heading {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-right: 0;
+}
+
+.register-heading h1 {
+  font-size: 1.5rem;
+  letter-spacing: -0.035em;
+}
+
+.register-heading .eyebrow {
+  margin-bottom: 0.5rem;
+}
+
+.register-close {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 2.5rem;
+  font: inherit;
+  font-size: 1.4rem;
+  height: 2.5rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  width: 2.5rem;
+}
+
+.register-close:hover {
+  background: var(--surface);
+}
+
+.register-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.register-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.register-form .input-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.register-form .input-group label {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.required-indicator {
+  color: #e05252;
+}
+
+.optional-indicator {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Thin and subtle active input border */
+.register-container .todo:focus {
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Password eye icon */
+.register-form .password-field {
+  position: relative;
+}
+
+.register-form .password-field .todo {
+  padding-right: 3rem;
+}
+
+.register-form .password-toggle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.45rem;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  height: 2.25rem;
+  justify-content: center;
+  padding: 0.4rem;
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+}
+
+.register-form .password-toggle:hover {
+  color: var(--ink);
+}
+
+.register-form .password-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.register-form .password-toggle svg {
+  fill: none;
+  height: 1.15rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  width: 1.15rem;
+}
+
+/* Optional role dropdown */
+.register-role-select {
+  position: relative;
+}
+
+.register-role-select::after {
+  border-bottom: 1.5px solid var(--muted);
+  border-right: 1.5px solid var(--muted);
+  content: "";
+  height: 0.45rem;
+  pointer-events: none;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-70%) rotate(45deg);
+  width: 0.45rem;
+}
+
+.register-role-select select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+/* Button and login prompt spacing */
+.register-form .add-todo {
+  margin-top: 0.55rem;
+}
+
+.register-login-prompt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.register-login-prompt a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Login page: match the Vanilla login dialog */
+
+.todo-container.login-container {
+  max-width: 30rem;
+  padding: 1.5rem;
+  margin: 3rem auto;
+}
+
+.login-container .register-heading {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.login-container .register-heading h1 {
+  font-size: 1.5rem;
+  letter-spacing: -0.035em;
+}
+
+.login-container .register-heading .eyebrow {
+  margin-bottom: 0.5rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.login-form .input-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.login-form .input-group label {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* Subtle, thin focus border */
+.login-container .todo:focus {
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Password eye icon */
+.login-form .password-field {
+  position: relative;
+}
+
+.login-form .password-field .todo {
+  padding-right: 3rem;
+}
+
+.login-form .password-toggle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.45rem;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  height: 2.25rem;
+  justify-content: center;
+  padding: 0.4rem;
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+}
+
+.login-form .password-toggle:hover {
+  color: var(--ink);
+}
+
+.login-form .password-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.login-form .password-toggle svg {
+  fill: none;
+  height: 1.15rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  width: 1.15rem;
+}
+
+/* Login button spacing */
+.login-form .add-todo {
+  margin-top: 0.55rem;
+}
+
+/* Register link below the button */
+.login-container .register-login-prompt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.login-container .register-login-prompt a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
