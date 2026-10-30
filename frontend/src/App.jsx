@@ -1,9 +1,18 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router";
+
+import { useEffect, useState } from "react";
 
 import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
+import Toast from "./components/ui/Toast.jsx";
 
-//  Components
+// Components
 import Header from "./components/layout/Header.jsx";
 import AppShell from "./components/layout/AppShell.jsx";
 import TodoForm from "./features/todos/components/TodoForm.jsx";
@@ -12,11 +21,56 @@ import ContactForm from "./features/contact/components/ContactForm.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import ScrollToTop from "./components/layout/ScrollToTop.jsx";
 
-//Hooks
+// Hooks
 import { useTodos } from "./features/todos/hooks/useTodos.js";
 
 function HomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [toast, setToast] = useState(null);
+
+  // Handle registration status received from RegisterForm.
+  useEffect(() => {
+    const state = location.state;
+
+    if (!state) return;
+
+    if (state.registrationPending) {
+      setToast({
+        type: "pending",
+        message: "Creating your account...",
+      });
+    } else if (state.registrationSuccess) {
+      setToast({
+        type: "success",
+        message: state.message,
+      });
+    } else if (state.registrationError) {
+      setToast({
+        type: "error",
+        message: state.message,
+      });
+    }
+
+    // Clear navigation state after reading it.
+    navigate("/", {
+      replace: true,
+      state: null,
+    });
+  }, [location.state, navigate]);
+
+  // Hide success and error toasts after 5 seconds.
+  // Keep the pending toast visible until the API responds.
+  useEffect(() => {
+    if (!toast || toast.type === "pending") return;
+
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const {
     todos,
@@ -49,7 +103,7 @@ function HomePage() {
 
           <TodoForm onAddTodo={addTodo} />
 
-          {/* Adding loading and error template  */}
+          {/* Loading and error states */}
 
           {error && (
             <div className="error-message" role="alert">
@@ -76,8 +130,19 @@ function HomePage() {
             />
           )}
         </section>
+
         <ContactForm />
       </AppShell>
+
+      {/* Registration status toast */}
+      {toast && (
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <Footer />
       <ScrollToTop />
     </>
@@ -141,5 +206,3 @@ function App() {
 }
 
 export default App;
-
-// export default HomePage;

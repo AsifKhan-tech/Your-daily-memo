@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { validateRegisterDto } from "../dto/register.dto";
@@ -14,21 +14,10 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
 
-  // Automatically hide toast after 5 seconds.
-  useEffect(() => {
-    if (!toast) return;
+  // Prevent multiple registration requests.
+  const submissionStarted = useRef(false);
 
-    const timer = setTimeout(() => {
-      setToast(null);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [toast]);
-
-  // Remove a field's error when the user edits that field.
   function handleFieldChange(field, value, setter) {
     setter(value);
 
@@ -41,8 +30,7 @@ function RegisterForm() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    setToast(null);
-
+    // Prepare form data.
     const formData = {
       name,
       email,
@@ -50,7 +38,7 @@ function RegisterForm() {
       role,
     };
 
-    // Step 1: Validate form data using Joi DTO.
+    // Step 1: Validate data before clearing the form.
     const validation = validateRegisterDto(formData);
 
     if (!validation.isValid) {
@@ -58,38 +46,51 @@ function RegisterForm() {
       return;
     }
 
-    // Clear previous validation errors.
+    // Prevent duplicate submissions.
+    if (submissionStarted.current) return;
+
+    submissionStarted.current = true;
+
+    // Step 2: Save validated data.
+    const registrationData = validation.data;
+
+    // Step 3: Immediately clear the form.
+    setName("");
+    setEmail("");
+    setPassword("");
+    setRole("user");
+    setShowPassword(false);
     setErrors({});
 
+    // Step 4: Immediately navigate to homepage.
+    navigate("/", {
+      replace: true,
+      state: {
+        registrationPending: true,
+      },
+    });
+
+    // Step 5: Send registration request in the background.
     try {
-      setIsSubmitting(true);
+      const response = await registerUser(registrationData);
 
-      // Step 2: Send validated data to backend.
-      const response = await registerUser(validation.data);
-
-      // Step 3: Show success message.
-      setToast({
-        type: "success",
-        message:
-          response.message ||
-          "Registration successful. Please check your email to confirm your account.",
+      // Backend registration successful.
+      navigate("/", {
+        replace: true,
+        state: {
+          registrationSuccess: true,
+          message: "Confirm your email.",
+        },
       });
-
-      // Clear form after successful registration.
-      setName("");
-      setEmail("");
-      setPassword("");
-      setRole("user");
-      setShowPassword(false);
     } catch (error) {
-      // Step 4: Show backend or network error.
-      setToast({
-        type: "error",
-        message: error.message || "Registration failed. Please try again.",
+      // Backend or network error.
+      navigate("/", {
+        replace: true,
+        state: {
+          registrationError: true,
+          message: error.message || "Registration failed. Please try again.",
+        },
       });
-    } finally {
-      // Always stop loading, whether request succeeds or fails.
-      setIsSubmitting(false);
     }
   }
 
@@ -234,20 +235,10 @@ function RegisterForm() {
           </div>
         </div>
 
-        <button className="add-todo" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating account..." : "Create account"}
+        <button className="add-todo" type="submit">
+          Create account
         </button>
       </form>
-
-      {toast && (
-        <div
-          className={`toast ${toast.type === "error" ? "error" : ""}`}
-          role={toast.type === "error" ? "alert" : "status"}
-          aria-live={toast.type === "error" ? "assertive" : "polite"}
-        >
-          {toast.message}
-        </div>
-      )}
 
       <p className="register-login-prompt">
         Already have an account? <Link to="/login">Login</Link>
