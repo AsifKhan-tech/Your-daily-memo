@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 export default function Header({ onLoginClick, onRegisterClick }) {
   // 1. Manage the mobile navigation menu.
@@ -43,8 +44,9 @@ export default function Header({ onLoginClick, onRegisterClick }) {
         aria-label="Primary navigation"
       >
         {/* Brand */}
-        <a
+        <Link
           className="brand"
+          to="/"
           href="#home"
           aria-label="Daily Memo home"
           onClick={handleNavigation}
@@ -64,7 +66,7 @@ export default function Header({ onLoginClick, onRegisterClick }) {
           </span>
 
           <span>Daily Memo</span>
-        </a>
+        </Link>
 
         {/* Mobile menu button */}
         <button
