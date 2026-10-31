@@ -117,3 +117,28 @@ export async function resendVerificationEmail(email) {
 
   return result;
 }
+
+// Refresh access token using the HTTP-only refresh token cookie.
+export async function refreshSession() {
+  const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const error = new Error(
+      result?.message || "Session expired. Please login again.",
+    );
+
+    error.code = result?.code;
+
+    throw error;
+  }
+
+  return result;
+}

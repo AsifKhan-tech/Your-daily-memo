@@ -162,11 +162,13 @@ const login = async ({ email, password }) => {
 
 // Token refresh service
 const refresh = async (token) => {
-  //check token is availabe
-  if (!token) throw ApiError.unauthorized("Refresh token missing");
+  //checking if the user has provided token
+  if (typeof token !== "string" || !token.trim()) {
+    throw ApiError.unauthorized("Refresh token missing");
+  }
 
   //verify refresh token & it returns payload
-  const decoded = verifyRefreshToken(token);
+  const decoded = verifyRefreshToken(token.trim());
 
   //find the specific user
   const user = await User.findById(decoded.id).select("+refreshToken");

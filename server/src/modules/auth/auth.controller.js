@@ -65,25 +65,33 @@ const login = async (req, res) => {
 };
 
 // Token refresh controller
+// Token refresh controller
 const refreshToken = async (req, res) => {
   const token = req.cookies?.refreshToken;
 
   const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
 
+  // Cookie configuration
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  };
+
+  // Set new access token cookie
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
+    ...cookieOptions,
     maxAge: 15 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
   });
 
+  // Set new refresh token cookie
   res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
+    ...cookieOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
   });
 
+  // Return user information, not tokens.
   Apiresponse.ok(res, "Tokens refreshed successfully", { user });
 };
 
