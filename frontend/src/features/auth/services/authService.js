@@ -7,13 +7,34 @@ export async function registerUser(payload) {
     headers: {
       "Content-Type": "application/json",
     },
+
+    /**
+     * This (JSON) is a built-in library(object) in the language
+     * It contains static utility methods to handle data conversion.
+     * .stringify() : This is a synchronous method
+     * It immediately takes a live JavaScript object/array (payload)
+     * and converts it into a flat, raw text string so it can be sent over the internet.
+     */
     body: JSON.stringify(payload),
   });
 
-  // Response ko JSON mein convert karne ki koshish
+  /**
+   * await response.json()
+   * This (json) is a built-in tool(method) attached to the network response
+   * The response object: When you make a network request (using fetch),
+   * the server doesn't send the whole file instantly;
+   * it arrives as a stream of raw bytes.
+   * The response variable holds a reference to this ongoing stream.
+   */
+
+  /**
+   * The .json() method: This is a built-in method belonging to the Fetch API response object.
+   * It does two jobs behind the scenes:
+   * It waits for the raw data stream from the network to completely finish downloading.
+   * It automatically takes that downloaded text string and parses it back into a usable JavaScript object.
+   */
   const result = await response.json().catch(() => null);
 
-  // HTTP error handle karo
   if (!response.ok) {
     throw new Error(
       result?.message || "Registration failed. Please try again.",
@@ -34,6 +55,7 @@ export async function verifyEmail(token) {
     },
   );
 
+  // Parse(convert) response body(server response) into JSON object
   const result = await response.json().catch(() => null);
 
   if (!response.ok) {

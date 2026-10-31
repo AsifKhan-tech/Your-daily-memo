@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 
 // IMPORT FILE SYSTEM TO READ HTML FILES
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Utility to get current directory path in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -128,11 +128,7 @@ const sendResetPasswordEmail = async (email, token) => {
     const url = `${process.env.CLIENT_URL}/reset-password/${token}`;
 
     // Read the reset password template
-    const templatePath = path.join(
-      __dirname,
-      "templates",
-      "reset-password.html",
-    );
+    const templatePath = path.join(__dirname, "templates", "reset-password.html");
     let htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
     // Inject dynamic data

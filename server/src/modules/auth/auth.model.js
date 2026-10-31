@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false, //when an object(user) created using it, all the data is returned except the data which => selcet:false
     },
-
+    // TODO: add verificationTokenExpiry
     refreshToken: { type: String, select: false },
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpiry: { type: Date, select: false },
