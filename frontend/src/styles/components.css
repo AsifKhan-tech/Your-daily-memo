@@ -1695,3 +1695,67 @@
   filter: none;
   box-shadow: none;
 }
+
+/* Resend verification email */
+.resend-verification-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.resend-verification-message {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Shared button design */
+.resend-verification-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 2.25rem;
+  padding: 0.5rem 0.9rem;
+
+  border: 1px solid var(--verification-border);
+  border-radius: 0.65rem;
+
+  background: var(--verification-bg);
+  color: var(--verification-ink);
+
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.resend-verification-button:hover:not(:disabled) {
+  background: var(--verification-hover);
+  border-color: var(--verification-border-hover);
+  transform: translateY(-1px);
+}
+
+.resend-verification-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.resend-verification-button:focus-visible {
+  outline: 2px solid var(--verification-ink);
+  outline-offset: 3px;
+}
+
+.resend-verification-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

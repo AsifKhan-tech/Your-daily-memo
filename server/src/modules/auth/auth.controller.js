@@ -68,8 +68,23 @@ const login = async (req, res) => {
 const refreshToken = async (req, res) => {
   const token = req.cookies?.refreshToken;
 
-  const { accessToken } = authService.refresh(token);
-  Apiresponse.ok(res, "Refreshed the token", { accessToken });
+  const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  Apiresponse.ok(res, "Tokens refreshed successfully", { user });
 };
 
 // User logout controller

@@ -1,7 +1,8 @@
 class ApiError extends Error {
-  constructor(statusCode, message) {
+  constructor(statusCode, message, code = "API_ERROR") {
     super(message);
     this.statusCode = statusCode;
+    this.code = code;
     this.isOperational = true;
 
     Error.captureStackTrace(this, this.constructor);
@@ -27,9 +28,7 @@ class ApiError extends Error {
     return new ApiError(404, message);
   }
 
-  static internal(
-    message = "Failed to send verification email. Please try again!",
-  ) {
+  static internal(message = "Failed to send verification email. Please try again!") {
     return new ApiError(500, message);
   }
 }

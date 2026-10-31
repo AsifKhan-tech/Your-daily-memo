@@ -40,6 +40,13 @@
   --focus: #e7d4bb; /* Focus rings and hover fills */
   --shadow: rgba(0, 0, 0, 0.38); /* Elevation */
   --control-height: 2.75rem; /* Shared height for inputs and primary buttons */
+
+  /* Verification button: Dark theme */
+  --verification-ink: #4ade80;
+  --verification-bg: rgba(34, 197, 94, 0.1);
+  --verification-hover: rgba(34, 197, 94, 0.18);
+  --verification-border: rgba(34, 197, 94, 0.25);
+  --verification-border-hover: rgba(34, 197, 94, 0.45);
 }
 
 /* Light palette when the user opts in with the theme toggle. */
@@ -56,4 +63,11 @@
   --accent-ink: #f7f3e9;
   --focus: #e7d4bb;
   --shadow: rgba(22, 22, 22, 0.16);
+
+  /* Verification button: Light theme */
+  --verification-ink: #15803d;
+  --verification-bg: rgba(22, 163, 74, 0.08);
+  --verification-hover: rgba(22, 163, 74, 0.14);
+  --verification-border: rgba(22, 163, 74, 0.25);
+  --verification-border-hover: rgba(22, 163, 74, 0.45);
 }

@@ -103,7 +103,7 @@ const resendVerificationEmail = async (email) => {
   if (!user) throw ApiError.notFound("Account not found");
 
   //if user already verified, give the error
-  if (user.isVerified) throw ApiError.badRequest("User already exists");
+  if (user.isVerified) throw ApiError.badRequest("Your email is already verified. Please login.");
 
   //generate reset tokens one give to the user
   //and another one store in DB to compare the user's token
@@ -129,15 +129,18 @@ const login = async ({ email, password }) => {
   //check if verified or not
 
   const user = await User.findOne({ email }).select("+password");
+  console.log("User found:", Boolean(user));
   if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
   //check password
   const isMatch = await user.comparePassword(password);
+  console.log("Password valid:", isMatch);
+  console.log("Email verified:", user.isVerified);
   if (!isMatch) throw ApiError.unauthorized("Invalid Email or password");
 
   //if isVerified: false, It means user didn't verify its email
   if (!user.isVerified) {
-    throw ApiError.forbidden("Please verify your email before login");
+    throw new ApiError(403, "Please verify your email before login", "EMAIL_NOT_VERIFIED");
   }
 
   //generate tokens for sending to the client so that client and server communicates smoothly

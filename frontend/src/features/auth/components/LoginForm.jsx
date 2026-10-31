@@ -2,7 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { validateLoginDto } from "../dto/login.dto";
-import { loginUser } from "../services/authService";
+import { loginUser, resendVerificationEmail } from "../services/authService";
+
 import Toast from "../../../components/ui/Toast";
 
 function LoginForm() {
@@ -14,11 +15,14 @@ function LoginForm() {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [requiresVerification, setRequiresVerification] = useState(false);
+
   const [toast, setToast] = useState(null);
 
   const submissionStarted = useRef(false);
 
-  // Automatically hide error toast after 5 seconds.
+  // Automatically hide toast after 5 seconds.
   useEffect(() => {
     if (!toast) return;
 
@@ -29,6 +33,7 @@ function LoginForm() {
     return () => clearTimeout(timer);
   }, [toast]);
 
+  // Handle input changes and clear individual field errors.
   function handleFieldChange(field, value, setter) {
     setter(value);
 
@@ -36,20 +41,25 @@ function LoginForm() {
       ...previous,
       [field]: "",
     }));
+
+    // Hide resend option when the email changes.
+    if (field === "email") {
+      setRequiresVerification(false);
+    }
   }
 
+  // Handle login submission.
   async function handleSubmit(event) {
     event.preventDefault();
 
     if (submissionStarted.current) return;
 
-    // Step 1: Collect form data.
     const formData = {
       email,
       password,
     };
 
-    // Step 2: Validate data using Joi.
+    // Validate credentials using Joi.
     const validation = validateLoginDto(formData);
 
     if (!validation.isValid) {
@@ -57,17 +67,17 @@ function LoginForm() {
       return;
     }
 
-    // Step 3: Start submission.
     submissionStarted.current = true;
+
     setIsSubmitting(true);
     setErrors({});
     setToast(null);
+    setRequiresVerification(false);
 
     try {
-      // Step 4: Send login request to backend.
       const response = await loginUser(validation.data);
 
-      // Step 5: Redirect after successful login.
+      // Redirect after successful login.
       navigate("/", {
         replace: true,
         state: {
@@ -76,14 +86,44 @@ function LoginForm() {
         },
       });
     } catch (error) {
-      // Step 6: Display backend error.
+      const errorMessage = error.message || "Login failed. Please try again.";
+
+      // Check the structured backend error code.
+      const needsVerification = error.code === "EMAIL_NOT_VERIFIED";
+
+      setRequiresVerification(needsVerification);
+
       setToast({
         type: "error",
-        message: error.message || "Login failed. Please try again.",
+        message: errorMessage,
       });
     } finally {
       submissionStarted.current = false;
       setIsSubmitting(false);
+    }
+  }
+
+  // Resend email verification link.
+  async function handleResendVerification() {
+    if (isResending || !email.trim()) return;
+
+    setIsResending(true);
+    setToast(null);
+
+    try {
+      const response = await resendVerificationEmail(email.trim());
+
+      setToast({
+        type: "success",
+        message: response.message || "Verification email sent successfully.",
+      });
+    } catch (error) {
+      setToast({
+        type: "error",
+        message: error.message || "Unable to resend verification email.",
+      });
+    } finally {
+      setIsResending(false);
     }
   }
 
@@ -183,7 +223,30 @@ function LoginForm() {
             )}
           </div>
 
-          <button className="add-todo" type="submit" disabled={isSubmitting}>
+          {requiresVerification && (
+            <div className="resend-verification-wrapper">
+              <p className="resend-verification-message">
+                Your email address is not verified yet.
+              </p>
+
+              <button
+                type="button"
+                className="resend-verification-button"
+                onClick={handleResendVerification}
+                disabled={isResending}
+              >
+                {isResending
+                  ? "Sending verification email..."
+                  : "Resend verification email"}
+              </button>
+            </div>
+          )}
+
+          <button
+            className="add-todo"
+            type="submit"
+            disabled={isSubmitting || isResending}
+          >
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>

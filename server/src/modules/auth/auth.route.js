@@ -16,11 +16,7 @@ import { authenticate } from "./auth.middleware.js";
 const router = Router();
 
 //register route
-router.post(
-  "/register",
-  validateMiddlewareFunction(RegisterDto),
-  authController.register,
-);
+router.post("/register", validateMiddlewareFunction(RegisterDto), authController.register);
 
 /**
  * @route   GET /api/v1/auth/verify-email/:token
@@ -62,30 +58,20 @@ router.post(
 );
 
 //login route
-router.post(
-  "/login",
-  validateMiddlewareFunction(LoginDto),
-  authController.login,
-);
+router.post("/login", validateMiddlewareFunction(LoginDto), authController.login);
+
 //token refresh route
-router.post("/refresh-token", authenticate, authController.refreshToken);
+// This route call when access token has been expire
+router.post("/refresh-token", authController.refreshToken);
 
 //logout route
 router.post("/logout", authenticate, authController.logout);
 
 // forgot password route
-router.post(
-  "/forgot-password",
-  validateMiddlewareFunction(ForgotPasswordDto),
-  authController.forgotPassword,
-);
+router.post("/forgot-password", validateMiddlewareFunction(ForgotPasswordDto), authController.forgotPassword);
 
 //reset password route
-router.put(
-  "/reset-password/:token",
-  validateMiddlewareFunction(ResetPasswordDto),
-  authController.resetPassword,
-);
+router.put("/reset-password/:token", validateMiddlewareFunction(ResetPasswordDto), authController.resetPassword);
 
 //profile route
 router.get("/profile", authenticate, authController.profile);

@@ -1,6 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
+// User registeration
 export async function registerUser(payload) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",
@@ -44,6 +45,7 @@ export async function registerUser(payload) {
   return result;
 }
 
+//email verification
 export async function verifyEmail(token) {
   const response = await fetch(
     `${API_BASE_URL}/auth/verify-email/${encodeURIComponent(token)}`,
@@ -67,6 +69,8 @@ export async function verifyEmail(token) {
   return result;
 }
 
+//User login
+
 export async function loginUser(payload) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
@@ -80,7 +84,35 @@ export async function loginUser(payload) {
   const result = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(result?.message || "Login failed. Please try again.");
+    const error = new Error(
+      result?.message || "Login failed. Please try again.",
+    );
+
+    error.code = result?.code;
+
+    throw error;
+  }
+
+  return result;
+}
+
+// Re-send the email for verifiation
+export async function resendVerificationEmail(email) {
+  const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(
+      result?.message ||
+        "Failed to resend verification email. Please try again.",
+    );
   }
 
   return result;

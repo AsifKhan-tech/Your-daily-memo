@@ -75,8 +75,14 @@ app.all("{*path}", (req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
   res.status(err.statusCode || 500).json({
     success: false,
+    code: err.code || "INTERNAL_SERVER_ERROR",
     message: err.message || "Internal Server Error",
   });
 });
