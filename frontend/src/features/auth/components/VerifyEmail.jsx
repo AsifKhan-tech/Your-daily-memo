@@ -81,7 +81,7 @@
 
 // export default VerifyEmail;
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
 import { verifyEmail } from "../services/authService";
@@ -94,13 +94,7 @@ function VerifyEmail() {
   const [message, setMessage] = useState("Verifying your email...");
   const [toast, setToast] = useState(null);
 
-  const requestStarted = useRef(false);
-
   useEffect(() => {
-    if (requestStarted.current) return;
-
-    requestStarted.current = true;
-
     async function handleVerification() {
       if (!token) {
         setStatus("error");
