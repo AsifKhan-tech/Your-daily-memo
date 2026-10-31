@@ -151,6 +151,7 @@ const login = async ({ email, password }) => {
   const userObj = user.toObject();
 
   delete userObj.password;
+  // Delete the refresh token that is save in DB
   delete userObj.refreshToken;
 
   return { user: userObj, accessToken, refreshToken };

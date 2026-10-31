@@ -35,7 +35,6 @@ const login = async (req, res) => {
    * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
    */
 
-  // Cookies are the authentication mechanism
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     maxAge: 15 * 60 * 1000,
@@ -62,9 +61,6 @@ const login = async (req, res) => {
     sameSite: "strict",
   });
 
-  /**
-   * Remove/don't expose the access and refresh tokens from JSON response
-   */
   Apiresponse.ok(res, "User login successfully", { user });
 };
 
@@ -72,25 +68,8 @@ const login = async (req, res) => {
 const refreshToken = async (req, res) => {
   const token = req.cookies?.refreshToken;
 
-  const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
-
-  // Set new access token in cookie
-  req.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    maxAge: 15 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  // Set new refresh token in cookie
-  req.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    maxAge: 15 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  Apiresponse.ok(res, "Refreshed the token", { user });
+  const { accessToken } = authService.refresh(token);
+  Apiresponse.ok(res, "Refreshed the token", { accessToken });
 };
 
 // User logout controller

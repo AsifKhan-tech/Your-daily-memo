@@ -1687,3 +1687,11 @@
     transform: rotate(360deg);
   }
 }
+
+/* Login form and button disable styles */
+.login-form .add-todo:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: none;
+  box-shadow: none;
+}

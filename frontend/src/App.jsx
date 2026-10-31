@@ -8,19 +8,24 @@ import {
 
 import { useEffect, useState } from "react";
 
+// Auth components
 import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
-import Toast from "./components/ui/Toast.jsx";
 
-// Components
+// UI components
+import Toast from "./components/ui/Toast.jsx";
 import Header from "./components/layout/Header.jsx";
 import AppShell from "./components/layout/AppShell.jsx";
-import TodoForm from "./features/todos/components/TodoForm.jsx";
-import TodoList from "./features/todos/components/TodoList.jsx";
-import ContactForm from "./features/contact/components/ContactForm.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import ScrollToTop from "./components/layout/ScrollToTop.jsx";
+
+// Todo components
+import TodoForm from "./features/todos/components/TodoForm.jsx";
+import TodoList from "./features/todos/components/TodoList.jsx";
+
+// Contact component
+import ContactForm from "./features/contact/components/ContactForm.jsx";
 
 // Hooks
 import { useTodos } from "./features/todos/hooks/useTodos.js";
@@ -31,7 +36,7 @@ function HomePage() {
 
   const [toast, setToast] = useState(null);
 
-  // Handle registration status received from RegisterForm.
+  // Handle registration and login status received through navigation state.
   useEffect(() => {
     const state = location.state;
 
@@ -52,6 +57,11 @@ function HomePage() {
         type: "error",
         message: state.message,
       });
+    } else if (state.loginSuccess) {
+      setToast({
+        type: "success",
+        message: state.message || "Login successful. Welcome back!",
+      });
     }
 
     // Clear navigation state after reading it.
@@ -61,8 +71,8 @@ function HomePage() {
     });
   }, [location.state, navigate]);
 
-  // Hide success and error toasts after 5 seconds.
-  // Keep the pending toast visible until the API responds.
+  // Automatically hide success and error toasts after 5 seconds.
+  // Keep pending toast visible until the API responds.
   useEffect(() => {
     if (!toast || toast.type === "pending") return;
 
@@ -99,7 +109,9 @@ function HomePage() {
       <AppShell>
         <section className="todo-container" aria-labelledby="memo-title">
           <p className="eyebrow">Daily memo</p>
+
           <h1 id="memo-title">What's on your mind?</h1>
+
           <p className="intro">Capture a task before it slips away.</p>
 
           <TodoForm onAddTodo={addTodo} />
@@ -109,6 +121,7 @@ function HomePage() {
           {error && (
             <div className="error-message" role="alert">
               <p>{error}</p>
+
               <button type="button" onClick={retryLoading}>
                 Retry loading
               </button>
@@ -135,7 +148,7 @@ function HomePage() {
         <ContactForm />
       </AppShell>
 
-      {/* Registration status toast */}
+      {/* Registration and login status toast */}
       {toast && (
         <Toast
           type={toast.type}
@@ -150,6 +163,7 @@ function HomePage() {
   );
 }
 
+// Shared layout for authentication pages.
 function AuthPage({ children }) {
   const navigate = useNavigate();
 
@@ -171,8 +185,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Homepage */}
         <Route path="/" element={<HomePage />} />
 
+        {/* Login */}
         <Route
           path="/login"
           element={
@@ -182,6 +198,7 @@ function App() {
           }
         />
 
+        {/* Registration */}
         <Route
           path="/register"
           element={
@@ -191,6 +208,7 @@ function App() {
           }
         />
 
+        {/* Email verification */}
         <Route
           path="/verify-email/:token"
           element={
@@ -200,6 +218,7 @@ function App() {
           }
         />
 
+        {/* 404 - Page not found */}
         <Route
           path="*"
           element={
