@@ -24,6 +24,26 @@ const login = async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
   /**
+   * sending access token in cookie
+   * frontend cann't read the cookie because 'httpOnly: true'
+   * It prevents the XSS(Cross-Site scripting) attack
+   *
+   * secure: process.env.NODE_ENV === "production"
+   * This cookie will only transfer on HTTPS connections in 'production environment'
+   *
+   * sameSite: "strict" => Ensures that the cookie is sent on only with requests to your own domain.
+   * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
+   */
+
+  // Cookies are the authentication mechanism
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  /**
    * sending refresh token in cookie
    * frontend cann't read the cookie because 'httpOnly: true'
    * It prevents the XSS(Cross-Site scripting) attack
@@ -43,37 +63,34 @@ const login = async (req, res) => {
   });
 
   /**
-   * sending access token in cookie
-   * frontend cann't read the cookie because 'httpOnly: true'
-   * It prevents the XSS(Cross-Site scripting) attack
-   *
-   * secure: process.env.NODE_ENV === "production"
-   * This cookie will only transfer on HTTPS connections in 'production environment'
-   *
-   * sameSite: "strict" => Ensures that the cookie is sent on only with requests to your own domain.
-   * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
+   * Remove/don't expose the access and refresh tokens from JSON response
    */
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    maxAge: 15 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  Apiresponse.ok(res, "User login successfully", {
-    user,
-    accessToken,
-    refreshToken,
-  });
+  Apiresponse.ok(res, "User login successfully", { user });
 };
 
 // Token refresh controller
 const refreshToken = async (req, res) => {
   const token = req.cookies?.refreshToken;
 
-  const { accessToken } = authService.refresh(token);
-  Apiresponse.ok(res, "Refreshed the token", { accessToken });
+  const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
+
+  // Set new access token in cookie
+  req.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  // Set new refresh token in cookie
+  req.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  Apiresponse.ok(res, "Refreshed the token", { user });
 };
 
 // User logout controller

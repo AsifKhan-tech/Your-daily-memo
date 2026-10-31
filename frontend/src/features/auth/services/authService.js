@@ -66,3 +66,22 @@ export async function verifyEmail(token) {
 
   return result;
 }
+
+export async function loginUser(payload) {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(result?.message || "Login failed. Please try again.");
+  }
+
+  return result;
+}

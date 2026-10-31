@@ -102,7 +102,7 @@ const resendVerificationEmail = async (email) => {
   const user = await User.findOne({ email });
   if (!user) throw ApiError.notFound("Account not found");
 
-  //if already verified, give the error
+  //if user already verified, give the error
   if (user.isVerified) throw ApiError.badRequest("User already exists");
 
   //generate reset tokens one give to the user
@@ -114,12 +114,10 @@ const resendVerificationEmail = async (email) => {
   await user.save({ validateBeforeSave: false });
 
   //resend the verification email
-
   try {
     await sendVerificationEmail(email, rawToken);
   } catch (error) {
     console.error("Resend verification: ", error);
-
     throw ApiError.internal("Failed to send the verification email. Please try again!");
   }
 };
