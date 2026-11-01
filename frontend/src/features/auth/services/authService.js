@@ -1,7 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
-// User registeration
+// User registeration API call
 export async function registerUser(payload) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",
@@ -45,7 +45,7 @@ export async function registerUser(payload) {
   return result;
 }
 
-//email verification
+//email verification API call
 export async function verifyEmail(token) {
   const response = await fetch(
     `${API_BASE_URL}/auth/verify-email/${encodeURIComponent(token)}`,
@@ -69,7 +69,7 @@ export async function verifyEmail(token) {
   return result;
 }
 
-//User login
+//User login API call
 export async function loginUser(payload) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
@@ -95,7 +95,7 @@ export async function loginUser(payload) {
   return result;
 }
 
-// Re-send the email for verifiation
+// Re-send the email for verifiation email API call
 export async function resendVerificationEmail(email) {
   const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
     method: "POST",
