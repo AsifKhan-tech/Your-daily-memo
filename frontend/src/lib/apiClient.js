@@ -1,10 +1,10 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api/v1";
 
-// for storing promise of refresh request
+// Stores the currently running refresh request.
 let refreshPromise = null;
 
-// Refresh access & refresh tokens using the HTTP-only refresh token cookie.
+// Refresh the session using the HTTP-only refresh token cookie.
 async function refreshSession() {
   const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
     method: "POST",
@@ -13,14 +13,21 @@ async function refreshSession() {
 
   const result = await response.json().catch(() => null);
 
-  /* Fetch API 401, 404 aur 500 jaise HTTP errors par automatically Promise reject nahi karti */
   if (!response.ok) {
-    throw new Error(result?.message || "Session expired. Please login again.");
+    const error = new Error(
+      result?.message || "Session expired. Please login again.",
+    );
+
+    error.code = result?.code;
+    error.status = response.status;
+
+    throw error;
   }
 
   return result;
 }
 
+// Centralized API request function.
 export async function apiRequest(endpoint, options = {}) {
   const requestOptions = {
     ...options,
@@ -30,36 +37,50 @@ export async function apiRequest(endpoint, options = {}) {
     },
   };
 
-  let response = await fetch(`${API_BASE_URL}${endpoint}`, requestOptions);
+  const request = new Request(`${API_BASE_URL}${endpoint}`, requestOptions);
 
-  // Do not refresh recursively if refresh endpoint itself fails.
-  // It is the single-flight request pattern
-  if (
+  // Send the original API request.
+  let response = await fetch(request.clone());
+
+  // Check whether this request is eligible for token refresh.
+  const shouldRefresh =
     response.status === 401 &&
     endpoint !== "/auth/refresh-token" &&
     endpoint !== "/auth/login" &&
-    endpoint !== "/auth/register"
-  ) {
-    try {
-      // Prevent multiple simultaneous refresh requests.
-      if (!refreshPromise) {
-        refreshPromise = refreshSession().finally(() => {
-          refreshPromise = null;
-        });
+    endpoint !== "/auth/register";
+
+  if (shouldRefresh) {
+    // Read a clone so the original response body remains available.
+    const errorResult = await response
+      .clone()
+      .json()
+      .catch(() => null);
+
+    // Refresh only when the backend specifically reports an expired token.
+    if (errorResult?.code === "ACCESS_TOKEN_EXPIRED") {
+      try {
+        // Reuse an existing refresh request if one is already running.
+        if (!refreshPromise) {
+          refreshPromise = refreshSession().finally(() => {
+            refreshPromise = null;
+          });
+        }
+
+        // Wait until the refresh request completes.
+        await refreshPromise;
+
+        // Retry the original request once with the new cookies.
+        response = await fetch(request.clone());
+      } catch (error) {
+        throw error;
       }
-
-      // only request can execute at a time
-      await refreshPromise;
-
-      // Retry original request once.
-      response = await fetch(`${API_BASE_URL}${endpoint}`, requestOptions);
-    } catch (error) {
-      throw new Error(error.message || "Session expired. Please login again.");
     }
   }
 
+  // Parse the final API response.
   const result = await response.json().catch(() => null);
 
+  // Handle unsuccessful responses.
   if (!response.ok) {
     const error = new Error(result?.message || "Something went wrong.");
 

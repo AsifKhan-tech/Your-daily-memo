@@ -1,3 +1,5 @@
+import { apiRequest } from "../../../lib/apiClient.js";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
@@ -115,4 +117,11 @@ export async function resendVerificationEmail(email) {
   }
 
   return result;
+}
+
+// Get authenticated user's profile
+export async function getUserProfile() {
+  return apiRequest("/auth/profile", {
+    method: "GET",
+  });
 }

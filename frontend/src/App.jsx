@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
+import ProfilePage from "./features/auth/pages/ProfilePage.jsx";
 
 // UI components
 import Toast from "./components/ui/Toast.jsx";
@@ -217,6 +218,8 @@ function App() {
             </AuthPage>
           }
         />
+
+        <Route path="/profile" element={<ProfilePage />} />
 
         {/* 404 - Page not found */}
         <Route
