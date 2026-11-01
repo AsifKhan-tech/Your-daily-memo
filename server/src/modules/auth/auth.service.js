@@ -129,13 +129,10 @@ const login = async ({ email, password }) => {
   //check if verified or not
 
   const user = await User.findOne({ email }).select("+password");
-  console.log("User found:", Boolean(user));
   if (!user) throw ApiError.unauthorized("Invalid Email or password");
 
   //check password
   const isMatch = await user.comparePassword(password);
-  console.log("Password valid:", isMatch);
-  console.log("Email verified:", user.isVerified);
   if (!isMatch) throw ApiError.unauthorized("Invalid Email or password");
 
   //if isVerified: false, It means user didn't verify its email
@@ -168,14 +165,20 @@ const refresh = async (token) => {
   }
 
   //verify refresh token & it returns payload
-  const decoded = verifyRefreshToken(token.trim());
+  let decoded;
+
+  try {
+    decoded = verifyRefreshToken(token.trim());
+  } catch (error) {
+    throw ApiError.unauthorized("Invalid or expired refresh token");
+  }
 
   //find the specific user
   const user = await User.findById(decoded.id).select("+refreshToken");
   if (!user) throw ApiError.unauthorized("User not found");
 
   //check with stored hashed DB token
-  if (user.refreshToken !== hashToken(token)) {
+  if (user.refreshToken !== hashToken(token.trim())) {
     throw ApiError.unauthorized("Invalid refresh token");
   }
 
@@ -190,6 +193,7 @@ const refresh = async (token) => {
   //removing some fields and return
   const userObj = user.toObject();
   delete userObj.refreshToken;
+  delete userObj.password;
 
   return {
     user: userObj,

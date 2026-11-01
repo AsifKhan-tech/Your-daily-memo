@@ -1,5 +1,6 @@
 import * as authService from "./auth.service.js";
-import Apiresponse from "../../../src/common/utils/api-response.js";
+import Apiresponse from "../../common/utils/api-response.js";
+import { setAuthCookies, clearAuthCookies } from "../../common/utils/cookie.utils.js";
 
 // user registration controller
 const register = async (req, res) => {
@@ -35,12 +36,7 @@ const login = async (req, res) => {
    * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
    */
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    maxAge: 15 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
+  /* ---- Setting cookies ---- */
 
   /**
    * sending refresh token in cookie
@@ -54,42 +50,24 @@ const login = async (req, res) => {
    * It protects the server against 'CSRF (Cross-Site Request Forgery)' attacks
    */
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
+  // Set authentication cookies
+  setAuthCookies(res, accessToken, refreshToken);
 
   Apiresponse.ok(res, "User login successfully", { user });
 };
 
 // Token refresh controller
-// Token refresh controller
 const refreshToken = async (req, res) => {
+  console.log("Cookies received:", Object.keys(req.cookies || {}));
+
   const token = req.cookies?.refreshToken;
+
+  console.log("Refresh token received:", Boolean(token));
 
   const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
 
-  // Cookie configuration
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-  };
-
-  // Set new access token cookie
-  res.cookie("accessToken", accessToken, {
-    ...cookieOptions,
-    maxAge: 15 * 60 * 1000,
-  });
-
-  // Set new refresh token cookie
-  res.cookie("refreshToken", newRefreshToken, {
-    ...cookieOptions,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  // Set authentication cookies
+  setAuthCookies(res, accessToken, newRefreshToken);
 
   // Return user information, not tokens.
   Apiresponse.ok(res, "Tokens refreshed successfully", { user });
@@ -99,9 +77,9 @@ const refreshToken = async (req, res) => {
 const logout = async (req, res) => {
   //extract user's id
   await authService.logout(req.user.id);
-  //clear cookie
-  res.clearCookie("refreshToken");
-  res.clearCookie("accessToken");
+
+  // Clear authentication cookies
+  clearAuthCookies(res);
   Apiresponse.ok(res, "Logout successfully");
 };
 
