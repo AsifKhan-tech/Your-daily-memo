@@ -3,6 +3,7 @@ const API_BASE_URL =
 
 let refreshPromise = null;
 
+// Refresh access & refresh tokens using the HTTP-only refresh token cookie.
 async function refreshSession() {
   const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
     method: "POST",
@@ -11,6 +12,7 @@ async function refreshSession() {
 
   const result = await response.json().catch(() => null);
 
+  /* Fetch API 401, 404 aur 500 jaise HTTP errors par automatically Promise reject nahi karti */
   if (!response.ok) {
     throw new Error(result?.message || "Session expired. Please login again.");
   }
