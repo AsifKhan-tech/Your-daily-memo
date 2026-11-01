@@ -13,9 +13,9 @@ const verifyAccessToken = (token) => {
     return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      throw ApiError.unauthorized("Access token expired");
+      throw ApiError.unauthorized("Access token expired", "ACCESS_TOKEN_EXPIRED");
     }
-    throw ApiError.unauthorized("Invalid access token");
+    throw ApiError.unauthorized("Invalid access token", "INVALID_ACCESS_TOKEN");
   }
 };
 
@@ -37,18 +37,9 @@ const verifyRefreshToken = (token) => {
 const generateResetToken = () => {
   const rawToken = crypto.randomBytes(32).toString("hex");
 
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(rawToken)
-    .digest("hex");
+  const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
 
   return { rawToken, hashedToken };
 };
 
-export {
-  verifyAccessToken,
-  verifyRefreshToken,
-  generateAccessToken,
-  generateRefreshToken,
-  generateResetToken,
-};
+export { verifyAccessToken, verifyRefreshToken, generateAccessToken, generateRefreshToken, generateResetToken };

@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
   if (!token) throw ApiError.unauthorized("Not authenticated");
 
   //verify the access token and search the specific user
-  const decoded = verifyAccessToken(token);
+  const decoded = verifyAccessToken(token.trim());
   const user = await User.findById(decoded.id);
   if (!user) throw ApiError.unauthorized("User no longer exists");
 
@@ -31,9 +31,7 @@ const authenticate = async (req, res, next) => {
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      throw ApiError.forbidden(
-        "You don't have permission to perform this action",
-      );
+      throw ApiError.forbidden("You don't have permission to perform this action");
     }
     next();
   };

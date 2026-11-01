@@ -1,6 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1";
 
+// for storing promise of refresh request
 let refreshPromise = null;
 
 // Refresh access & refresh tokens using the HTTP-only refresh token cookie.
@@ -32,6 +33,7 @@ export async function apiRequest(endpoint, options = {}) {
   let response = await fetch(`${API_BASE_URL}${endpoint}`, requestOptions);
 
   // Do not refresh recursively if refresh endpoint itself fails.
+  // It is the single-flight request pattern
   if (
     response.status === 401 &&
     endpoint !== "/auth/refresh-token" &&
@@ -46,6 +48,7 @@ export async function apiRequest(endpoint, options = {}) {
         });
       }
 
+      // only request can execute at a time
       await refreshPromise;
 
       // Retry original request once.
