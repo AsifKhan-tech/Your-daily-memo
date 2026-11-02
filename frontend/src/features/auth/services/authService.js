@@ -151,3 +151,34 @@ export async function forgotPassword(email) {
 
   return result;
 }
+
+// Reset password API call
+export async function resetPassword(token, password) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/reset-password/${encodeURIComponent(token)}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password,
+      }),
+    },
+  );
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const error = new Error(
+      result?.message || "Unable to reset password. Please try again.",
+    );
+
+    error.code = result?.code;
+    error.status = response.status;
+
+    throw error;
+  }
+
+  return result;
+}

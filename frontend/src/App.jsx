@@ -15,6 +15,7 @@ import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
 import ProfilePage from "./features/auth/pages/ProfilePage.jsx";
 import ForgotPasswordForm from "./features/auth/components/ForgotPasswordForm.jsx";
+import ResetPasswordForm from "./features/auth/components/ResetPasswordForm.jsx";
 import { AuthProvider, useAuth } from "./features/auth/context/AuthContext.jsx";
 
 // UI components
@@ -231,6 +232,15 @@ function App() {
             element={
               <AuthPage>
                 <ForgotPasswordForm />
+              </AuthPage>
+            }
+          />
+
+          <Route
+            path="/reset-password/:token"
+            element={
+              <AuthPage>
+                <ResetPasswordForm />
               </AuthPage>
             }
           />

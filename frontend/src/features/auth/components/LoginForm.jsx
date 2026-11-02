@@ -227,7 +227,9 @@ function LoginForm() {
             )}
           </div>
 
-          <div className="forgot-password-link">
+          <div className="login-password-links">
+            <Link to="/reset-password">Reset password?</Link>
+
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
 

@@ -235,6 +235,17 @@
   }
 }
 
+@media (max-width: 400px) {
+  .login-password-links {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .login-password-links a {
+    font-size: 0.8rem;
+  }
+}
+
 /* ========================================
    6. Accessibility: Reduced Motion
 ======================================== */
