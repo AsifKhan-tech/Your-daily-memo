@@ -248,7 +248,9 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute>
-                <ProfilePage />
+                <AuthPage>
+                  <ProfilePage />
+                </AuthPage>
               </ProtectedRoute>
             }
           />

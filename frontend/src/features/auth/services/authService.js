@@ -1,5 +1,5 @@
 import { apiRequest } from "../../../lib/apiClient.js";
-import { API_BASE_URL } from "./config.js";
+import { API_BASE_URL } from "../../../lib/config.js";
 
 // User registeration API call
 export async function registerUser(payload) {

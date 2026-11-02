@@ -1,50 +1,61 @@
 /* src/css/responsive.css
-   Viewport and accessibility overrides. Loaded last so these rules win. */
+   Viewport and accessibility overrides.
+   Loaded last so these rules win. */
 
-/* Below ~1024px: hide the inline nav and show the hamburger instead. */
+/* ========================================
+   1. Responsive Navigation
+======================================== */
+
+/* Below ~1024px: hide inline navigation and show hamburger. */
+
 @media (max-width: 63.99rem) {
-  /* Position context for the dropdown panel. */
+  /* Position context for navigation dropdown. */
   .navbar {
     position: relative;
   }
 
-  /* Hamburger sits on the right of the brand. */
+  /* Hamburger button. */
   .menu-toggle {
     display: inline-flex;
     margin-left: auto;
   }
 
-  /* Collapsed menu: overlay under the bar until .is-menu-open is set in JS. */
+  /* Collapsed navigation panel. */
   .nav-links {
     align-items: stretch;
     background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
     border: 1px solid var(--line);
     border-radius: 0.9rem;
     box-shadow: 0 0.75rem 2rem var(--shadow);
+
     display: none;
     flex-direction: column;
     gap: 0.2rem;
+
     left: 0.75rem;
     padding: 0.4rem;
     position: absolute;
     right: 0.75rem;
     top: calc(100% + 0.5rem);
+
+    /* Important: allow profile dropdown to overflow. */
+    overflow: visible;
+
     -webkit-backdrop-filter: blur(1.25rem) saturate(150%);
     backdrop-filter: blur(1.25rem) saturate(150%);
   }
 
-  /* Open state toggled on .navbar by the menu button. */
+  /* Show navigation when hamburger is clicked. */
   .navbar.is-menu-open .nav-links {
     display: flex;
   }
 
-  /* Taller tap targets in the stacked menu. */
+  /* Larger navigation tap targets. */
   .nav-links a {
     min-height: 2.5rem;
   }
 
-  /* Add new code: In the hamburger panel, keep Login/Register as compact
-     side-by-side buttons (not stretched across the wide dropdown). */
+  /* Login/Register buttons. */
   .nav-links .auth-actions {
     align-self: flex-start;
     display: flex;
@@ -54,16 +65,19 @@
     width: auto;
   }
 
+  /* Profile menu container. */
   .nav-links .profile-menu {
     position: relative;
     width: auto;
   }
 
+  /* Profile trigger. */
   .nav-links .profile-trigger {
     justify-content: flex-start;
     min-height: 2.75rem;
   }
 
+  /* Profile dropdown positioning. */
   .nav-links .profile-dropdown {
     left: 0;
     right: auto;
@@ -72,9 +86,14 @@
   }
 }
 
-/* Add new code: On phones, stack Login/Register and make them full-width
-   so they are easy to tap in the narrow dropdown. */
+/* ========================================
+   2. Small Screen Navigation
+======================================== */
+
+/* Below 640px. */
+
 @media (max-width: 40rem) {
+  /* Stack authentication buttons vertically. */
   .nav-links .auth-actions {
     align-self: stretch;
     flex-direction: column;
@@ -86,45 +105,73 @@
     width: 100%;
   }
 
+  /* Keep profile dropdown within viewport width. */
   .nav-links .profile-dropdown {
     max-width: calc(100vw - 3rem);
   }
 
+  /* Comfortable touch targets. */
   .nav-links .profile-dropdown-links a,
   .nav-links .profile-dropdown-links button {
     min-height: 2.75rem;
   }
+
+  .profile-page {
+    margin: 1rem auto;
+    padding: 0.5rem;
+  }
+
+  .profile-details {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .profile-card-header {
+    padding: 1.25rem;
+  }
 }
 
-/* From ~640px up: more padding and matching card radii. */
+/* ========================================
+   3. Tablet and Larger Screens
+======================================== */
+
 @media (min-width: 40rem) {
   .app-shell {
     padding: 2rem;
   }
+
   .todo-container {
     border-radius: 1.75rem;
     padding: 2rem;
   }
 
+  /* Preserve registration form spacing. */
   .todo-container.register-container {
     padding: 1.5rem;
   }
+
   .contact-section {
     border-radius: 1.75rem;
     padding: 2rem;
   }
+
   .site-footer {
     padding-inline: 2rem;
   }
+
   .todo-form {
     grid-template-columns: minmax(0, 1fr);
   }
+
   .add-todo {
     width: 100%;
   }
 }
 
-/* Narrow footer: stack brand, links, and copyright instead of one row. */
+/* ========================================
+   4. Responsive Footer
+======================================== */
+
 @media (max-width: 63.99rem) {
   .footer-content {
     align-items: flex-start;
@@ -136,7 +183,10 @@
   }
 }
 
-/* Preserve the same compact proportions on narrow screens. */
+/* ========================================
+   5. Responsive Toast Notifications
+======================================== */
+
 @media (max-width: 480px) {
   .app-toast {
     width: min(360px, calc(100% - 2rem));
@@ -162,7 +212,10 @@
   }
 }
 
-/* Honor OS “reduce motion”: drop smooth scrolling and CSS transitions. */
+/* ========================================
+   6. Accessibility: Reduced Motion
+======================================== */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
