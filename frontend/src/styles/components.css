@@ -2150,6 +2150,203 @@
   background: color-mix(in srgb, var(--danger) 12%, transparent);
 }
 
+/* ========================================
+   404 Not Found Page
+======================================== */
+
+.not-found-page {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 65vh;
+  padding: 3rem 1rem;
+}
+
+.not-found-card {
+  position: relative;
+  width: min(100%, 38rem);
+  padding: 2.5rem 2rem;
+  overflow: hidden;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  box-shadow: 0 1.25rem 3rem var(--shadow);
+}
+
+.not-found-illustration {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 12rem;
+  margin-bottom: 1.5rem;
+}
+
+.not-found-number {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(5rem, 18vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.08em;
+  color: var(--accent);
+}
+
+.not-found-orbit {
+  position: absolute;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.orbit-one {
+  width: 10rem;
+  height: 10rem;
+}
+
+.orbit-two {
+  width: 13rem;
+  height: 13rem;
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.not-found-star {
+  position: absolute;
+  color: var(--accent);
+}
+
+.star-one {
+  top: 1rem;
+  right: 25%;
+  font-size: 1.75rem;
+}
+
+.star-two {
+  bottom: 1.5rem;
+  left: 23%;
+  font-size: 1.5rem;
+}
+
+.not-found-card .eyebrow {
+  margin-bottom: 0.6rem;
+}
+
+.not-found-card h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 5vw, 2.3rem);
+}
+
+.not-found-description {
+  max-width: 28rem;
+  margin: 1rem auto 1.75rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.not-found-home-button,
+.not-found-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.9rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.not-found-home-button {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.not-found-home-button svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.not-found-back-button {
+  color: var(--text);
+  background: var(--surface-strong);
+}
+
+.not-found-home-button:hover,
+.not-found-back-button:hover {
+  transform: translateY(-2px);
+}
+
+.not-found-back-button:hover {
+  border-color: var(--accent);
+}
+
+.not-found-footer-note {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.not-found-footer-note span:first-child {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.not-found-dot {
+  color: var(--accent);
+}
+
+@media (max-width: 40rem) {
+  .not-found-page {
+    min-height: 60vh;
+    padding: 2rem 0.75rem;
+  }
+
+  .not-found-card {
+    padding: 2rem 1.25rem;
+    border-radius: 1.15rem;
+  }
+
+  .not-found-illustration {
+    height: 10rem;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+
+  .not-found-home-button,
+  .not-found-back-button {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .profile-dropdown {
     animation: none;
@@ -2157,6 +2354,11 @@
 
   .profile-trigger,
   .profile-chevron {
+    transition: none;
+  }
+
+  .not-found-home-button,
+  .not-found-back-button {
     transition: none;
   }
 }

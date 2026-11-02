@@ -22,6 +22,7 @@ import Header from "./components/layout/Header.jsx";
 import AppShell from "./components/layout/AppShell.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import ScrollToTop from "./components/layout/ScrollToTop.jsx";
+import NotFoundPage from "./components/layout/NotFoundPage.jsx";
 
 // Todo components
 import TodoForm from "./features/todos/components/TodoForm.jsx";
@@ -259,11 +260,9 @@ function App() {
           <Route
             path="*"
             element={
-              <main className="app-shell">
-                <h1>Page not found</h1>
-                <p>The page you are looking for does not exist.</p>
-                <a href="/">Back to Daily Memo</a>
-              </main>
+              <AuthPage>
+                <NotFoundPage />
+              </AuthPage>
             }
           />
         </Routes>
