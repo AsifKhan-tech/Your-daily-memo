@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+
+import { useAuth } from "../../features/auth/context/AuthContext.jsx";
 
 export default function Header({ onLoginClick, onRegisterClick }) {
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const navigate = useNavigate();
+
   // 1. Manage the mobile navigation menu.
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // 2. Restore the saved theme, defaulting to dark.
   const [theme, setTheme] = useState(() => {
@@ -35,6 +42,31 @@ export default function Header({ onLoginClick, onRegisterClick }) {
   // 5. Close the mobile menu after navigating.
   function handleNavigation() {
     setIsMenuOpen(false);
+  }
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+
+    try {
+      await logout();
+
+      setIsProfileOpen(false);
+      setIsMenuOpen(false);
+
+      navigate("/", {
+        replace: true,
+        state: {
+          loginSuccess: false,
+          message: "You have been logged out successfully.",
+        },
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   }
 
   return (

@@ -13,6 +13,7 @@ import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
 import ProfilePage from "./features/auth/pages/ProfilePage.jsx";
+import { AuthProvider } from "./features/auth/context/AuthContext.jsx";
 
 // UI components
 import Toast from "./components/ui/Toast.jsx";
@@ -185,54 +186,57 @@ function AuthPage({ children }) {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Homepage */}
-        <Route path="/" element={<HomePage />} />
+      <AuthProvider>
+        <Routes>
+          {/* Homepage */}
+          <Route path="/" element={<HomePage />} />
 
-        {/* Login */}
-        <Route
-          path="/login"
-          element={
-            <AuthPage>
-              <LoginForm />
-            </AuthPage>
-          }
-        />
+          {/* Login */}
+          <Route
+            path="/login"
+            element={
+              <AuthPage>
+                <LoginForm />
+              </AuthPage>
+            }
+          />
 
-        {/* Registration */}
-        <Route
-          path="/register"
-          element={
-            <AuthPage>
-              <RegisterForm />
-            </AuthPage>
-          }
-        />
+          {/* Registration */}
+          <Route
+            path="/register"
+            element={
+              <AuthPage>
+                <RegisterForm />
+              </AuthPage>
+            }
+          />
 
-        {/* Email verification */}
-        <Route
-          path="/verify-email/:token"
-          element={
-            <AuthPage>
-              <VerifyEmail />
-            </AuthPage>
-          }
-        />
+          {/* Email verification */}
+          <Route
+            path="/verify-email/:token"
+            element={
+              <AuthPage>
+                <VerifyEmail />
+              </AuthPage>
+            }
+          />
 
-        <Route path="/profile" element={<ProfilePage />} />
+          {/* User profile */}
+          <Route path="/profile" element={<ProfilePage />} />
 
-        {/* 404 - Page not found */}
-        <Route
-          path="*"
-          element={
-            <main className="app-shell">
-              <h1>Page not found</h1>
-              <p>The page you are looking for does not exist.</p>
-              <a href="/">Back to Daily Memo</a>
-            </main>
-          }
-        />
-      </Routes>
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <main className="app-shell">
+                <h1>Page not found</h1>
+                <p>The page you are looking for does not exist.</p>
+                <a href="/">Back to Daily Memo</a>
+              </main>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

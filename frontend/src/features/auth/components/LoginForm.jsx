@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router";
 
 import { validateLoginDto } from "../dto/login.dto";
 import { loginUser, resendVerificationEmail } from "../services/authService";
-
+import { useAuth } from "../context/AuthContext.jsx";
 import Toast from "../../../components/ui/Toast";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,6 +77,9 @@ function LoginForm() {
 
     try {
       const response = await loginUser(validation.data);
+
+      // Update global authentication state.
+      login(response.data.user);
 
       // Redirect after successful login.
       navigate("/", {
