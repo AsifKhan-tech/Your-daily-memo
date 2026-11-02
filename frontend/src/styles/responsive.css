@@ -129,6 +129,29 @@
   .profile-card-header {
     padding: 1.25rem;
   }
+
+  .not-found-page {
+    min-height: 60vh;
+    padding: 2rem 0.75rem;
+  }
+
+  .not-found-card {
+    padding: 2rem 1.25rem;
+    border-radius: 1.15rem;
+  }
+
+  .not-found-illustration {
+    height: 10rem;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+
+  .not-found-home-button,
+  .not-found-back-button {
+    width: 100%;
+  }
 }
 
 /* ========================================

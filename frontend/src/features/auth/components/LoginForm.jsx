@@ -227,6 +227,10 @@ function LoginForm() {
             )}
           </div>
 
+          <div className="forgot-password-link">
+            <Link to="/forgot-password">Forgot password?</Link>
+          </div>
+
           {requiresVerification && (
             <div className="resend-verification-wrapper">
               <p className="resend-verification-message">
