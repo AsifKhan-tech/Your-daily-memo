@@ -221,8 +221,9 @@ const forgotPassword = async (email) => {
    * verify the email existance in DB
    */
   const user = await User.findOne({ email });
-  if (!user) throw ApiError.notFound("No account found with this email");
-
+  if (!user) {
+    return;
+  }
   /**
    * create tokens
    * save resetPasswordToken it will hashedToken in DB

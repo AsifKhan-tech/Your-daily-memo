@@ -123,3 +123,31 @@ export async function getUserProfile() {
     method: "GET",
   });
 }
+
+// Forgot password API call
+export async function forgotPassword(email) {
+  const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email.trim().toLowerCase(),
+    }),
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const error = new Error(
+      result?.message || "Unable to process your request. Please try again.",
+    );
+
+    error.code = result?.code;
+    error.status = response.status;
+
+    throw error;
+  }
+
+  return result;
+}

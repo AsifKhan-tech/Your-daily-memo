@@ -81,7 +81,7 @@ const logout = async (req, res) => {
 //forgot password controller
 const forgotPassword = async (req, res) => {
   await authService.forgotPassword(req.body.email);
-  Apiresponse.ok(res, "password reset email sent");
+  Apiresponse.ok(res, "If an account exists with this email, you will receive a password reset link.");
 };
 
 // reset password controller
