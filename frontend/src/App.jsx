@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useNavigate,
+  Navigate,
   useLocation,
 } from "react-router";
 
@@ -13,7 +14,7 @@ import LoginForm from "./features/auth/components/LoginForm.jsx";
 import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 import VerifyEmail from "./features/auth/components/VerifyEmail.jsx";
 import ProfilePage from "./features/auth/pages/ProfilePage.jsx";
-import { AuthProvider } from "./features/auth/context/AuthContext.jsx";
+import { AuthProvider, useAuth } from "./features/auth/context/AuthContext.jsx";
 
 // UI components
 import Toast from "./components/ui/Toast.jsx";
@@ -183,6 +184,27 @@ function AuthPage({ children }) {
   );
 }
 
+// Protect routes that require authentication.
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Wait until authentication status is restored.
+  if (isLoading) {
+    return (
+      <main className="app-shell">
+        <p role="status">Checking your session...</p>
+      </main>
+    );
+  }
+
+  // Redirect unauthenticated users to login.
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -221,8 +243,15 @@ function App() {
             }
           />
 
-          {/* User profile */}
-          <Route path="/profile" element={<ProfilePage />} />
+          {/* Protected user profile */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* 404 */}
           <Route

@@ -1759,3 +1759,273 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* ========================================
+   Profile Dropdown
+======================================== */
+
+.profile-menu {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+/* Profile trigger button */
+
+.profile-trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+
+  min-height: 2.5rem;
+  padding: 0.35rem 0.65rem;
+
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.profile-trigger:hover,
+.profile-trigger[aria-expanded="true"] {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+/* Circular avatar */
+
+.profile-avatar-small,
+.profile-avatar-large {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+
+  color: var(--muted);
+}
+
+.profile-avatar-small {
+  width: 2rem;
+  height: 2rem;
+}
+
+.profile-avatar-large {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.profile-avatar-small svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.profile-avatar-large svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.profile-avatar-small svg,
+.profile-avatar-large svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* First name */
+
+.profile-first-name {
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+/* Chevron */
+
+.profile-chevron {
+  width: 0.9rem;
+  height: 0.9rem;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  transition: transform 180ms ease;
+}
+
+.profile-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  z-index: 50;
+
+  width: min(16rem, calc(100vw - 2rem));
+
+  overflow: hidden;
+
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+
+  box-shadow:
+    0 1rem 2.5rem var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  -webkit-backdrop-filter: blur(1.25rem) saturate(140%);
+  backdrop-filter: blur(1.25rem) saturate(140%);
+
+  animation: profile-dropdown-enter 160ms ease-out;
+}
+
+/* Dropdown header */
+
+.profile-dropdown-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 1.25rem 1rem;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.profile-dropdown-header strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.profile-dropdown-header a {
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.profile-dropdown-header a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Dropdown action links */
+
+.profile-dropdown-links {
+  display: grid;
+  padding: 0.35rem;
+}
+
+/* Override generic navbar link styles for dropdown links. */
+
+.nav-links .profile-dropdown-links a,
+.profile-dropdown-links button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+
+  width: 100%;
+  min-height: 2.65rem;
+  padding: 0.65rem 0.75rem;
+
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.6rem;
+
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+}
+
+/* Remove navbar underline animation from dropdown links. */
+
+.nav-links .profile-dropdown-links a::after {
+  display: none;
+}
+
+.nav-links .profile-dropdown-links a:hover,
+.profile-dropdown-links button:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.profile-dropdown-links button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+/* New badge */
+
+.profile-new-badge {
+  margin-left: auto;
+
+  padding: 0.15rem 0.45rem;
+
+  background: var(--accent);
+  border-radius: 0.4rem;
+
+  color: var(--accent-ink);
+  font-size: 0.65rem;
+  font-weight: 750;
+}
+
+/* Focus accessibility */
+
+.profile-trigger:focus-visible,
+.profile-dropdown a:focus-visible,
+.profile-dropdown button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Dropdown animation */
+
+@keyframes profile-dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-dropdown {
+    animation: none;
+  }
+
+  .profile-trigger,
+  .profile-chevron {
+    transition: none;
+  }
+}

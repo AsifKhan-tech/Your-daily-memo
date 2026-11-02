@@ -5,9 +5,26 @@ import { apiRequest } from "../../../lib/apiClient.js";
 
 const AuthContext = createContext(null);
 
+// Custom event used when the user's session expires.
+const SESSION_EXPIRED_EVENT = "auth:session-expired";
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Listen for session expiration events.
+  useEffect(() => {
+    function handleSessionExpired() {
+      setUser(null);
+      setIsLoading(false);
+    }
+
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+
+    return () => {
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    };
+  }, []);
 
   // Restore the authenticated user when the app loads.
   useEffect(() => {
@@ -41,6 +58,7 @@ export function AuthProvider({ children }) {
   // Update authentication state after successful login.
   function login(userData) {
     setUser(userData);
+    setIsLoading(false);
   }
 
   // Logout the user from the platform.

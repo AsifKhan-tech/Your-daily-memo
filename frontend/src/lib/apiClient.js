@@ -1,8 +1,10 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api/v1";
+import { API_BASE_URL } from "./config.js";
 
 // Stores the currently running refresh request.
 let refreshPromise = null;
+
+// Custom event used to notify AuthContext about session expiration.
+const SESSION_EXPIRED_EVENT = "auth:session-expired";
 
 // Refresh the session using the HTTP-only refresh token cookie.
 async function refreshSession() {
@@ -25,6 +27,11 @@ async function refreshSession() {
   }
 
   return result;
+}
+
+// Notify AuthContext when the session can no longer be refreshed.
+function notifySessionExpired() {
+  window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
 }
 
 // Centralized API request function.
@@ -50,13 +57,12 @@ export async function apiRequest(endpoint, options = {}) {
     endpoint !== "/auth/register";
 
   if (shouldRefresh) {
-    // Read a clone so the original response body remains available.
     const errorResult = await response
       .clone()
       .json()
       .catch(() => null);
 
-    // Refresh only when the backend specifically reports an expired token.
+    // Refresh only when the access token has expired.
     if (errorResult?.code === "ACCESS_TOKEN_EXPIRED") {
       try {
         // Reuse an existing refresh request if one is already running.
@@ -66,12 +72,37 @@ export async function apiRequest(endpoint, options = {}) {
           });
         }
 
-        // Wait until the refresh request completes.
+        // Wait for the refresh request.
         await refreshPromise;
 
-        // Retry the original request once with the new cookies.
+        // Retry the original request once.
         response = await fetch(request.clone());
+
+        if (response.status === 401) {
+          const retryError = await response
+            .clone()
+            .json()
+            .catch(() => null);
+
+          if (
+            retryError?.code === "ACCESS_TOKEN_EXPIRED" ||
+            retryError?.code === "INVALID_ACCESS_TOKEN"
+          ) {
+            notifySessionExpired();
+          }
+        }
       } catch (error) {
+        // Only clear authentication for confirmed refresh-token failures.
+        const terminalRefreshErrors = [
+          "REFRESH_TOKEN_EXPIRED",
+          "INVALID_REFRESH_TOKEN",
+          "REFRESH_TOKEN_MISSING",
+        ];
+
+        if (terminalRefreshErrors.includes(error.code)) {
+          notifySessionExpired();
+        }
+
         throw error;
       }
     }

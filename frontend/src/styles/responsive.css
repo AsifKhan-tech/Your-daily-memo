@@ -53,6 +53,23 @@
     min-width: 0;
     width: auto;
   }
+
+  .nav-links .profile-menu {
+    position: relative;
+    width: auto;
+  }
+
+  .nav-links .profile-trigger {
+    justify-content: flex-start;
+    min-height: 2.75rem;
+  }
+
+  .nav-links .profile-dropdown {
+    left: 0;
+    right: auto;
+    top: calc(100% + 0.5rem);
+    width: min(16rem, calc(100vw - 3rem));
+  }
 }
 
 /* Add new code: On phones, stack Login/Register and make them full-width
@@ -67,6 +84,15 @@
   .nav-links .auth-btn {
     max-width: 100%;
     width: 100%;
+  }
+
+  .nav-links .profile-dropdown {
+    max-width: calc(100vw - 3rem);
+  }
+
+  .nav-links .profile-dropdown-links a,
+  .nav-links .profile-dropdown-links button {
+    min-height: 2.75rem;
   }
 }
 

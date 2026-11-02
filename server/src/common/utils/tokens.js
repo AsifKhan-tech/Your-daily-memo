@@ -8,6 +8,7 @@ const generateAccessToken = (payload) => {
   });
 };
 
+//it will return the decoded payload object
 const verifyAccessToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
@@ -25,12 +26,20 @@ const generateRefreshToken = (payload) => {
   });
 };
 
-//it will return the payload
+//it will return the decoded payload object
 const verifyRefreshToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
   } catch (error) {
-    throw ApiError.unauthorized("Invalid refresh token");
+    if (error.name === "TokenExpiredError") {
+      throw ApiError.unauthorized("Refresh token expired. Please login", "REFRESH_TOKEN_EXPIRED");
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      throw ApiError.unauthorized("Invalid refresh token.", "INVALID_REFRESH_TOKEN");
+    }
+
+    throw ApiError.unauthorized("Unable to verify refresh token.", "INVALID_REFRESH_TOKEN");
   }
 };
 

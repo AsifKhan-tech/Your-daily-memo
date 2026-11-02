@@ -58,12 +58,7 @@ const login = async (req, res) => {
 
 // Token refresh controller
 const refreshToken = async (req, res) => {
-  console.log("Cookies received:", Object.keys(req.cookies || {}));
-
   const token = req.cookies?.refreshToken;
-
-  console.log("Refresh token received:", Boolean(token));
-
   const { user, accessToken, refreshToken: newRefreshToken } = await authService.refresh(token);
 
   // Set authentication cookies

@@ -31,7 +31,6 @@ const register = async ({ name, email, password, role = "user" }) => {
     role: role,
     verificationToken: hashedToken,
   });
-  console.log("Stored user: ", user);
 
   // send an email to the user with a token: rawToken for varify the email
   try {
@@ -52,7 +51,6 @@ const register = async ({ name, email, password, role = "user" }) => {
   delete userObject.password;
   delete userObject.verificationToken;
 
-  console.log("User registered");
   return userObject;
 };
 
@@ -161,36 +159,34 @@ const login = async ({ email, password }) => {
 const refresh = async (token) => {
   //checking if the user has provided token
   if (typeof token !== "string" || !token.trim()) {
-    throw ApiError.unauthorized("Refresh token missing");
+    throw ApiError.unauthorized("Refresh token missing", "REFRESH_TOKEN_MISSING");
   }
 
-  //verify refresh token & it returns payload
-  let decoded;
+  // Verify refresh token.
+  // Do not catch and overwrite errors from verifyRefreshToken().
+  const decoded = verifyRefreshToken(token.trim());
 
-  try {
-    decoded = verifyRefreshToken(token.trim());
-  } catch (error) {
-    throw ApiError.unauthorized("Invalid or expired refresh token");
-  }
-
-  //find the specific user
+  // Find the specific user.
   const user = await User.findById(decoded.id).select("+refreshToken");
-  if (!user) throw ApiError.unauthorized("User not found");
 
-  //check with stored hashed DB token
-  if (user.refreshToken !== hashToken(token.trim())) {
-    throw ApiError.unauthorized("Invalid refresh token");
+  if (!user) {
+    throw ApiError.unauthorized("Invalid refresh token.", "INVALID_REFRESH_TOKEN");
   }
 
-  //generate access and refresh tokens
+  // Compare the provided token with the hashed token stored in DB.
+  if (user.refreshToken !== hashToken(token.trim())) {
+    throw ApiError.unauthorized("Invalid refresh token.", "INVALID_REFRESH_TOKEN");
+  }
+
+  // Generate new access and refresh tokens.
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
   const newRefreshToken = generateRefreshToken({ id: user._id });
 
-  //store hashed refreshToken of the specific user in DB
+  //store the hashed new refreshToken of the specific user in DB
   user.refreshToken = hashToken(newRefreshToken);
   await user.save({ validateBeforeSave: false }); //don't run DB validation
 
-  //removing some fields and return
+  // Remove sensitive fields before returning user information.
   const userObj = user.toObject();
   delete userObj.refreshToken;
   delete userObj.password;

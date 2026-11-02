@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { useAuth } from "../../features/auth/context/AuthContext.jsx";
+import Toast from "../ui/Toast.jsx";
 
 export default function Header({ onLoginClick, onRegisterClick }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -11,6 +12,9 @@ export default function Header({ onLoginClick, onRegisterClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutToast, setLogoutToast] = useState(null);
+
+  const profileMenuRef = useRef(null);
 
   // 2. Restore the saved theme, defaulting to dark.
   const [theme, setTheme] = useState(() => {
@@ -44,10 +48,37 @@ export default function Header({ onLoginClick, onRegisterClick }) {
     setIsMenuOpen(false);
   }
 
+  // Close profile dropdown when clicking outside or pressing Escape.
+  useEffect(() => {
+    function handleOutsideClick(event) {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setIsProfileOpen(false);
+      }
+    }
+
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setIsProfileOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
   async function handleLogout() {
     if (isLoggingOut) return;
 
     setIsLoggingOut(true);
+    setLogoutToast(null);
 
     try {
       await logout();
@@ -55,15 +86,14 @@ export default function Header({ onLoginClick, onRegisterClick }) {
       setIsProfileOpen(false);
       setIsMenuOpen(false);
 
-      navigate("/", {
-        replace: true,
-        state: {
-          loginSuccess: false,
-          message: "You have been logged out successfully.",
-        },
-      });
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
+
+      setLogoutToast({
+        type: "error",
+        message: error.message || "Logout failed. Please try again.",
+      });
     } finally {
       setIsLoggingOut(false);
     }
@@ -79,7 +109,6 @@ export default function Header({ onLoginClick, onRegisterClick }) {
         <Link
           className="brand"
           to="/"
-          href="#home"
           aria-label="Daily Memo home"
           onClick={handleNavigation}
         >
@@ -130,23 +159,104 @@ export default function Header({ onLoginClick, onRegisterClick }) {
             Contact us
           </a>
 
-          {/* Authentication buttons */}
+          {/* Authentication / Profile controls */}
           <div className="auth-actions" role="group" aria-label="Account">
-            <button
-              className="auth-btn auth-btn-login"
-              type="button"
-              onClick={onLoginClick}
-            >
-              Login
-            </button>
+            {isLoading ? null : !isAuthenticated ? (
+              <>
+                <button
+                  className="auth-btn auth-btn-login"
+                  type="button"
+                  onClick={onLoginClick}
+                >
+                  Login
+                </button>
 
-            <button
-              className="auth-btn auth-btn-register"
-              type="button"
-              onClick={onRegisterClick}
-            >
-              Register
-            </button>
+                <button
+                  className="auth-btn auth-btn-register"
+                  type="button"
+                  onClick={onRegisterClick}
+                >
+                  Register
+                </button>
+              </>
+            ) : (
+              <div className="profile-menu" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  className="profile-trigger"
+                  aria-expanded={isProfileOpen}
+                  aria-haspopup="true"
+                  aria-controls="profile-dropdown"
+                  onClick={() => setIsProfileOpen((previous) => !previous)}
+                >
+                  <span className="profile-avatar-small" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 21a8 8 0 0 1 16 0" />
+                    </svg>
+                  </span>
+
+                  <span className="profile-first-name">
+                    {user?.name?.trim().split(/\s+/)[0] || "Account"}
+                  </span>
+
+                  <svg
+                    className={`profile-chevron ${isProfileOpen ? "is-open" : ""}`}
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+
+                {isProfileOpen && (
+                  <div className="profile-dropdown" id="profile-dropdown">
+                    <div className="profile-dropdown-header">
+                      <span className="profile-avatar-large" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <circle cx="12" cy="8" r="4" />
+                          <path d="M4 21a8 8 0 0 1 16 0" />
+                        </svg>
+                      </span>
+
+                      <strong>{user?.name}</strong>
+
+                      <Link
+                        to="/profile"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          handleNavigation();
+                        }}
+                      >
+                        My Profile
+                      </Link>
+                    </div>
+
+                    <div className="profile-dropdown-links">
+                      <a href="/api-docs" onClick={handleNavigation}>
+                        <span aria-hidden="true">▣</span>
+                        API Docs
+                        <span className="profile-new-badge">New</span>
+                      </a>
+
+                      <a href="/help" onClick={handleNavigation}>
+                        <span aria-hidden="true">ⓘ</span>
+                        Help
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                      >
+                        <span aria-hidden="true">↪</span>
+                        {isLoggingOut ? "Logging out..." : "Logout"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Theme toggle */}
@@ -179,6 +289,13 @@ export default function Header({ onLoginClick, onRegisterClick }) {
           </button>
         </div>
       </nav>
+      {logoutToast && (
+        <Toast
+          type={logoutToast.type}
+          message={logoutToast.message}
+          onClose={() => setLogoutToast(null)}
+        />
+      )}
     </header>
   );
 }
