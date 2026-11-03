@@ -16,3 +16,7 @@ const connectDB = async () => {
 };
 
 export default connectDB;
+
+/**
+ * throw: keyword propogate error to the next calling function
+ */
