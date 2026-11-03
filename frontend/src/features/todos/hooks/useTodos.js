@@ -60,9 +60,11 @@ export function useTodos(enabled = true) {
     try {
       const createdTodo = await todoService.createTodo(newTodo);
       setTodos((currentTodos) => [...currentTodos, createdTodo]);
+      return true;
     } catch (error) {
       setError("Could not add the memo. Please try again.");
       console.error("Failed to add todo:", error);
+      return false;
     }
   }
 
