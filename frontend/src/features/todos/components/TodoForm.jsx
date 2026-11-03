@@ -3,8 +3,9 @@ import { useState } from "react";
 export default function TodoForm({ onAddTodo }) {
   const [memo, setMemo] = useState("");
   const [dateTime, setDateTime] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const trimmedMemo = memo.trim();
@@ -13,14 +14,17 @@ export default function TodoForm({ onAddTodo }) {
       return;
     }
 
-    onAddTodo({
-      memo: trimmedMemo,
-      dateTime,
-    });
+    setIsSubmitting(true);
 
-    // Clear the form after adding the memo.
-    setMemo("");
-    setDateTime("");
+    try {
+      const created = await onAddTodo({ memo: trimmedMemo, dateTime });
+      if (created) {
+        setMemo("");
+        setDateTime("");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -53,8 +57,8 @@ export default function TodoForm({ onAddTodo }) {
         />
       </div>
 
-      <button className="add-todo" type="submit">
-        Add memo
+      <button className="add-todo" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Adding..." : "Add memo"}
       </button>
     </form>
   );
