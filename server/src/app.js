@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./modules/auth/auth.route.js";
+import todoRoutes from "./modules/todo/todo.route.js";
 import ApiError from "./common/utils/api-error.js";
 
 const app = express();
@@ -61,6 +62,7 @@ app.use(
  * send/route it to the 'authRoutes' router."
  */
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/todos", todoRoutes);
 
 /**
  * Global Catch-All (404 Fallback) Route.
