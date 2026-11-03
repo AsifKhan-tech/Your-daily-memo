@@ -41,7 +41,7 @@ function HomePage() {
   const location = useLocation();
 
   const [toast, setToast] = useState(null);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   // Handle registration and login status received through navigation state.
   useEffect(() => {
@@ -121,7 +121,9 @@ function HomePage() {
 
           <p className="intro">Capture a task before it slips away.</p>
 
-          {isAuthenticated ? (
+          {isAuthLoading ? (
+            <p role="status">Checking your session...</p>
+          ) : isAuthenticated ? (
             <>
               <TodoForm onAddTodo={addTodo} />
 
