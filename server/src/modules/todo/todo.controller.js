@@ -12,12 +12,7 @@ const createTodo = async (req, res) => {
 };
 
 const updateTodo = async (req, res) => {
-  const todo = await todoService.updateTodo(
-    req.user.id,
-    req.params.todoId,
-    req.body,
-  );
-
+  const todo = await todoService.updateTodo(req.user.id, req.params.todoId, req.body);
   Apiresponse.ok(res, "Memo updated successfully", todo);
 };
 
@@ -27,25 +22,13 @@ const deleteTodo = async (req, res) => {
 };
 
 const toggleAllTodos = async (req, res) => {
-  const todos = await todoService.toggleAllTodos(
-    req.user.id,
-    req.body.completed,
-  );
-
+  const todos = await todoService.toggleAllTodos(req.user.id, req.body.completed);
   Apiresponse.ok(res, "Memos updated successfully", todos);
 };
 
 const deleteAllTodos = async (req, res) => {
   const deletedCount = await todoService.deleteAllTodos(req.user.id);
-
   Apiresponse.ok(res, "All memos deleted successfully", { deletedCount });
 };
 
-export {
-  getTodos,
-  createTodo,
-  updateTodo,
-  deleteTodo,
-  toggleAllTodos,
-  deleteAllTodos,
-};
+export { getTodos, createTodo, updateTodo, deleteTodo, toggleAllTodos, deleteAllTodos };
