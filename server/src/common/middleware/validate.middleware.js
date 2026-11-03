@@ -18,5 +18,5 @@ const validateMiddlewareFunction = (Dtoclass) => {
 export default validateMiddlewareFunction;
 
 /**
- * next(): function give signal to the express that the middleware has been completed
+ * next(): function gives signal to the express that the middleware has been completed
  */
