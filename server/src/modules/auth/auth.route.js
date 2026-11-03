@@ -16,6 +16,7 @@ import { authenticate } from "./auth.middleware.js";
 const router = Router();
 
 //register route
+//The validateMiddlwareFunction excutes at the time of route register
 router.post("/register", validateMiddlewareFunction(RegisterDto), authController.register);
 
 /**

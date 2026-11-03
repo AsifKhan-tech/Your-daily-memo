@@ -1,8 +1,10 @@
 import ApiError from "../utils/api-error.js";
 
 const validateMiddlewareFunction = (Dtoclass) => {
+  // the returned function is actual middleware function
+  //This function executes when request come
+  //This is also synchronous middleware
   return (req, res, next) => {
-    // this returned function is actual middleware function
     const { errors, value } = Dtoclass.validateInput(req.body);
 
     if (errors) {

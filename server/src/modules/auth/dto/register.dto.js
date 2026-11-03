@@ -2,6 +2,11 @@ import Joi from "joi";
 
 import Basedto from "../../../common/dto/base.dto.js";
 
+/**
+ * RegisterDto extended Basedto so,
+ * RegisterDto can use inherited static method validateInput()
+ */
+
 class RegisterDto extends Basedto {
   static schema = Joi.object({
     name: Joi.string().trim().min(2).max(50).required(),
