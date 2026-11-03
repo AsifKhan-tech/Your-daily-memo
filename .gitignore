@@ -25,7 +25,7 @@ dist-ssr
 
 #I ignore them temporarily
 dist/
-
+raw-client/
 
 commits.md
 notes.md
