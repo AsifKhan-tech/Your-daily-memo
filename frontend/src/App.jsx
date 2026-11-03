@@ -41,6 +41,7 @@ function HomePage() {
   const location = useLocation();
 
   const [toast, setToast] = useState(null);
+  const { isAuthenticated } = useAuth();
 
   // Handle registration and login status received through navigation state.
   useEffect(() => {
@@ -103,7 +104,7 @@ function HomePage() {
     startEditingTodo,
     saveTodo,
     cancelEditingTodo,
-  } = useTodos();
+  } = useTodos(isAuthenticated);
 
   return (
     <>
@@ -120,34 +121,39 @@ function HomePage() {
 
           <p className="intro">Capture a task before it slips away.</p>
 
-          <TodoForm onAddTodo={addTodo} />
+          {isAuthenticated ? (
+            <>
+              <TodoForm onAddTodo={addTodo} />
 
-          {/* Loading and error states */}
+              {error && (
+                <div className="error-message" role="alert">
+                  <p>{error}</p>
+                  <button type="button" onClick={retryLoading}>
+                    Retry loading
+                  </button>
+                </div>
+              )}
 
-          {error && (
-            <div className="error-message" role="alert">
-              <p>{error}</p>
-
-              <button type="button" onClick={retryLoading}>
-                Retry loading
-              </button>
-            </div>
-          )}
-
-          {isLoading ? (
-            <p role="status">Loading your memos...</p>
+              {isLoading ? (
+                <p role="status">Loading your memos...</p>
+              ) : (
+                <TodoList
+                  todos={todos}
+                  onToggleTodo={toggleTodo}
+                  onDeleteTodo={deleteTodo}
+                  editingTodoId={editingTodoId}
+                  onEditTodo={startEditingTodo}
+                  onSaveTodo={saveTodo}
+                  onCancelEdit={cancelEditingTodo}
+                  onToggleAll={toggleAllTodos}
+                  onDeleteAll={deleteAllTodos}
+                />
+              )}
+            </>
           ) : (
-            <TodoList
-              todos={todos}
-              onToggleTodo={toggleTodo}
-              onDeleteTodo={deleteTodo}
-              editingTodoId={editingTodoId}
-              onEditTodo={startEditingTodo}
-              onSaveTodo={saveTodo}
-              onCancelEdit={cancelEditingTodo}
-              onToggleAll={toggleAllTodos}
-              onDeleteAll={deleteAllTodos}
-            />
+            <p className="intro">
+              Please <button type="button" onClick={() => navigate("/login")}>log in</button> to create and manage your personal memos.
+            </p>
           )}
         </section>
 
