@@ -228,7 +228,7 @@ function LoginForm() {
           </div>
 
           <div className="login-password-links">
-            <Link to="/reset-password">Reset password?</Link>
+            {/* <Link to="/reset-password">Reset password?</Link> */}
 
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
