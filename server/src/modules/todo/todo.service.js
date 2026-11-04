@@ -98,11 +98,36 @@ const updateTodo = async (userId, todoId, updatedData) => {
 
   // Step 5: Handle document not found
   if (!todo) {
-    ApiError.notFound("Todo not found");
+    throw ApiError.notFound("Todo not found");
   }
 
   // Step 6: Return updated document
   return todo;
 };
 
-export { getTodos, createTodo, updateTodo };
+/**
+ * Delete an existing Todo document that belongs to the currently authenticated user.
+ */
+const deleteTodo = async (todoId, userId) => {
+  // Receive the authenticated user's ID & Todo ID
+  // Validate whether the provided Todo ID is a valid MongoDB ObjectID
+  // Find the Todo document using both its ID and authenticated user's ID
+  // Delete the matching document from MongoDB
+  // Check whether a document actually deleted
+  // If no matching document exists, throw a 404 Not found error
+  // Return the deleted document to the controller
+
+  assertValidTodoId(todoId);
+  const todo = await Todo.findOneAndDelete({
+    _id: todoId,
+    user: userId,
+  });
+
+  if (!todo) {
+    throw ApiError.notFound("Todo not found");
+  }
+
+  return todo;
+};
+
+export { getTodos, createTodo, updateTodo, deleteTodo };
