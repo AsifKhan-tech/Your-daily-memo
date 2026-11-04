@@ -74,7 +74,13 @@ app.all("{*path}", (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error({
+    name: err.name,
+    message: err.message,
+    stack: err.stack,
+    path: err.originalUrl,
+    method: err.method,
+  });
 
   if (res.headersSent) {
     return next(err);
@@ -83,7 +89,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
     success: false,
     code: err.code || "INTERNAL_SERVER_ERROR",
-    message: err.message || "Internal Server Error",
+    message: process.env.NODE_ENV === "production" ? "Something went wrong" : err.message,
   });
 });
 

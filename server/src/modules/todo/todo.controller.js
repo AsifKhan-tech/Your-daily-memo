@@ -1,0 +1,25 @@
+import * as todoService from "./todo.service.js";
+import Apiresponse from "../../common/utils/api-response.js";
+
+// Get all todos
+const getTodos = async (req, res) => {
+  const todos = await todoService.getTodos(req.user.id);
+
+  Apiresponse.ok(res, "Todos retrieved successfully", todos);
+};
+
+// Create a todo
+const createTodo = async (req, res) => {
+  const todo = await todoService.createTodo(req.user.id, req.body);
+
+  Apiresponse.created(res, "Todo created successfully", todo);
+};
+
+// Update a todo
+const updateTodo = async (req, res) => {
+  const todo = await todoService.updateTodo(req.user.id, req.body);
+
+  Apiresponse.created(res, "Todo updated successfully", todo);
+};
+
+export { getTodos, createTodo, updateTodo };
