@@ -7,10 +7,10 @@ const todoSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    memo: {
+    todo: {
       type: String,
       trim: true,
-      required: [true, "Memo is required"],
+      required: [true, "Todo is required"],
       minlength: 1,
       maxlength: 200,
     },

@@ -17,9 +17,9 @@ const createTodo = async (req, res) => {
 
 // Update a todo
 const updateTodo = async (req, res) => {
-  const todo = await todoService.updateTodo(req.user.id, req.body);
+  const todo = await todoService.updateTodo(req.user.id, req.params.id, req.body);
 
-  Apiresponse.created(res, "Todo updated successfully", todo);
+  Apiresponse.ok(res, "Todo updated successfully", todo);
 };
 
 export { getTodos, createTodo, updateTodo };

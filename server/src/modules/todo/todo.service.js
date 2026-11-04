@@ -6,7 +6,7 @@ import ApiError from "../../common/utils/api-error.js";
 const assertValidTodoId = (todoId) => {
   if (!mongoose.isValidObjectId(todoId)) {
     //isValidaObjectId(id): It validates ObjectId format/type
-    throw ApiError.badRequest("Invalid memo ID");
+    throw ApiError.badRequest("Invalid todo ID");
   }
 };
 
@@ -48,7 +48,6 @@ const createTodo = async (userId, todoData) => {
 
   return todo;
 };
-assertValidTodoId;
 /**
  * Update an existing Todo document belonging to the authenticated user.
  */
@@ -67,19 +66,19 @@ const updateTodo = async (userId, todoId, updatedData) => {
 
   // Step 2: Allow only permitted fields
   const allowUpdates = {};
-  if (updatedData.memo !== "undefined") {
-    allowUpdates.memo = updatedData.memo;
+  if (updatedData.todo !== undefined) {
+    allowUpdates.todo = updatedData.todo;
   }
-  if (updatedData.dataTime !== "undefined") {
-    allowUpdates.dataTime = updatedData.dataTime;
+  if (updatedData.dateTime !== undefined) {
+    allowUpdates.dateTime = updatedData.dateTime;
   }
-  if (updatedData.completed !== "undefined") {
+  if (updatedData.completed !== undefined) {
     allowUpdates.completed = updatedData.completed;
   }
 
   // Step 3: Check whether valid fields exist
   if (Object.keys(allowUpdates).length === 0) {
-    throw ApiError("No valid memo fields are provided");
+    throw ApiError.badRequest("No valid todo fields are provided");
   }
 
   // Step 4: Find and update the user's Todo
@@ -99,7 +98,7 @@ const updateTodo = async (userId, todoId, updatedData) => {
 
   // Step 5: Handle document not found
   if (!todo) {
-    ApiError.notFound("Memo not found");
+    ApiError.notFound("Todo not found");
   }
 
   // Step 6: Return updated document
