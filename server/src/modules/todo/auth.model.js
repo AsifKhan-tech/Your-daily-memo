@@ -27,6 +27,7 @@ const todoSchema = new mongoose.Schema(
 );
 
 // Most requests load a user's memos in creation order.
+// 1 Ascending order
 todoSchema.index({ user: 1, createdAt: 1 });
 
 export default mongoose.model("Todo", todoSchema);
