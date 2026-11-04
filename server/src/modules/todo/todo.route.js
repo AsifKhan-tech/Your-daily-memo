@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import * as todoController from "./todo.controller.jsx";
+import * as todoController from "./todo.controller.js";
 import { authenticate } from "../auth/auth.middleware.js";
 
 // validate the request

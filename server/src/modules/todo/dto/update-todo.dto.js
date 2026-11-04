@@ -4,7 +4,7 @@ import Basedto from "../../../common/dto/base.dto.js";
 
 class UpdateTodoDTO extends Basedto {
   static schema = Joi.object({
-    memo: Joi.string().trim().min(1).max(2),
+    todo: Joi.string().trim().min(1).max(200),
     dateTime: Joi.date().iso(),
     completed: Joi.boolean(),
   }).min(1);

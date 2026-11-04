@@ -81,8 +81,8 @@ app.use((err, req, res, next) => {
     name: err.name,
     message: err.message,
     stack: err.stack,
-    path: err.originalUrl,
-    method: err.method,
+    path: req.originalUrl,
+    method: req.method,
   });
 
   if (res.headersSent) {
