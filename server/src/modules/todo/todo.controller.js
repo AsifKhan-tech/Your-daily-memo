@@ -17,9 +17,16 @@ const createTodo = async (req, res) => {
 
 // Update a todo
 const updateTodo = async (req, res) => {
-  const todo = await todoService.updateTodo(req.user.id, req.params.id, req.body);
+  const todo = await todoService.updateTodo(req.user.id, req.params.todoId, req.body);
 
   Apiresponse.ok(res, "Todo updated successfully", todo);
 };
 
-export { getTodos, createTodo, updateTodo };
+// Delete a todo
+const deleteTodo = async (req, res) => {
+  await todoService.deleteTodo(req.user.id, req.params.todoId);
+
+  Apiresponse.noContent(res);
+};
+
+export { getTodos, createTodo, updateTodo, deleteTodo };
