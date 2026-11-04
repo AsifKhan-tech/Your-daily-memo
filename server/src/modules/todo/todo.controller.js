@@ -29,4 +29,11 @@ const deleteTodo = async (req, res) => {
   Apiresponse.noContent(res);
 };
 
-export { getTodos, createTodo, updateTodo, deleteTodo };
+// Delete multiple selected todos
+const deleteSelectedTodos = async (req, res) => {
+  const result = await todoService.deleteAllSelectedTodos(req.user.id, req.body.todoIds);
+
+  Apiresponse.ok(res, "Selected todos deleted successfully", result);
+};
+
+export { getTodos, createTodo, updateTodo, deleteTodo, deleteSelectedTodos };

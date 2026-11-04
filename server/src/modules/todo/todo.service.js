@@ -108,7 +108,7 @@ const updateTodo = async (userId, todoId, updatedData) => {
 /**
  * Delete an existing Todo document that belongs to the currently authenticated user.
  */
-const deleteTodo = async (todoId, userId) => {
+const deleteTodo = async (userId, todoId) => {
   // Receive the authenticated user's ID & Todo ID
   // Validate whether the provided Todo ID is a valid MongoDB ObjectID
   // Find the Todo document using both its ID and authenticated user's ID
@@ -130,4 +130,34 @@ const deleteTodo = async (todoId, userId) => {
   return todo;
 };
 
-export { getTodos, createTodo, updateTodo, deleteTodo };
+const deleteSelectedTodos = async (userId, todoIds) => {
+  // Receive the authenticated user's ID and array of selected todo IDS
+  // Verify that array of todo IDS is not empty
+  // Validate evry todo ID
+  // Find all selected todos that belong to the authenticated user
+  // Delete all matching documents from DB
+  // Return the number of deleted documents
+
+  // Step 1: Validate the selected Todo IDs
+  if (!Array.isArray(todoIds) || todoIds.length === 0) {
+    throw ApiError.badRequest("Please select at least one todo");
+  }
+
+  // Step 2: Validate every Todo ID
+  todoIds.forEach(assertValidTodoId);
+
+  // Step 3: Remove duplicate IDs
+  const uniqueTodoIds = [...new Set(todoIds)];
+
+  // Step 4: Delete selected Todos belonging to the authenticated user
+  const result = Todo.deleteMany({
+    _id: {
+      $in: uniqueTodoIds,
+    },
+    user: userId,
+  });
+
+  // Step 5: Return the deletion result
+  return { result: result.deleteCount };
+};
+export { getTodos, createTodo, updateTodo, deleteTodo, deleteSelectedTodos };
