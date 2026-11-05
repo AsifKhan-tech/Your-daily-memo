@@ -4,7 +4,7 @@ export default function TodoForm({ onAddTodo }) {
   const [memo, setMemo] = useState("");
   const [dateTime, setDateTime] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const trimmedMemo = memo.trim();
@@ -13,14 +13,16 @@ export default function TodoForm({ onAddTodo }) {
       return;
     }
 
-    onAddTodo({
+    const createTodo = await onAddTodo({
       memo: trimmedMemo,
       dateTime,
     });
 
     // Clear the form after adding the memo.
-    setMemo("");
-    setDateTime("");
+    if (createTodo) {
+      setMemo("");
+      setDateTime("");
+    }
   }
 
   return (

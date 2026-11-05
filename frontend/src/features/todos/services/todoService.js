@@ -61,11 +61,7 @@ export const todoService = {
   },
 
   async deleteAllTodos() {
-    const todos = await todoApiService.getTodos();
-
-    if (todos.length === 0) {
-      return 0;
-    }
+    if (!todos.length) return 0;
 
     return todoApiService.deleteSelectedTodos(todos.map((todo) => todo.id));
   },

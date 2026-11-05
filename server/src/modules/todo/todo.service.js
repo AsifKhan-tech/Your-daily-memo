@@ -159,7 +159,8 @@ const deleteSelectedTodos = async (userId, todoIds) => {
 
   // Step 5: Return the deletion result
   return {
-    deleteCount: result.deleteCount,
+    deleteCount: result.deletedCount,
+    // Mongoose provide deleteMany() result in deletedCount property
   };
 };
 export { getTodos, createTodo, updateTodo, deleteTodo, deleteSelectedTodos };
