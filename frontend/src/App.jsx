@@ -103,6 +103,10 @@ function HomePage() {
     startEditingTodo,
     saveTodo,
     cancelEditingTodo,
+    selectedTodoIds,
+    toggleTodoSelection,
+    selectAllTodos,
+    deleteSelectedTodos,
   } = useTodos();
 
   return (
@@ -139,10 +143,15 @@ function HomePage() {
           ) : (
             <TodoList
               todos={todos}
+              selectedTodoIds={selectedTodoIds}
+              onToggleTodoSelection={toggleTodoSelection}
+              onSelectAllTodos={selectAllTodos}
+              onDeleteSelectedTodos={deleteSelectedTodos}
+              // Existing props
               onToggleTodo={toggleTodo}
               onDeleteTodo={deleteTodo}
-              editingTodoId={editingTodoId}
               onEditTodo={startEditingTodo}
+              editingTodoId={editingTodoId}
               onSaveTodo={saveTodo}
               onCancelEdit={cancelEditingTodo}
               onToggleAll={toggleAllTodos}

@@ -906,7 +906,7 @@
   font-size: 0.875rem;
 }
 
-/* Master checkbox: complete every task at once. */
+/* Master checkboxes: complete or select every task at once. */
 .all-items-control {
   align-items: center;
   color: var(--muted);
@@ -918,25 +918,40 @@
   margin-top: 1rem;
 }
 
-.all-items-control:has(input:disabled) {
+.select-all-control {
+  align-items: center;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  gap: 0.55rem;
+}
+
+.all-items-control:has(input:disabled),
+.select-all-control:has(input:disabled) {
   cursor: default;
   opacity: 0.5;
 }
 
-/* All items on the left, Delete all on the right. */
+/* Keep the controls usable when the action row wraps on narrow screens. */
 .list-actions {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
   margin-top: 1rem;
 }
 
-.list-actions .all-items-control {
+.list-actions .all-items-control,
+.list-actions .select-all-control {
   margin-top: 0;
 }
 
-/* Destructive action; enabled only after every item is selected. */
-.delete-all {
+/* Destructive actions; Delete all is enabled only when every item is complete. */
+.delete-all,
+.delete-selected {
   appearance: none;
   background: transparent;
   border: 1px solid var(--line);
@@ -954,20 +969,27 @@
     color 180ms ease;
 }
 
-.delete-all:hover:not(:disabled) {
+.delete-all:hover:not(:disabled),
+.delete-selected:hover:not(:disabled) {
   background: var(--focus);
   border-color: var(--focus);
   color: #161616;
 }
 
-.delete-all:focus-visible {
+.delete-all:focus-visible,
+.delete-selected:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-.delete-all:disabled {
+.delete-all:disabled,
+.delete-selected:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+.delete-selected {
+  margin-left: auto;
 }
 
 /* JS-populated rows. Hide the empty <ul> so it does not add gap. */
@@ -982,12 +1004,25 @@
   display: none;
 }
 
-/* Card column + fixed-width Delete/Save column. */
+/* Selection checkbox, task card, and fixed-width Delete/Save column. */
 .todo-row {
   align-items: stretch;
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: minmax(0, 1fr) 4.5rem;
+  grid-template-columns: 1rem minmax(0, 1fr) 4.5rem;
+}
+
+.todo-selection-checkbox {
+  accent-color: var(--accent);
+  align-self: center;
+  cursor: pointer;
+  height: 1rem;
+  margin: 0;
+  width: 1rem;
+}
+
+.todo-selection-checkbox:disabled {
+  cursor: default;
 }
 
 /* Checkbox, memo text, datetime, edit icon. */

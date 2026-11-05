@@ -49,7 +49,14 @@ export async function apiRequest(endpoint, options = {}) {
   // Send the original API request.
   let response = await fetch(request.clone());
 
-  // Check whether this request is eligible for token refresh.
+  // A missing access cookie (browser already dropped it) and an expired JWT
+  // both come back as 401. Either one can be recovered with the refresh cookie.
+  const refreshableStatuses = new Set([
+    "ACCESS_TOKEN_EXPIRED",
+    "ACCESS_TOKEN_MISSING",
+    "UNAUTHORIZED",
+  ]);
+
   const shouldRefresh =
     response.status === 401 &&
     endpoint !== "/auth/refresh-token" &&
@@ -62,8 +69,7 @@ export async function apiRequest(endpoint, options = {}) {
       .json()
       .catch(() => null);
 
-    // Refresh only when the access token has expired.
-    if (errorResult?.code === "ACCESS_TOKEN_EXPIRED") {
+    if (refreshableStatuses.has(errorResult?.code)) {
       try {
         // Reuse an existing refresh request if one is already running.
         if (!refreshPromise) {
@@ -84,10 +90,7 @@ export async function apiRequest(endpoint, options = {}) {
             .json()
             .catch(() => null);
 
-          if (
-            retryError?.code === "ACCESS_TOKEN_EXPIRED" ||
-            retryError?.code === "INVALID_ACCESS_TOKEN"
-          ) {
+          if (refreshableStatuses.has(retryError?.code) || retryError?.code === "INVALID_ACCESS_TOKEN") {
             notifySessionExpired();
           }
         }

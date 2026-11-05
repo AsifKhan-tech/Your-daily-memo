@@ -60,9 +60,17 @@ export const todoService = {
     return todoApiService.deleteTodo(todoId);
   },
 
+  // Delete selected todos
+  async deleteSelectedTodos(todoIds) {
+    if (!todoIds.length) return 0;
+
+    return todoApiService.deleteSelectedTodos(todoIds);
+  },
+
+  // Delete all todos
   async deleteAllTodos(todoIds) {
     if (!todoIds.length) return 0;
 
-    return todoApiService.deleteSelectedTodos(todoIds.map((todo) => todo.id));
+    return todoApiService.deleteSelectedTodos(todoIds);
   },
 };
