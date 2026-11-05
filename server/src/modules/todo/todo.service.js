@@ -150,7 +150,7 @@ const deleteSelectedTodos = async (userId, todoIds) => {
   const uniqueTodoIds = [...new Set(todoIds)];
 
   // Step 4: Delete selected Todos belonging to the authenticated user
-  const result = Todo.deleteMany({
+  const result = await Todo.deleteMany({
     _id: {
       $in: uniqueTodoIds,
     },
@@ -158,6 +158,8 @@ const deleteSelectedTodos = async (userId, todoIds) => {
   });
 
   // Step 5: Return the deletion result
-  return { result: result.deleteCount };
+  return {
+    deleteCount: result.deleteCount,
+  };
 };
 export { getTodos, createTodo, updateTodo, deleteTodo, deleteSelectedTodos };
