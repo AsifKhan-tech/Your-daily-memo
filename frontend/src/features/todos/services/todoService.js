@@ -60,9 +60,9 @@ export const todoService = {
     return todoApiService.deleteTodo(todoId);
   },
 
-  async deleteAllTodos() {
-    if (!todos.length) return 0;
+  async deleteAllTodos(todoIds) {
+    if (!todoIds.length) return 0;
 
-    return todoApiService.deleteSelectedTodos(todos.map((todo) => todo.id));
+    return todoApiService.deleteSelectedTodos(todoIds.map((todo) => todo.id));
   },
 };
