@@ -1,0 +1,44 @@
+name: Daily Memo CI/CD Pipeline
+
+# 1. Trigger: When the pipeline will run?
+on:
+  push:
+    branches:
+      - main # Whenever code will push in main branch
+
+jobs:
+  build-and-test:
+    name: Continuous Integration (CI)
+    runs-on: ubuntu-latest # cloud Linux server of GitHub
+
+    steps:
+      # Step A: Code is downloaded on GitHub server
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step B: Build all images using Docker Compose
+      # This will ensure that there is no error in new code
+      - name: Build Docker Images
+        run: docker compose build
+
+  deploy:
+    name: Continuous Deployment (CD)
+    needs: build-and-test # Deploy will run after pass the CI
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      # Step C: Send the Code on production server
+      # New code will pull using SSH in actual server(VPS)
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/your/project
+            git pull origin main
+            docker compose down
+            docker compose build
+            docker compose up -d
