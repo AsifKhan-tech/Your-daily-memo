@@ -28,3 +28,4 @@ volumes:
 
 # docker compose logs -f mongo-express
 # when want to see the logs of the container => mongo-express
+
