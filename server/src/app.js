@@ -4,6 +4,8 @@ import cors from "cors";
 
 import authRoutes from "./modules/auth/auth.route.js";
 import todoRoutes from "./modules/todo/todo.route.js";
+import contactRoutes from "./modules/contact/contact.route.js";
+
 import ApiError from "./common/utils/api-error.js";
 
 const app = express();
@@ -59,11 +61,11 @@ app.use(
 /**
  * Mount routes into app
  * Signaling to the express: "when any request start with '/api/v1/auth' ,
- * send/route it to the 'authRoutes' router."
+ * send/route it to the 'authRoutes', `todoRoutes`, `contactRoutes`, router."
  */
 app.use("/api/v1/auth", authRoutes);
-
 app.use("/api/v1/todos", todoRoutes);
+app.use("/api/v1/contact", contactRoutes);
 
 /**
  * Global Catch-All (404 Fallback) Route.
