@@ -16,6 +16,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+        # Naya Step: Specify directory explicitly and run command
+      - name: Build Docker Images
+        working-directory: ./server # <--- Ye line specify karegi ki docker compose yahan chalana hai
+        run: docker compose build
+
       # Step B: Build all images using Docker Compose
       # This will ensure that there is no error in new code
       - name: Build Docker Images
