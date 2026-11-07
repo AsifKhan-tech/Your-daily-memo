@@ -20,6 +20,20 @@
  
  
  
+
+
+      services:
+  # ... (Existing mongodb, mongo-express, api-server remain here) ...
+
+  frontend-app:
+    build: 
+      context: ../frontend    # Path to your frontend folder relative to docker-compose.yml
+    container_name: daily_memo_frontend
+    ports:
+      - "80:80"               # Map container's Nginx port 80 to your local port 80
+    restart: unless-stopped
+    depends_on:
+      - api-server            # Frontend should start after the backend is ready
  */
 
 // for future
