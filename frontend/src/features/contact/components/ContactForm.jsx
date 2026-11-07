@@ -1,17 +1,17 @@
 import { useState } from "react";
 
 function ContactForm() {
-  const [nameOrEmail, setNameOrEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const trimmedNameOrEmail = nameOrEmail.trim();
+    const trimmedemail = email.trim();
     const trimmedDescription = description.trim();
 
-    if (!trimmedNameOrEmail || !trimmedDescription) {
+    if (!trimmedemail || !trimmedDescription) {
       setStatus("Please fill in both fields.");
       return;
     }
@@ -19,7 +19,7 @@ function ContactForm() {
     // Frontend-only for now. No message is sent to a server.
     setStatus("Thanks! Your message has been recorded in this form.");
 
-    setNameOrEmail("");
+    setEmail("");
     setDescription("");
   }
 
@@ -34,17 +34,17 @@ function ContactForm() {
       <h2 id="contact-title">How can we help?</h2>
 
       <form className="contact-form" onSubmit={handleSubmit}>
-        <label htmlFor="contact-name">Name or email</label>
+        <label htmlFor="contact-name">Email</label>
 
         <input
+          type="text"
           className="todo"
           id="contact-name"
           name="contact-name"
-          type="text"
-          placeholder="Your name or email"
+          placeholder="jane.doe@example.com"
           autoComplete="email"
-          value={nameOrEmail}
-          onChange={(event) => setNameOrEmail(event.target.value)}
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
           required
         />
 
