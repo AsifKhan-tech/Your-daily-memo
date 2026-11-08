@@ -1,4 +1,7 @@
 import { apiRequest } from "../../../lib/apiClient.js";
+import { validateCreateTodoDto } from "../dto/createTodo.dto.js";
+import { validateUpdateTodoDto } from "../dto/updateTodo.dto.js";
+import { validateBulkDeleteTodosDto } from "../dto/bulkDeleteTodos.dto.js";
 
 // Import existing apiRequest()
 // Create functions for each Todo API endpoint
@@ -23,9 +26,12 @@ function normalizeTodo(todo) {
   };
 }
 
-// Convert frontend date into an ISO timestamp.
-function toApiDateTime(dateTime) {
-  return new Date(dateTime).toISOString();
+function getValidatedData(validation) {
+  if (!validation.isValid) {
+    throw new Error(Object.values(validation.errors).join(" "));
+  }
+
+  return validation.data;
 }
 
 export const todoApiService = {
@@ -38,14 +44,21 @@ export const todoApiService = {
 
   // Create a todo
   async createTodo(todo) {
+    const validatedTodo = getValidatedData(
+      validateCreateTodoDto({
+        todo: todo.memo,
+        dateTime: todo.dateTime,
+      }),
+    );
+
     const response = await apiRequest("/todos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        todo: todo.memo,
-        dateTime: toApiDateTime(todo.dateTime),
+        todo: validatedTodo.todo,
+        dateTime: validatedTodo.dateTime.toISOString(),
       }),
     });
 
@@ -61,11 +74,16 @@ export const todoApiService = {
     }
 
     if (updates.dateTime !== undefined) {
-      payload.dateTime = toApiDateTime(updates.dateTime);
+      payload.dateTime = updates.dateTime;
     }
 
     if (updates.completed !== undefined) {
       payload.completed = updates.completed;
+    }
+
+    const validatedUpdates = getValidatedData(validateUpdateTodoDto(payload));
+    if (validatedUpdates.dateTime) {
+      validatedUpdates.dateTime = validatedUpdates.dateTime.toISOString();
     }
 
     const response = await apiRequest(`/todos/${encodeURIComponent(todoId)}`, {
@@ -73,7 +91,7 @@ export const todoApiService = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(validatedUpdates),
     });
 
     return normalizeTodo(response.data);
@@ -90,12 +108,16 @@ export const todoApiService = {
 
   // Delete selected todos
   async deleteSelectedTodos(todoIds) {
+    const validatedPayload = getValidatedData(
+      validateBulkDeleteTodosDto({ todoIds }),
+    );
+
     const response = await apiRequest("/todos/bulk-delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ todoIds }),
+      body: JSON.stringify(validatedPayload),
     });
 
     return response.data.deletedCount;
