@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { formatDateTime } from "../../../lib/utils.js";
+import { validateUpdateTodoDto } from "../dto/updateTodo.dto.js";
 
 function TodoList({
   todos,
@@ -19,18 +20,21 @@ function TodoList({
   onDeleteSelectedTodos,
 }) {
   const [editingMemo, setEditingMemo] = useState("");
-
-  useEffect(() => {
-    const todoToEdit = todos.find((todo) => todo.id === editingTodoId);
-
-    if (todoToEdit) {
-      setEditingMemo(todoToEdit.memo);
-    }
-  }, [editingTodoId, todos]);
+  const [editingError, setEditingError] = useState("");
 
   function handleSave(todoId) {
+    const validation = validateUpdateTodoDto({
+      todo: editingMemo,
+    });
+
+    if (!validation.isValid) {
+      setEditingError(validation.errors.todo);
+      return;
+    }
+
+    setEditingError("");
     onSaveTodo(todoId, {
-      memo: editingMemo,
+      memo: validation.data.todo,
     });
   }
 
@@ -141,8 +145,16 @@ function TodoList({
                         className="todo-edit-input"
                         type="text"
                         value={editingMemo}
-                        onChange={(event) => setEditingMemo(event.target.value)}
+                        maxLength={200}
+                        onChange={(event) => {
+                          setEditingMemo(event.target.value);
+                          setEditingError("");
+                        }}
                         aria-label="Edit memo"
+                        aria-invalid={Boolean(editingError)}
+                        aria-describedby={
+                          editingError ? `todo-edit-error-${todo.id}` : undefined
+                        }
                         autoFocus
                       />
                     ) : (
@@ -156,11 +168,24 @@ function TodoList({
                     )}
                   </div>
 
+                  {isEditing && editingError && (
+                    <small
+                      className="field-error"
+                      id={`todo-edit-error-${todo.id}`}
+                    >
+                      {editingError}
+                    </small>
+                  )}
+
                   {!isEditing && (
                     <button
                       className="edit-todo"
                       type="button"
-                      onClick={() => onEditTodo(todo.id)}
+                      onClick={() => {
+                        setEditingMemo(todo.memo);
+                        setEditingError("");
+                        onEditTodo(todo.id);
+                      }}
                       aria-label={`Edit ${todo.memo}`}
                     >
                       <svg
