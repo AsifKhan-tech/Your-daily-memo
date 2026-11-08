@@ -26,7 +26,6 @@ dist-ssr
 #I ignore them temporarily
 dist/
 raw-client/
-.github/*
 
 commits.md
 notes.md

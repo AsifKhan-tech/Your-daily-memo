@@ -5,7 +5,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "node --watch server.js",
+    "dev": "node server.js",
     "up": "docker compose up -d",
     "down": "docker compose down -v",
     "start": "docker compose start",
