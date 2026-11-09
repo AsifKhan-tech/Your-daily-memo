@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:8.0
+    image: mongo:9.0
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     env_file: ./server/.env
     environment:
-      PORT: 3000
+      PORT: 4000
       NODE_ENV: production
     depends_on:
       mongodb:
