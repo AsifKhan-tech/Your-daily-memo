@@ -1,3 +1,4 @@
+/*
 import "dotenv/config";
 
 import app from "./src/app.js";
@@ -20,3 +21,5 @@ start().catch((e) => {
   console.error("Failed to start server", e);
   process.exit(1);
 });
+
+*/

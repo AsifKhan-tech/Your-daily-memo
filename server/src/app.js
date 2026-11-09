@@ -68,6 +68,19 @@ app.use("/api/v1/todos", todoRoutes);
 app.use("/api/v1/contact", contactRoutes);
 
 /**
+ * Health Check Route
+ * This route is used to check if the server is running & healthy(for loadbalancer and Docker compose).
+ */
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is healthy and running",
+    uptime: process.uptime(), // server up time
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
  * Global Catch-All (404 Fallback) Route.
  *
  * Intercepts all unmatched HTTP requests (GET, POST, PUT, etc.) for any undefined endpoint.
