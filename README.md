@@ -136,13 +136,6 @@ pnpm build     # Build the frontend (frontend only)
 pnpm lint      # Lint the frontend (frontend only)
 ```
 
-## Configuration and troubleshooting
-
-- Keep `.env` files and secrets out of version control.
-- If the API cannot connect to MongoDB, check that MongoDB is running and that `MONGODB_URI` uses the correct host. From the API container, the Compose database hostname is `mongodb`, not `localhost`.
-- If browser requests fail with a CORS error, set `CLIENT_URL` to the exact frontend origin, including its protocol and port.
-- If verification or password recovery emails fail, check the SMTP host, port, credentials, sender address, and provider requirements.
-
 # Contact
 
 - [LinkedIn](https://www.linkedin.com/in/mohd-asif-39a4ba27b/)
