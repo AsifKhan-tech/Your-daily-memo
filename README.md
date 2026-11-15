@@ -138,6 +138,7 @@ pnpm lint      # Lint the frontend (frontend only)
 
 # Contact
 
+- [Email](asifjamshed4@gmail.com)
 - [LinkedIn](https://www.linkedin.com/in/mohd-asif-39a4ba27b/)
 - [GitHub](https://github.com/AsifKhan-tech)
 - [X / Twitter](https://x.com/asifdotcom_1)
