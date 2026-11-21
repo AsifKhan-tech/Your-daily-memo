@@ -6,11 +6,11 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "docker:up": "docker compose up -d",
-    "docker:down": "docker compose down -v",
-    "docker:start": "docker compose start",
-    "docker:stop": "docker compose stop",
-    "docker:restart": "docker compose restart"
+    "up": "docker compose up -d",
+    "down": "docker compose down -v",
+    "start": "docker compose start",
+    "stop": "docker compose stop",
+    "restart": "docker compose restart"
   },
   "keywords": [
     "Node.js",
