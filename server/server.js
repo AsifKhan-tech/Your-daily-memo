@@ -29,7 +29,7 @@ import app from "./src/app.js";
 import databaseConnection from "./src/common/config/db.connection.js";
 import mongoose from "mongoose"; // import Mongoose for close the connection
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 let server; // Store the server instance in global variable
 
 const start = async () => {

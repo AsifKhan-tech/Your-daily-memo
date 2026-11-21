@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       trim: true,
-
+      minlength: 6,
+      maxlength: 254,
       required: [true, "email is required"],
       unique: true,
       lowercase: true,
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: 8,
+      maxlength: 64,
       select: false,
     },
     role: {
@@ -38,7 +40,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false, //when an object(user) created using it, all the data is returned except the data which => selcet:false
     },
-    // TODO: add verificationTokenExpiry
+    verificationExpiry: { type: Date, select: false },
+
     refreshToken: { type: String, select: false },
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpiry: { type: Date, select: false },

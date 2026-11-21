@@ -30,6 +30,7 @@ const register = async ({ name, email, password, role = "user" }) => {
     password: password,
     role: role,
     verificationToken: hashedToken,
+    verificationExpiry: Date.now() + 24 * 60 * 60 * 1000,
   });
 
   // send an email to the user with a token: rawToken for varify the email
@@ -78,8 +79,16 @@ const verifyEmail = async (token) => {
    * rather than the original unverified one.
    */
   const user = await User.findOneAndUpdate(
-    { verificationToken: hashedToken },
-    { $set: { isVerified: true }, $unset: { verificationToken: 1 } },
+    {
+      verificationToken: hashedToken,
+      verificationExpiry: { $gt: Date.now() },
+    },
+
+    {
+      $set: { isVerified: true },
+      $unset: { verificationToken: 1, verificationExpiry: 1 },
+    },
+
     { returnDocument: "after" }, //with this 'flag after' DB returns the updated object
   );
 
@@ -181,6 +190,7 @@ const refresh = async (token) => {
   // Generate new access and refresh tokens.
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
   const newRefreshToken = generateRefreshToken({ id: user._id });
+  // TODO: add verificationTokenExpiry
 
   //store the hashed new refreshToken of the specific user in DB
   user.refreshToken = hashToken(newRefreshToken);
